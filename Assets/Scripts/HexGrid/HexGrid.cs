@@ -22,12 +22,16 @@ public class HexGrid : MonoBehaviour {
         return hexGrid[index];
     }
 
-    public Vector3 HexToPixel(int q, int r) {
+    public Vector3 HexToCenterCoord(int q, int r) {
 
-        float x = 2f*HexConst.innerRadius*(float)q;
+        float x = (2 * q + r) * HexConst.innerRadius;;
         float y = 0;
-        float z = HexConst.outerRadius * (3f / 2f) * (float)r;
+        float z = 1.5f * r * HexConst.outerRadius;
 
         return new Vector3(x, y, z);
+    }
+
+    public int[] CoordToHexIndex(Vector3 pos) {
+        return null;
     }
 }
