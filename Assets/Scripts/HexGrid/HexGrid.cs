@@ -21,17 +21,4 @@ public class HexGrid : MonoBehaviour {
         int[] index = { q, r };
         return hexGrid[index];
     }
-
-    public Vector3 HexToCenterCoord(int q, int r) {
-
-        float x = (2 * q + r) * HexConst.innerRadius;;
-        float y = 0;
-        float z = 1.5f * r * HexConst.outerRadius;
-
-        return new Vector3(x, y, z);
-    }
-
-    public int[] CoordToHexIndex(Vector3 pos) {
-        return null;
-    }
 }
