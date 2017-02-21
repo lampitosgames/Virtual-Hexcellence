@@ -11,11 +11,6 @@ namespace Assets.Editor.Menu
 				if(transform.name.Contains("HexCell")) {
                     int[] hexCoords = HexConst.CoordToHexIndex(transform.position);
                     transform.position = HexConst.HexToWorldCoord(hexCoords[0], hexCoords[1]);
-     //               transform.position = new Vector3 (
-					//	Mathf.Round(transform.position.x / HexConst.innerRadius) * HexConst.innerRadius,
-					//	0,
-					//	Mathf.Round(transform.position.z / HexConst.outerRadius) * HexConst.outerRadius
-					//);
 				}
 			}
 		}
