@@ -6,9 +6,13 @@ using UnityEngine;
 public class HexGrid : MonoBehaviour {
     private Dictionary<int, GameObject> hexGrid = new Dictionary<int, GameObject>();
 
-    //Adds a hex cell reference to the map at the index.
-    //q=column, r=row
-    public void SetHexLocation(int q, int r, GameObject cell) {
+    /// <summary>
+    /// Adds a hex cell reference to the map at the index.
+    /// </summary>
+    /// <param name="q">column</param>
+    /// <param name="r">row</param>
+    /// <param name="cell">hex gameobject</param>
+    public void SetHex(int q, int r, GameObject cell) {
         int index = Hash(new int[] { q, r});
         if (hexGrid.ContainsKey(index)) {
             hexGrid[index] = cell;
@@ -16,8 +20,13 @@ public class HexGrid : MonoBehaviour {
             hexGrid.Add(index, cell);
         }
     }
-    //Get a hex cell at an index
-    //q=column, r=row
+
+    /// <summary>
+    /// Get a hex cell at the index
+    /// </summary>
+    /// <param name="q">column</param>
+    /// <param name="r">row</param>
+    /// <returns>hex gameobject.  If none is found, returns null</returns>
     public GameObject GetHex(int q, int r) {
         int index = Hash(new int[] { q, r });
         if (hexGrid.ContainsKey(index)) {
@@ -27,6 +36,12 @@ public class HexGrid : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Get the hexes surrounding the coordinates.  Won't return empty locations
+    /// </summary>
+    /// <param name="q">column</param>
+    /// <param name="r">row</param>
+    /// <returns>array of neighboring game objects</returns>
     public GameObject[] GetNeighbors(int q, int r) {
         List<GameObject> neighbors = new List<GameObject>();
         neighbors.Add(GetHex(q + 1, r));
@@ -39,12 +54,16 @@ public class HexGrid : MonoBehaviour {
         return neighbors.ToArray();
     }
 
-    //Give an int array a hashed value
-    private int Hash(int[] index) {
+    /// <summary>
+    /// Hashes an integer array
+    /// </summary>
+    /// <param name="arr">Integer array to hash</param>
+    /// <returns>hashed value</returns>
+    private int Hash(int[] arr) {
         int result = 17;
-        for (int i = 0; i < index.Length; i++) {
+        for (int i = 0; i < arr.Length; i++) {
             unchecked {
-                result = result * 23 + index[i];
+                result = result * 23 + arr[i];
             }
         }
         return result;

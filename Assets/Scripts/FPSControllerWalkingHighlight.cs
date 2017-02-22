@@ -4,6 +4,7 @@ using UnityEngine;
 
 
 //WARNING: HORRIBLE CODE AHEAD
+//TODO: Delete this monstrocity
 public class FPSControllerWalkingHighlight : MonoBehaviour {
     public HexGrid grid;
     public GameObject currentHex;
@@ -25,10 +26,6 @@ public class FPSControllerWalkingHighlight : MonoBehaviour {
         int[] cellIndex = HexConst.CoordToHexIndex(transform.position);
         //Get the cell the player is standing on
         currentHex = grid.GetHex(cellIndex[0], cellIndex[1]);
-        //if (currentHex != prevHex && prevHex != null) {
-        //    prevHex.GetComponent<Renderer>().material = normalHexMaterial;
-        //}
-        //prevHex = currentHex;
         if (currentHex != null) {
             currentHex.GetComponent<Renderer>().material = currentHexMaterial;
         }
