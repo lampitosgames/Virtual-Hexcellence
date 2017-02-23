@@ -8,6 +8,7 @@ using UnityEngine;
 public static class HexConst {
     //Side length of a hex.  Also distance from the hex center to any of the hex corners
     public const float radius = 2.31f;
+    public const float height = 0.1532126f * 4f;
 
     /// <summary>
     /// Convert hex coordinates to world coordinates
@@ -15,9 +16,9 @@ public static class HexConst {
     /// <param name="q">hex column</param>
     /// <param name="r">hex row</param>
     /// <returns>point in world</returns>
-    public static Vector3 HexToWorldCoord(int q, int r) {
+    public static Vector3 HexToWorldCoord(int q, int r, int h) {
         float x = HexConst.radius * 1.5f * r;
-        float y = 0;
+        float y = HexConst.height * h;
         float z = HexConst.radius * Mathf.Sqrt(3) * (q + (r / 2f));
         return new Vector3(x, y, z);
     }
@@ -30,29 +31,30 @@ public static class HexConst {
     public static int[] CoordToHexIndex(Vector3 pos) {
         float q = (pos.z * Mathf.Sqrt(3f) / 3f - pos.x / 3f) / HexConst.radius;
         float r = (pos.x * (2f / 3f)) / HexConst.radius;
-        return hexRound(q, r);
+        float h = pos.y / HexConst.height;
+        return hexRound(q, r, h);
     }
     
     /// <summary>
     /// Convert from axial hex coordinates to cube hex coordinates
     /// </summary>
-    /// <param name="axialCoords">Integer array of axial coordinates</param>
-    /// <returns>Integer array of cube coordinates</returns>
+    /// <param name="axialCoords">Integer array of axial coordinates [q, r, h]</param>
+    /// <returns>Integer array of cube coordinates [x, y, z, h]</returns>
     public static int[] AxialToCube(int[] axialCoords) {
         // x = q;
         // z = r;
         // y = -x - z;
-        return new int[] { axialCoords[0], -axialCoords[0] - axialCoords[1], axialCoords[1] };
+        return new int[] { axialCoords[0], -axialCoords[0] - axialCoords[1], axialCoords[1], axialCoords[2] };
     }
     
     /// <summary>
     /// Convert from cube to axial hex coordinates.
     /// does so by simply dropping the 'y' axis of the cube coordinates
     /// </summary>
-    /// <param name="cubeCoords">Integer array of cube coordinates</param>
-    /// <returns>Integer array of axial coordinates</returns>
+    /// <param name="cubeCoords">Integer array of cube coordinates [x, y, z, h]</param>
+    /// <returns>Integer array of axial coordinates [q, r, h]</returns>
     public static int[] CubeToAxial(int[] cubeCoords) {
-        return new int[] { cubeCoords[0], cubeCoords[2] };
+        return new int[] { cubeCoords[0], cubeCoords[2], cubeCoords[3] };
     }
 
     /// <summary>
@@ -61,7 +63,7 @@ public static class HexConst {
     /// <param name="q">partial axial column coordinate</param>
     /// <param name="r">partial axial row coordinate</param>
     /// <returns>verified axial coordinates</returns>
-    private static int[] hexRound(float q, float r) {
+    private static int[] hexRound(float q, float r, float h) {
         //Convert axial to cube coordinates for the algorithm
         //Not using the provided static methods because input values haven't been rounded to ints
         float x = q;
@@ -90,7 +92,7 @@ public static class HexConst {
         }
 
         //Convert cube coords to axial
-        int[] returnArray = { Mathf.RoundToInt(rx), Mathf.RoundToInt(rz) };
+        int[] returnArray = { Mathf.RoundToInt(rx), Mathf.RoundToInt(rz), Mathf.RoundToInt(h) };
         return returnArray;
 
     }

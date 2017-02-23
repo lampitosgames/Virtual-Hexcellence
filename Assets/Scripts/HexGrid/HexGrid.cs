@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class HexGrid : MonoBehaviour {
-    private Dictionary<int, GameObject> hexGrid = new Dictionary<int, GameObject>();
+public class HexGrid<T> : IEnumerable<T> {
+    private Dictionary<int, T> hexGrid = new Dictionary<int, T>();
 
     /// <summary>
-    /// Adds a hex cell reference to the map at the index.
+    /// Adds a cell reference to the map at the index.
     /// </summary>
     /// <param name="q">column</param>
     /// <param name="r">row</param>
-    /// <param name="cell">hex gameobject</param>
-    public void SetHex(int q, int r, GameObject cell) {
-        int index = Hash(new int[] { q, r});
+    /// <param name="r">height</param>
+    /// <param name="cell">cell item</param>
+    public void SetHex(int q, int r, int h, T cell) {
+        int index = Hash(new int[] { q, r, h });
         if (hexGrid.ContainsKey(index)) {
             hexGrid[index] = cell;
         } else {
@@ -22,34 +22,53 @@ public class HexGrid : MonoBehaviour {
     }
 
     /// <summary>
-    /// Get a hex cell at the index
+    /// Get a cell at the index
     /// </summary>
     /// <param name="q">column</param>
     /// <param name="r">row</param>
-    /// <returns>hex gameobject.  If none is found, returns null</returns>
-    public GameObject GetHex(int q, int r) {
-        int index = Hash(new int[] { q, r });
+    /// <param name="h">height</param>
+    /// <returns>Cell item. If none is found, returns default value for the data type (usually null)</returns>
+    public T GetHex(int q, int r, int h) {
+        int index = Hash(new int[] { q, r, h });
         if (hexGrid.ContainsKey(index)) {
             return hexGrid[index];
         } else {
-            return null;
+            return default(T);
         }
     }
 
     /// <summary>
-    /// Get the hexes surrounding the coordinates.  Won't return empty locations
+    /// Get the hex cells surrounding the coordinates.  Won't return empty locations.
+    /// Only gets cells with height +/- 2 from provided height
+    /// TODO: Make this obsolete with a more generalized radial function
     /// </summary>
     /// <param name="q">column</param>
     /// <param name="r">row</param>
-    /// <returns>array of neighboring game objects</returns>
-    public GameObject[] GetNeighbors(int q, int r) {
-        List<GameObject> neighbors = new List<GameObject>();
-        neighbors.Add(GetHex(q + 1, r));
-        neighbors.Add(GetHex(q, r + 1));
-        neighbors.Add(GetHex(q - 1, r + 1));
-        neighbors.Add(GetHex(q - 1, r));
-        neighbors.Add(GetHex(q, r - 1));
-        neighbors.Add(GetHex(q + 1, r - 1));
+    /// <param name="h">height</param>
+    /// <returns>array of neighboring cell items</returns>
+    public T[] GetNeighbors(int q, int r, int h) {
+        List<T> neighbors = new List<T>();
+        //Height lower
+        neighbors.Add(GetHex(q + 1, r, h-1));
+        neighbors.Add(GetHex(q, r + 1, h-1));
+        neighbors.Add(GetHex(q - 1, r + 1, h-1));
+        neighbors.Add(GetHex(q - 1, r, h-1));
+        neighbors.Add(GetHex(q, r - 1, h-1));
+        neighbors.Add(GetHex(q + 1, r - 1, h-1));
+        //Same Height
+        neighbors.Add(GetHex(q + 1, r, h));
+        neighbors.Add(GetHex(q, r + 1, h));
+        neighbors.Add(GetHex(q - 1, r + 1, h));
+        neighbors.Add(GetHex(q - 1, r, h));
+        neighbors.Add(GetHex(q, r - 1, h));
+        neighbors.Add(GetHex(q + 1, r - 1, h));
+        //Height higher
+        neighbors.Add(GetHex(q + 1, r, h+1));
+        neighbors.Add(GetHex(q, r + 1, h+1));
+        neighbors.Add(GetHex(q - 1, r + 1, h+1));
+        neighbors.Add(GetHex(q - 1, r, h+1));
+        neighbors.Add(GetHex(q, r - 1, h+1));
+        neighbors.Add(GetHex(q + 1, r - 1, h+1));
         neighbors.RemoveAll(Cell => Cell == null);
         return neighbors.ToArray();
     }
@@ -67,5 +86,21 @@ public class HexGrid : MonoBehaviour {
             }
         }
         return result;
+    }
+
+    /// <summary>
+    /// Get an iterable list of cells for use in a foreach loop
+    /// </summary>
+    /// <returns>IEnumerator</returns>
+    public IEnumerator<T> GetEnumerator() {
+        List<T> allCells = new List<T>();
+        foreach (KeyValuePair<int, T> cell in hexGrid) {
+            allCells.Add(cell.Value);
+        }
+        return allCells.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() {
+        return GetEnumerator();
     }
 }

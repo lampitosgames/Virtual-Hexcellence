@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HexCell : MonoBehaviour {
-    HexGrid grid;
-    int q, r;
+public class HexCellObj : MonoBehaviour {
+    int q, r, h;
     private void Awake() {
         //Save the grid game object
-        grid = GameObject.Find("HexGridObj").GetComponent("HexGrid") as HexGrid;
+        LevelController levelController = GameObject.Find("LevelController").GetComponent("LevelController") as LevelController;
 
         //Get the hex index for this hex cell.  Pass in the transform.
         int[] thisHexIndex = HexConst.CoordToHexIndex(transform.position);
         q = thisHexIndex[0];
         r = thisHexIndex[1];
+        h = thisHexIndex[2];
 
         //Pass a reference to this hex cell to the hex grid
-        grid.SetHex(q, r, gameObject);
+        levelController.AddCell(q, r, h, gameObject);
     }
 }
