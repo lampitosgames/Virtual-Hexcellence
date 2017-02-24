@@ -2,8 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// The actual mesh representing the cell in the game world
+/// </summary>
+// TODO: Abstract HexGrid cells.  There is a lot of repeated functionality.
 public class HexCellObj : MonoBehaviour {
+    //Coordinates
     int q, r, h;
+
+    /// <summary>
+    /// Unity start method
+    /// </summary>
     void Start() {
         //Save the grid game object
         LevelController levelController = GameObject.Find("LevelController").GetComponent("LevelController") as LevelController;
@@ -14,7 +23,7 @@ public class HexCellObj : MonoBehaviour {
         r = thisHexIndex[1];
         h = thisHexIndex[2];
 
-        //Pass a reference to this hex cell to the hex grid
+        //Tell the level controller to initialize this hex cell
         levelController.AddCell(q, r, h, gameObject);
     }
 }

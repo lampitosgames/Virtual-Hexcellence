@@ -2,6 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// A hex-based grid
+/// INCREDIBLY USEFUL ARTICLE: http://www.redblobgames.com/grids/hexagons
+/// That article is basically a hexagon bible.  I took a ton of pseudocode from it
+/// </summary>
+/// <typeparam name="T">Data type held at each hex</typeparam>
 public class HexGrid<T> : IEnumerable<T> {
     private Dictionary<int, T> hexGrid = new Dictionary<int, T>();
 
@@ -40,7 +46,7 @@ public class HexGrid<T> : IEnumerable<T> {
     /// <summary>
     /// Get the hex cells surrounding the coordinates.  Won't return empty locations.
     /// Only gets cells with height +/- 2 from provided height
-    /// TODO: Make this obsolete with a more generalized radial function
+    /// TODO: Make this obsolete with a more generalized and efficient radial-based function
     /// </summary>
     /// <param name="q">column</param>
     /// <param name="r">row</param>

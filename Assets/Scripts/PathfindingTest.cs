@@ -2,29 +2,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A temporary script to test and showcase the pathfinding logic
+/// </summary>
 public class PathfindingTest : MonoBehaviour {
+    //Player object reference
     GameObject player;
+    //AI Controller reference
     AIController aiController;
-    int[] curCell = null, startCell = null;
+    //Current cell of the player, 
+    int[] curCell = null, startCell = new int[] { 0, 0, 0 };
 
+    //Store path from start to player location
     List<int[]> path = null;
-
-	// Use this for initialization
+    
+    /// <summary>
+    /// Unity update method
+    /// </summary>
 	void Start () {
+        //Grab references to the player and AIController
         player = GameObject.Find("FPSController") as GameObject;
         aiController = GameObject.Find("AIController").GetComponent<AIController>() as AIController;
 	}
 
+    /// <summary>
+    /// Unity update method
+    /// </summary>
     void Update() {
+        //Get the position of the player's feet
         Vector3 playerPos = player.GetComponent<Transform>().position - new Vector3(0, 0.8f, 0);
-        if (startCell == null) { startCell = HexConst.CoordToHexIndex(playerPos); }
+        //Get the cell the player is standing on
         curCell = HexConst.CoordToHexIndex(playerPos);
+        //Path from the start cell to the current cell
         path = aiController.PathBetween(startCell, curCell);
     }
 
+    /// <summary>
+    /// Unity draw gizmos function
+    /// </summary>
     void OnDrawGizmos() {
+        //If the path exists
         if (path != null) {
             Gizmos.color = Color.cyan;
+            //Loop through the path and draw a line between all cells to form a path.
             for (int i = 1; i < path.Count; i++) {
                 Vector3 curCoords = HexConst.HexToWorldCoord(path[i][0], path[i][1], path[i][2]) + new Vector3(0, 1, 0);
                 Vector3 prevCoords = HexConst.HexToWorldCoord(path[i - 1][0], path[i - 1][1], path[i - 1][2]) + new Vector3(0, 1, 0);
