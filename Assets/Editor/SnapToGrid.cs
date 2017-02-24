@@ -15,7 +15,7 @@ namespace Assets.Editor.Menu
                     //Get the hex coordinates the object is overlapping with
                     int[] hexCoords = HexConst.CoordToHexIndex(transform.position);
                     //Move this object to the specific grid-aligned coordinates.
-                    transform.position = HexConst.HexToWorldCoord(hexCoords[0], hexCoords[1], hexCoords[2]);
+					transform.position = HexConst.HexToWorldCoord(hexCoords[0], hexCoords[1], hexCoords[2]);
 				}
 			}
 		}
