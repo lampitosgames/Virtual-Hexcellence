@@ -9,9 +9,7 @@ using UnityEngine;
 /// All HexCellData objects are built and populated at runtime.
 /// </summary>
 // TODO: Abstract HexGrid cells.  There is a lot of repeated functionality.
-public class HexCellData {
-    //Hex Cell coordinates
-    public int q, r, h;
+public class HexCellData : HexCell {
     //Reference to the cell's game object
     public GameObject hexCellObject;
     //Center position of the cell
@@ -24,10 +22,7 @@ public class HexCellData {
     /// <param name="r">row</param>
     /// <param name="h">height</param>
     /// <param name="hexCellObject">Hex GameObject</param>
-	public HexCellData(int q, int r, int h, GameObject hexCellObject) {
-        this.q = q;
-        this.r = r;
-        this.h = h;
+	public HexCellData(int q, int r, int h, GameObject hexCellObject) : base(q, r, h) {
         this.hexCellObject = hexCellObject;
         this.centerPos = HexConst.HexToWorldCoord(q, r, h);
     }

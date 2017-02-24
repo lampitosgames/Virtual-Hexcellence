@@ -6,10 +6,7 @@ using UnityEngine;
 /// The AICells hold state for individual cells in the AIController's pathGrid
 /// </summary>
 // TODO: Abstract HexGrid cells.  There is a lot of repeated functionality.
-public class AICell {
-    //Coordinates
-    public int q, r, h;
-
+public class AICell : HexCell {
     //Pathing algorithm fields
     public AICell parent = null;
     public int g = int.MaxValue;
@@ -20,11 +17,7 @@ public class AICell {
     /// <param name="q">column</param>
     /// <param name="r">row</param>
     /// <param name="h">height</param>
-    public AICell(int q, int r, int h) {
-        this.q = q;
-        this.r = r;
-        this.h = h;
-    }
+    public AICell(int q, int r, int h) : base(q, r, h) {}
 
     /// <summary>
     /// Comparitor
