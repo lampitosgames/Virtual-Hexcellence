@@ -8,11 +8,10 @@ using UnityEngine;
 public class FPSControllerWalkingHighlight : MonoBehaviour {
     LevelController levelController;
 
-    public GameObject currenthex;
-
     public Material currenthexmaterial;
     public Material normalhexmaterial;
     public Material neighborhexmaterial;
+    public HexCellData[] neighbors = new HexCellData[0];
 
     // use this for initialization
     void Awake() {
@@ -22,15 +21,18 @@ public class FPSControllerWalkingHighlight : MonoBehaviour {
 
     // update is called once per frame
     void Update() {
+        foreach (HexCellData cell in neighbors) {
+            cell.hexCellObject.GetComponent<Renderer>().material = normalhexmaterial;
+        }
+
         //get the cell location of the player
         int[] cellIndex = HexConst.CoordToHexIndex(new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z));
-        Debug.Log(cellIndex[2]);
         //get the cell the player is standing on
-        currenthex = levelController.levelGrid.GetHex(cellIndex[0], cellIndex[1], cellIndex[2]).hexCellObject;
+        HexCellData currenthex = levelController.levelGrid.GetHex(cellIndex[0], cellIndex[1], cellIndex[2]);
         if (currenthex != null) {
-            currenthex.GetComponent<Renderer>().material = currenthexmaterial;
+            currenthex.hexCellObject.GetComponent<Renderer>().material = currenthexmaterial;
         }
-        HexCellData[] neighbors = levelController.levelGrid.GetNeighbors(cellIndex[0], cellIndex[1], cellIndex[2]);
+        neighbors = levelController.levelGrid.GetNeighbors(cellIndex[0], cellIndex[1], cellIndex[2]);
         for (int i = 0; i < neighbors.Length; i++) {
             neighbors[i].hexCellObject.GetComponent<Renderer>().material = neighborhexmaterial;
         }

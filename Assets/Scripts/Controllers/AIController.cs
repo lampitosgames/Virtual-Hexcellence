@@ -62,6 +62,7 @@ public class AIController : MonoBehaviour {
 
     private List<int[]> ReconstructPath(AICell endCell, AICell startCell) {
         List<int[]> returnList = new List<int[]>();
+        if (endCell.Equals(startCell)) { return returnList; }
         AICell temp = endCell;
         do {
             returnList.Add(new int[] { temp.q, temp.r, temp.h });
