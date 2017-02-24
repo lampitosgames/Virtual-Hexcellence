@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HexCellObj : MonoBehaviour {
     int q, r, h;
-    private void Awake() {
+    void Start() {
         //Save the grid game object
         LevelController levelController = GameObject.Find("LevelController").GetComponent("LevelController") as LevelController;
 
