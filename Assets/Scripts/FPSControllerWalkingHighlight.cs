@@ -38,7 +38,6 @@ public class FPSControllerWalkingHighlight : MonoBehaviour {
 
         //get the cell location of the player
         int[] cellIndex = HexConst.CoordToHexIndex(new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z));
-        Debug.Log(cellIndex[0] + ", " + cellIndex[1] + ", " + cellIndex[2]);
         //get the cell the player is standing on
         HexCellData currenthex = levelController.levelGrid[cellIndex[0], cellIndex[1], cellIndex[2]];
         //If the player is standing on a hex (not falling, jumping)
@@ -48,7 +47,7 @@ public class FPSControllerWalkingHighlight : MonoBehaviour {
         }
 
         //Get the neighbors of the current hex
-        neighbors = levelController.levelGrid.GetNeighbors(cellIndex[0], cellIndex[1], cellIndex[2]);
+        neighbors = levelController.levelGrid.GetRadius(cellIndex[0], cellIndex[1], cellIndex[2], 3, -1);
         //Give all valid neighbors the neighbor material
         foreach (HexCellData cell in neighbors) {
             cell.hexCellObject.GetComponent<Renderer>().material = neighborhexmaterial;

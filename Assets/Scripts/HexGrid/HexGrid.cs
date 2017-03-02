@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -9,7 +10,8 @@ using System.Collections.Generic;
 /// </summary>
 /// <typeparam name="T">Data type held at each hex</typeparam>
 public class HexGrid<T> : IEnumerable<T> {
-    private Dictionary<int, T> hexGrid = new Dictionary<int, T>();
+    //The first dimensional dictionary accesses items by hashed coordinate values.  The second-dimensional dictionary hold cell heights
+    private Dictionary<int, Dictionary<int, T>> hexGrid = new Dictionary<int, Dictionary<int, T>>();
 
     /// <summary>
     /// Allow get/set for grids using [q,r,h]
@@ -30,12 +32,13 @@ public class HexGrid<T> : IEnumerable<T> {
     /// <param name="r">height</param>
     /// <param name="cell">cell item</param>
     public void SetHex(int q, int r, int h, T cell) {
-        int index = Hash(new int[] { q, r, h });
-        if (hexGrid.ContainsKey(index)) {
-            hexGrid[index] = cell;
-        } else {
-            hexGrid.Add(index, cell);
+        int coords = Hash(new int[] { q, r });
+        //If there is not a height dictionary at these coordinates
+        if (!hexGrid.ContainsKey(coords)) {
+            hexGrid[coords] = new Dictionary<int, T>();
         }
+        //Add the cell at this height
+        hexGrid[coords][h] = cell;
     }
 
     /// <summary>
@@ -46,48 +49,143 @@ public class HexGrid<T> : IEnumerable<T> {
     /// <param name="h">height</param>
     /// <returns>Cell item. If none is found, returns default value for the data type (usually null)</returns>
     public T GetHex(int q, int r, int h) {
-        int index = Hash(new int[] { q, r, h });
-        if (hexGrid.ContainsKey(index)) {
-            return hexGrid[index];
-        } else {
-            return default(T);
+        //Hash the hex coordinates
+        int coords = Hash(new int[] { q, r });
+        //If there are cells at these coordinates
+        if (hexGrid.ContainsKey(coords)) {
+            //Get the dictionary that holds cells at different heights
+            Dictionary<int, T> atCoords = hexGrid[coords];
+            //If there is a cell at this height, return it
+            if (atCoords.ContainsKey(h)) {
+                return atCoords[h];
+            }
         }
+        return default(T);
     }
 
     /// <summary>
-    /// Get the hex cells surrounding the coordinates.  Won't return empty locations.
-    /// Only gets cells with height +/- 2 from provided height
-    /// TODO: Make this obsolete with a more generalized and efficient radial-based function
+    /// Get hex cells in a radius surrounding the origin
+    /// Optional parameters allow for search height (+/- how much height will it search)
+    /// Iteration over height is middle-out (starts at 0, then +1, then -1, then +2, etc.)
+    /// If nearby cells have a lot of height variance, set searchHeight to -1.  The program will do a dictionary key lookup instead of looping.
     /// </summary>
     /// <param name="q">column</param>
     /// <param name="r">row</param>
     /// <param name="h">height</param>
-    /// <returns>array of neighboring cell items</returns>
-    public T[] GetNeighbors(int q, int r, int h) {
-        List<T> neighbors = new List<T>();
-        //Height lower
-        neighbors.Add(this[q + 1, r, h-1]);
-        neighbors.Add(this[q, r + 1, h-1]);
-        neighbors.Add(this[q - 1, r + 1, h-1]);
-        neighbors.Add(this[q - 1, r, h-1]);
-        neighbors.Add(this[q, r - 1, h-1]);
-        neighbors.Add(this[q + 1, r - 1, h-1]);
-        //Same Height
-        neighbors.Add(this[q + 1, r, h]);
-        neighbors.Add(this[q, r + 1, h]);
-        neighbors.Add(this[q - 1, r + 1, h]);
-        neighbors.Add(this[q - 1, r, h]);
-        neighbors.Add(this[q, r - 1, h]);
-        neighbors.Add(this[q + 1, r - 1, h]);
-        //Height higher
-        neighbors.Add(this[q + 1, r, h+1]);
-        neighbors.Add(this[q, r + 1, h+1]);
-        neighbors.Add(this[q - 1, r + 1, h+1]);
-        neighbors.Add(this[q - 1, r, h+1]);
-        neighbors.Add(this[q, r - 1, h+1]);
-        neighbors.Add(this[q + 1, r - 1, h+1]);
-        neighbors.RemoveAll(Cell => Cell == null);
-        return neighbors.ToArray();
+    /// <param name="radius">radius around cell (in steps)</param>
+    /// <param name="searchHeight">Search Height.  Default == 1.  -1 just finds the nearest y-shifted neighbor</param>
+    /// <param name="includeOrigin">Include the origin cell (provided coords) in the return value.  Default == false</param>
+    /// <returns></returns>
+    public T[] GetRadius(int q, int r, int h, int radius, int searchHeight = 1, bool includeOrigin = false) {
+        //Get coordinates in a radius around the center
+        List<int[]> aCoords = GetAxialCoordsInRadius(q, r, radius, includeOrigin);
+
+        //A list of non-null cells to return
+        List<T> returnList = new List<T>();
+
+        //Loop through found coordinates
+        for (int i = 0; i < aCoords.Count; i++) {
+            //Hash the coordinate value for dictionary lookup
+            int hashed = Hash(aCoords[i]);
+            //If a height dictionary exists at the hashed location (null lookup)
+            if (hexGrid.ContainsKey(hashed)) {
+                //Get the height dictionary at these coordinates
+                Dictionary<int, T> heightDic = hexGrid[Hash(aCoords[i])];
+                //If height is bounded
+                if (searchHeight > 0) {
+                    //Check coordinate for current height
+                    if (heightDic.ContainsKey(0)) {
+                        returnList.Add(heightDic[0]);
+                    }
+                    //Loop through the height radius (default 1)
+                    for (int k = 1; k <= searchHeight; k++) {
+                        //Check up first, then down
+                        if (heightDic.ContainsKey(k)) {
+                            returnList.Add(heightDic[k]);
+                            break;
+                        } else if (heightDic.ContainsKey(-k)) {
+                            returnList.Add(heightDic[-k]);
+                            break;
+                        }
+                    }
+
+                //Height is unbounded, find nearest neighbor
+                } else {
+                    //Initialize a "closest" value
+                    int closestIndex = int.MaxValue;
+                    //Loop through all keys in the height dictionary
+                    foreach (KeyValuePair<int, T> height in heightDic) {
+                        //Get the delta height.  If its smaller, this cell is the new closest
+                        closestIndex = (Math.Abs(h - height.Key) < closestIndex) ? height.Key : closestIndex;
+                    }
+                    //Add the closest cell to the return list
+                    returnList.Add(heightDic[closestIndex]);
+                }
+            }
+        }
+        return returnList.ToArray();
+    }
+    
+    /// <summary>
+    /// Get hex cells in a radius surrounding the origin.  Gets only the highest cells (top-down)
+    /// </summary>
+    /// <param name="q">column</param>
+    /// <param name="r">row</param>
+    /// <param name="h">height</param>
+    /// <param name="radius">radius around cell (in steps)</param>
+    /// <param name="includeOrigin">Include the origin cell (provided coords) in the return value.  Default == false</param>
+    /// <returns></returns>
+    public T[] TopDownRadius(int q, int r, int h, int radius, bool includeOrigin = false) {
+        //Get coordinates in a radius around the center
+        List<int[]> aCoords = GetAxialCoordsInRadius(q, r, radius, includeOrigin);
+
+        //A list of non-null cells to return
+        List<T> returnList = new List<T>();
+
+        //Loop through found coordinates
+        for (int i = 0; i < aCoords.Count; i++) {
+            //Hash the coordinate value for dictionary lookup
+            int hashed = Hash(aCoords[i]);
+            //If a height dictionary exists at the hashed location (null lookup)
+            if (hexGrid.ContainsKey(hashed)) {
+                //Get the height dictionary at these coordinates
+                Dictionary<int, T> heightDic = hexGrid[Hash(aCoords[i])];
+                //Add the highest item to the return list
+                returnList.Add(heightDic[heightDic.Keys.Max()]);
+            }
+        }
+        return returnList.ToArray();
+    }
+
+    /// <summary>
+    /// Get coordinates in a radius around center.  This is a private split out function for radial selections
+    /// </summary>
+    /// <param name="q">column</param>
+    /// <param name="r">row</param>
+    /// <param name="radius">radius</param>
+    /// <param name="includeOrigin">include the origin coordinates?</param>
+    /// <returns></returns>
+    private List<int[]> GetAxialCoordsInRadius(int q, int r, int radius, bool includeOrigin) {
+        //Convert the given axial coordinate to cube coordinates
+        int[] cCoords = HexConst.AxialToCube(q, r, 0);
+        //Store found axial coordinates in a list
+        List<int[]> aCoords = new List<int[]>();
+        //Loop from -radius to +radius on the x-axis
+        for (int dx = -1 * radius; dx <= radius; dx++) {
+            //Loop from -radius (constrained by the x radius) to +radius (also constrained by the x radius) on the y axis
+            for (int dy = Math.Max(-radius, -dx - radius); dy <= Math.Min(radius, -dx + radius); dy++) {
+                //Grab the final z coordinate
+                int dz = -dx - dy;
+                //include the origin cell in the return?
+                if (includeOrigin == false && dx == 0 && dy == 0 && dz == 0) {
+                    continue;
+                }
+                //Convert the location back to axial coordinates and add it to the list
+                aCoords.Add(new int[] { cCoords[0] + dx, cCoords[2] + dz });
+            }
+        }
+
+        return aCoords;
     }
 
     /// <summary>
@@ -111,8 +209,10 @@ public class HexGrid<T> : IEnumerable<T> {
     /// <returns>IEnumerator</returns>
     public IEnumerator<T> GetEnumerator() {
         List<T> allCells = new List<T>();
-        foreach (KeyValuePair<int, T> cell in hexGrid) {
-            allCells.Add(cell.Value);
+        foreach (KeyValuePair<int, Dictionary<int, T>> heightDictionary in hexGrid) {
+            foreach (KeyValuePair<int, T> cell in heightDictionary.Value) {
+                allCells.Add(cell.Value);
+            }
         }
         return allCells.GetEnumerator();
     }

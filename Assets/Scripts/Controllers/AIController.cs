@@ -50,7 +50,7 @@ public class AIController : MonoBehaviour {
             closed.Add(cCell);
 
             //Loop through the neighbors of cCell
-            foreach (AICell nCell in pathGrid.GetNeighbors(cCell.q, cCell.r, cCell.h)) {
+            foreach (AICell nCell in pathGrid.GetRadius(cCell.q, cCell.r, cCell.h, 1)) {
                 //If the neighbor node is already in the closed set, don't evaluate
                 if (closed.Contains(nCell)) { continue; }
 
