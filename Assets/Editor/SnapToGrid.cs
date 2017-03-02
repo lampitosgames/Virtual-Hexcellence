@@ -12,10 +12,13 @@ namespace Assets.Editor.Menu
 			foreach (Transform transform in Selection.GetTransforms(SelectionMode.TopLevel | SelectionMode.OnlyUserModifiable)) {
                 //If the object's transform is named "HexCell", it is a snap-able hex cell
 				if(transform.name.Contains("HexCell")) {
+                    float modelHeight = transform.gameObject.GetComponent<Renderer>().bounds.size.y;
+                    //float modelHeight = HexConst.modelHeight * transform.localScale.y;
                     //Get the hex coordinates the object is overlapping with
-                    int[] hexCoords = HexConst.CoordToHexIndex(transform.position);
+                    int[] hexCoords = HexConst.CoordToHexIndex(transform.position + new Vector3(0, modelHeight/2, 0));
                     //Move this object to the specific grid-aligned coordinates.
 					transform.position = HexConst.HexToWorldCoord(hexCoords[0], hexCoords[1], hexCoords[2]);
+                    transform.position = transform.position - new Vector3(0, modelHeight/2, 0);
 				}
 			}
 		}
