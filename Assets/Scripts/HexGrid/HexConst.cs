@@ -8,9 +8,8 @@ using UnityEngine;
 public static class HexConst {
     //Side length of a hex. Also distance from the hex center to any of the hex corners
     //TODO: Change these values if/when the hex model changes
-    public const float radius = 2.5f;
+    public const float radius = 2.52f;
     public const float height = 0.1282126f * 4f;
-    public const float modelHeight = 20.514016f;
 
     /// <summary>
     /// Convert hex coordinates to world coordinates

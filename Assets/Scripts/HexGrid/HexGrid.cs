@@ -12,6 +12,17 @@ public class HexGrid<T> : IEnumerable<T> {
     private Dictionary<int, T> hexGrid = new Dictionary<int, T>();
 
     /// <summary>
+    /// Allow get/set for grids using [q,r,h]
+    /// </summary>
+    /// <param name="q">column</param>
+    /// <param name="r">row</param>
+    /// <param name="h">height</param>
+    public T this[int q, int r, int h] {
+        get { return this.GetHex(q, r, h); }
+        set { this.SetHex(q, r, h, value); }
+    }
+
+    /// <summary>
     /// Adds a cell reference to the map at the index.
     /// </summary>
     /// <param name="q">column</param>
@@ -55,26 +66,26 @@ public class HexGrid<T> : IEnumerable<T> {
     public T[] GetNeighbors(int q, int r, int h) {
         List<T> neighbors = new List<T>();
         //Height lower
-        neighbors.Add(GetHex(q + 1, r, h-1));
-        neighbors.Add(GetHex(q, r + 1, h-1));
-        neighbors.Add(GetHex(q - 1, r + 1, h-1));
-        neighbors.Add(GetHex(q - 1, r, h-1));
-        neighbors.Add(GetHex(q, r - 1, h-1));
-        neighbors.Add(GetHex(q + 1, r - 1, h-1));
+        neighbors.Add(this[q + 1, r, h-1]);
+        neighbors.Add(this[q, r + 1, h-1]);
+        neighbors.Add(this[q - 1, r + 1, h-1]);
+        neighbors.Add(this[q - 1, r, h-1]);
+        neighbors.Add(this[q, r - 1, h-1]);
+        neighbors.Add(this[q + 1, r - 1, h-1]);
         //Same Height
-        neighbors.Add(GetHex(q + 1, r, h));
-        neighbors.Add(GetHex(q, r + 1, h));
-        neighbors.Add(GetHex(q - 1, r + 1, h));
-        neighbors.Add(GetHex(q - 1, r, h));
-        neighbors.Add(GetHex(q, r - 1, h));
-        neighbors.Add(GetHex(q + 1, r - 1, h));
+        neighbors.Add(this[q + 1, r, h]);
+        neighbors.Add(this[q, r + 1, h]);
+        neighbors.Add(this[q - 1, r + 1, h]);
+        neighbors.Add(this[q - 1, r, h]);
+        neighbors.Add(this[q, r - 1, h]);
+        neighbors.Add(this[q + 1, r - 1, h]);
         //Height higher
-        neighbors.Add(GetHex(q + 1, r, h+1));
-        neighbors.Add(GetHex(q, r + 1, h+1));
-        neighbors.Add(GetHex(q - 1, r + 1, h+1));
-        neighbors.Add(GetHex(q - 1, r, h+1));
-        neighbors.Add(GetHex(q, r - 1, h+1));
-        neighbors.Add(GetHex(q + 1, r - 1, h+1));
+        neighbors.Add(this[q + 1, r, h+1]);
+        neighbors.Add(this[q, r + 1, h+1]);
+        neighbors.Add(this[q - 1, r + 1, h+1]);
+        neighbors.Add(this[q - 1, r, h+1]);
+        neighbors.Add(this[q, r - 1, h+1]);
+        neighbors.Add(this[q + 1, r - 1, h+1]);
         neighbors.RemoveAll(Cell => Cell == null);
         return neighbors.ToArray();
     }

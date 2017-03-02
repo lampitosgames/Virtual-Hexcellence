@@ -17,8 +17,8 @@ public class AIController : MonoBehaviour {
     /// <returns>A list of hex coordinates that form a path.  Null if no path possible</returns>
     public List<int[]> PathBetween(int[] startCoords, int[] endCoords) {
         //Get references to the start and end path objects
-        AICell cStart = pathGrid.GetHex(startCoords[0], startCoords[1], startCoords[2]);
-        AICell cEnd = pathGrid.GetHex(endCoords[0], endCoords[1], endCoords[2]);
+        AICell cStart = pathGrid[startCoords[0], startCoords[1], startCoords[2]];
+        AICell cEnd = pathGrid[endCoords[0], endCoords[1], endCoords[2]];
         //If the start is the end, there is no path
         if (cStart == null || cEnd == null) { return null; }
 
@@ -90,6 +90,11 @@ public class AIController : MonoBehaviour {
         int[] bc = HexConst.AxialToCube(cell2.q, cell2.r, cell2.h);
         //Calculate the cell distance
         return ((int)Mathf.Abs(ac[0] - bc[0]) + (int)Mathf.Abs(ac[1] - bc[1]) + (int)Mathf.Abs(ac[2] - bc[2])) / 2;
+    }
+
+    public AICell[] Neighbors(AICell cell) {
+
+        return null;
     }
 
     /// <summary>

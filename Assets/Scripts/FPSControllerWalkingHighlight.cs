@@ -40,7 +40,7 @@ public class FPSControllerWalkingHighlight : MonoBehaviour {
         int[] cellIndex = HexConst.CoordToHexIndex(new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z));
         Debug.Log(cellIndex[0] + ", " + cellIndex[1] + ", " + cellIndex[2]);
         //get the cell the player is standing on
-        HexCellData currenthex = levelController.levelGrid.GetHex(cellIndex[0], cellIndex[1], cellIndex[2]);
+        HexCellData currenthex = levelController.levelGrid[cellIndex[0], cellIndex[1], cellIndex[2]];
         //If the player is standing on a hex (not falling, jumping)
         if (currenthex != null) {
             //Give the current hex the current hex material

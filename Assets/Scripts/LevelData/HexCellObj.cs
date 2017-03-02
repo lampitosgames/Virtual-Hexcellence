@@ -8,7 +8,7 @@ using UnityEngine;
 // TODO: Abstract HexGrid cells.  There is a lot of repeated functionality.
 public class HexCellObj : MonoBehaviour {
     //Model height
-    public float modelHeight = HexConst.modelHeight;
+    public float modelHeight;
 
     //Coordinates
     int q, r, h;
