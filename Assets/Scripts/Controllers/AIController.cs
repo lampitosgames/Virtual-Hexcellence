@@ -9,8 +9,8 @@ public class AIController : MonoBehaviour {
     //The path grid holds a list of AICells. These cells have useful information for pathfinding and AI awareness.
     public HexGrid<AICell> pathGrid = new HexGrid<AICell>();
     
-    public AICell[] ValidNeighbors(AICell cell) {
-        AICell[] neighbors = (AICell[])pathGrid.GetRadius(cell.q, cell.r, cell.h, 1);
+    public AICell[] ValidNeighbors(AICell cell, int searchHeight = 1) {
+        AICell[] neighbors = (AICell[])pathGrid.GetRadius(cell.q, cell.r, cell.h, 1, searchHeight);
         List<AICell> returnNeighbors = new List<AICell>();
 
         //Loop through all possible neighbors
@@ -100,6 +100,30 @@ public class AIController : MonoBehaviour {
         }
         //No path found, return null
         return null;
+    }
+
+    public List<AICell> ReachableInSteps(int[] center, int steps) {
+        List<AICell> visited = new List<AICell>();
+        visited.Add(pathGrid[center[0], center[1], center[2]]);
+
+        List<List<AICell>> fringes = new List<List<AICell>>();
+        fringes.Add(new List<AICell>());
+        fringes[0].Add(pathGrid[center[0], center[1], center[2]]);
+
+        for (int k=1; k<=steps; k++) {
+            fringes.Add(new List<AICell>());
+            foreach (AICell cell in fringes[k-1]) {
+                AICell[] neighbors = ValidNeighbors(cell);
+                foreach (AICell n in neighbors) {
+                    if (!visited.Contains(n)) {
+                        visited.Add(n);
+                        fringes[k].Add(n);
+                    }
+                }
+
+            }
+        }
+        return visited;
     }
 
     /// <summary>

@@ -85,6 +85,7 @@ public class HexGrid<T> : IEnumerable<T> {
 
         //Loop through found coordinates
         for (int i = 0; i < aCoords.Count; i++) {
+            int[] coords = aCoords[i];
             //Hash the coordinate value for dictionary lookup
             int hashed = Hash(aCoords[i]);
             //If a height dictionary exists at the hashed location (null lookup)
@@ -94,17 +95,18 @@ public class HexGrid<T> : IEnumerable<T> {
                 //If height is bounded
                 if (searchHeight > 0) {
                     //Check coordinate for current height
-                    if (heightDic.ContainsKey(0)) {
-                        returnList.Add(heightDic[0]);
+                    if (heightDic.ContainsKey(h)) {
+                        returnList.Add(heightDic[h]);
                     }
                     //Loop through the height radius (default 1)
                     for (int k = 1; k <= searchHeight; k++) {
                         //Check up first, then down
-                        if (heightDic.ContainsKey(k)) {
-                            returnList.Add(heightDic[k]);
+                        if (heightDic.ContainsKey(h+k)) {
+                            returnList.Add(heightDic[h+k]);
                             break;
-                        } else if (heightDic.ContainsKey(-k)) {
-                            returnList.Add(heightDic[-k]);
+                        }
+                        if (heightDic.ContainsKey(h-k)) {
+                            returnList.Add(heightDic[h-k]);
                             break;
                         }
                     }

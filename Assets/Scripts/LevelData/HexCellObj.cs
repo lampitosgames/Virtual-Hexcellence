@@ -11,7 +11,7 @@ public class HexCellObj : MonoBehaviour {
     public float modelHeight;
 
     //Coordinates
-    int q, r, h;
+    public int q, r, h;
 
     /// <summary>
     /// Unity start method
