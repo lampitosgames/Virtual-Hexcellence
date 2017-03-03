@@ -9,6 +9,8 @@ using UnityEngine;
 public abstract class HexCell {
     //Hex Cell coordinates
     public int q, r, h;
+    //Center position of the cell
+    public Vector3 centerPos;
 
     /// <summary>
     /// Constructor
@@ -20,5 +22,6 @@ public abstract class HexCell {
         this.q = q;
         this.r = r;
         this.h = h;
+        this.centerPos = HexConst.HexToWorldCoord(q, r, h);
     }
 }

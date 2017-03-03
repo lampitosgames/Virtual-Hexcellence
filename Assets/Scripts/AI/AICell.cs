@@ -5,7 +5,6 @@ using UnityEngine;
 /// <summary>
 /// The AICells hold state for individual cells in the AIController's pathGrid
 /// </summary>
-// TODO: Abstract HexGrid cells.  There is a lot of repeated functionality.
 public class AICell : HexCell {
     //Pathing algorithm fields
     public AICell parent = null;

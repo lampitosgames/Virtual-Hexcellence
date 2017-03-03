@@ -12,8 +12,6 @@ using UnityEngine;
 public class HexCellData : HexCell {
     //Reference to the cell's game object
     public GameObject hexCellObject;
-    //Center position of the cell
-    public Vector3 centerPos;
 
     /// <summary>
     /// Constructor
@@ -24,6 +22,5 @@ public class HexCellData : HexCell {
     /// <param name="hexCellObject">Hex GameObject</param>
 	public HexCellData(int q, int r, int h, GameObject hexCellObject) : base(q, r, h) {
         this.hexCellObject = hexCellObject;
-        this.centerPos = HexConst.HexToWorldCoord(q, r, h);
     }
 }

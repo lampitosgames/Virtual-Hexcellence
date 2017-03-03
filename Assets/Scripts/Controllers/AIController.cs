@@ -9,6 +9,32 @@ public class AIController : MonoBehaviour {
     //The path grid holds a list of AICells. These cells have useful information for pathfinding and AI awareness.
     public HexGrid<AICell> pathGrid = new HexGrid<AICell>();
     
+    public AICell[] ValidNeighbors(AICell cell) {
+        AICell[] neighbors = (AICell[])pathGrid.GetRadius(cell.q, cell.r, cell.h, 1);
+        List<AICell> returnNeighbors = new List<AICell>();
+
+        //Loop through all possible neighbors
+        foreach (AICell n in neighbors) {
+            //Get the vector that points to the edge of the hex
+            Vector3 toEdge = (n.centerPos - cell.centerPos) / 2;
+
+            //Create a rotation for the box
+            Quaternion rotation = new Quaternion();
+            rotation.SetLookRotation(toEdge.normalized, new Vector3(0, 1, 0));
+
+            //Get the collider center position (in between the cells, 1 unit up)
+            Vector3 colliderPos = toEdge + cell.centerPos + new Vector3(0, 1, 0);
+
+            //Check the location for physics collisions
+            //TODO: Make sure this doesn't collide with the player.  Also, mess with this number
+            if (!Physics.CheckBox(colliderPos, new Vector3(0.5f, 0.5f, 0.1f), rotation)) {
+                //If it is a valid location, add this to the list.
+                returnNeighbors.Add(n);
+            }
+        }
+        return returnNeighbors.ToArray();
+    }
+
     /// <summary>
     /// A basic implementation of A*
     /// </summary>
@@ -50,7 +76,7 @@ public class AIController : MonoBehaviour {
             closed.Add(cCell);
 
             //Loop through the neighbors of cCell
-            foreach (AICell nCell in pathGrid.GetRadius(cCell.q, cCell.r, cCell.h, 1)) {
+            foreach (AICell nCell in ValidNeighbors(cCell)) {
                 //If the neighbor node is already in the closed set, don't evaluate
                 if (closed.Contains(nCell)) { continue; }
 
