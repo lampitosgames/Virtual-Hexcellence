@@ -14,6 +14,15 @@ public class HexCellData : HexCell {
     public GameObject hexCellObject;
     //Center position of the cell
     public Vector3 centerPos;
+	private bool highlighted;
+	public bool Highlighted{
+		get {
+			return highlighted;
+		}
+		set {
+			highlighted = value;
+		}
+	}
 
     /// <summary>
     /// Constructor

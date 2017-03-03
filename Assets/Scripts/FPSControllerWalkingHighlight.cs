@@ -10,14 +10,20 @@ using UnityEngine;
 public class FPSControllerWalkingHighlight : MonoBehaviour {
     //Reference to the level controller that provides access to the hex grid
     LevelController levelController;
+	TileSelect tileSelection;
 
     //Materials for hexes being walked over
     public Material currenthexmaterial;
     public Material normalhexmaterial;
     public Material neighborhexmaterial;
+	public Material highlightMaterial;
 
     //Store neighboring hexes
     public HexCellData[] neighbors = new HexCellData[0];
+
+	private GameObject gameCamera;
+	private HexCellData previousHex;
+
 
     /// <summary>
     /// Unity awake method
@@ -25,6 +31,8 @@ public class FPSControllerWalkingHighlight : MonoBehaviour {
     void Awake() {
         //get the grid
         levelController = GameObject.Find("LevelController").GetComponent("LevelController") as LevelController;
+		tileSelection = GameObject.Find("AIController").GetComponent("TileSelect") as TileSelect;
+		gameCamera = this.transform.FindChild ("FirstPersonCharacter").gameObject as GameObject;
     }
 
     /// <summary>
@@ -33,7 +41,9 @@ public class FPSControllerWalkingHighlight : MonoBehaviour {
     void Update() {
         //Reset all neighbor cells
         foreach (HexCellData cell in neighbors) {
-            cell.hexCellObject.GetComponent<Renderer>().material = normalhexmaterial;
+			if (!cell.Highlighted) {
+				cell.hexCellObject.GetComponent<Renderer> ().material = normalhexmaterial;
+			}
         }
 
         //get the cell location of the player
@@ -53,5 +63,25 @@ public class FPSControllerWalkingHighlight : MonoBehaviour {
             cell.hexCellObject.GetComponent<Renderer>().material = neighborhexmaterial;
         }
 
+		int [] selectedCellIndex = tileSelection.selectCell (gameCamera);
+		if (selectedCellIndex != cellIndex && selectedCellIndex != null) {
+			HexCellData hoveredHex = levelController.levelGrid.GetHex(selectedCellIndex[0], selectedCellIndex[1], selectedCellIndex[2]);
+			if (hoveredHex != null) {
+				foreach (HexCellData validMove in neighbors) {
+					if (validMove == hoveredHex) {
+						hoveredHex.hexCellObject.GetComponent<Renderer> ().material = highlightMaterial;
+						if (previousHex != hoveredHex && previousHex != null) {
+							previousHex.hexCellObject.GetComponent<Renderer> ().material = normalhexmaterial;
+						}
+						if (Input.GetMouseButtonDown (0)) {
+							transform.position = new Vector3 (hoveredHex.centerPos.x, hoveredHex.centerPos.y + 0.8f, hoveredHex.centerPos.z);
+						}
+						previousHex = hoveredHex;
+					}
+				}
+			}
+		}
+
     }
+
 }
