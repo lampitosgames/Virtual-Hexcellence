@@ -8,26 +8,45 @@ using UnityEngine;
 public class AIController : MonoBehaviour {
     //The path grid holds a list of AICells. These cells have useful information for pathfinding and AI awareness.
     public HexGrid<AICell> pathGrid = new HexGrid<AICell>();
-    
+
+    /// <summary>
+    /// Allow getting/setting for the level grid using [q,r,h]
+    /// </summary>
+    /// <param name="q">column</param>
+    /// <param name="r">row</param>
+    /// <param name="h">height</param>
+    public AICell this[int q, int r, int h] {
+        get { return this.pathGrid[q, r, h]; }
+        set { this.pathGrid[q, r, h] = value; }
+    }
+
+    /// <summary>
+    /// A much slower GetRadius function, but more accurate.  It uses collision box projectsions to determine blocked edges that break
+    /// connections to neighboring hex cells, even if those cells exist.  This is useful for finding valid paths through impassible game objects.
+    /// </summary>
+    /// <param name="cell">Center AICell</param>
+    /// <param name="searchHeight">How high (up or down) does the algorithm search for neighbors?  -1 is unbounded</param>
+    /// <returns></returns>
     public AICell[] ValidNeighbors(AICell cell, int searchHeight = 1) {
+        //Get neighbors normally
         AICell[] neighbors = (AICell[])pathGrid.GetRadius(cell.q, cell.r, cell.h, 1, searchHeight);
         List<AICell> returnNeighbors = new List<AICell>();
 
         //Loop through all possible neighbors
         foreach (AICell n in neighbors) {
-            //Get the vector that points to the edge of the hex
+            //Get the vector that points to the edge of the hex in the direction of the neighbor
             Vector3 toEdge = (n.centerPos - cell.centerPos) / 2;
 
-            //Create a rotation for the box
+            //Create a rotation for the collider box (so it is orientated along the edge)
             Quaternion rotation = new Quaternion();
             rotation.SetLookRotation(toEdge.normalized, new Vector3(0, 1, 0));
 
             //Get the collider center position (in between the cells, 1 unit up)
             Vector3 colliderPos = toEdge + cell.centerPos + new Vector3(0, 1, 0);
 
-            //Check the location for physics collisions
-            //TODO: Make sure this doesn't collide with the player.  Also, mess with this number
-            if (!Physics.CheckBox(colliderPos, new Vector3(0.5f, 0.5f, 0.1f), rotation)) {
+            //Check the location for physics collisions (if it collides with the middle third of the edge)
+            //TODO: Make sure this doesn't collide with the player.
+            if (!Physics.CheckBox(colliderPos, new Vector3(HexConst.radius/6f, 0.5f, 0.1f), rotation)) {
                 //If it is a valid location, add this to the list.
                 returnNeighbors.Add(n);
             }
@@ -36,12 +55,58 @@ public class AIController : MonoBehaviour {
     }
 
     /// <summary>
+    /// With a given pathing distance, find all reachable cells in that many steps.
+    /// 1 step is defined as a single movement from a start hex to an adjacent, unblocked hex
+    /// </summary>
+    /// <param name="center">start cell</param>
+    /// <param name="steps">number of steps to search</param>
+    /// <returns></returns>
+    public List<AICell> ReachableInSteps(int[] center, int steps) {
+        //Store a list of cells that are reachable within the number of steps
+        List<AICell> visited = new List<AICell>();
+        //Add the start to the visited list
+        visited.Add(pathGrid[center[0], center[1], center[2]]);
+
+        //The firnges list holds lists of cells at each tier of movement.
+        //Index 0 contains the center cell
+        //Index 1 contains all cells reachable in 1 step
+        //Index 2 contains all cells reachable in 2 steps
+        //Etc.  it might be helpful to return the fringes in the future for display purposes
+        List<List<AICell>> fringes = new List<List<AICell>>();
+        //Add the start cell at index 0
+        fringes.Add(new List<AICell>());
+        fringes[0].Add(pathGrid[center[0], center[1], center[2]]);
+
+        //For every possible step
+        for (int k=1; k<=steps; k++) {
+            //Create a list for this index
+            fringes.Add(new List<AICell>());
+            //For each cell in the previous index
+            foreach (AICell cell in fringes[k-1]) {
+                //Expand it to visible neighbors
+                AICell[] neighbors = ValidNeighbors(cell);
+                //Add all visible neighbors to the visited set
+                //Also add them to the current fringe index for use in the next iteration
+                foreach (AICell n in neighbors) {
+                    if (!visited.Contains(n)) {
+                        visited.Add(n);
+                        fringes[k].Add(n);
+                    }
+                }
+
+            }
+        }
+        return visited;
+    }
+
+    /// <summary>
     /// A basic implementation of A*
     /// </summary>
     /// <param name="startCoords">start hex coordinate array</param>
     /// <param name="endCoords">end hex coordinate array</param>
     /// <returns>A list of hex coordinates that form a path.  Null if no path possible</returns>
-    public List<int[]> PathBetween(int[] startCoords, int[] endCoords) {
+    public List<int[]> PathBetween(int[] startCoords, int[] endCoords)
+    {
         //Get references to the start and end path objects
         AICell cStart = pathGrid[startCoords[0], startCoords[1], startCoords[2]];
         AICell cEnd = pathGrid[endCoords[0], endCoords[1], endCoords[2]];
@@ -57,17 +122,21 @@ public class AIController : MonoBehaviour {
         open.Add(cStart);
 
         //While items exist in the open set
-        while (open.Count > 0) {
+        while (open.Count > 0)
+        {
             //Get the lowest g-valued cell;
             AICell cCell = null;
-            foreach (AICell cell in open) {
-                if (cCell == null) { cCell = cell;  continue; }
-                if (cCell.g > cell.g) {
+            foreach (AICell cell in open)
+            {
+                if (cCell == null) { cCell = cell; continue; }
+                if (cCell.g > cell.g)
+                {
                     cCell = cell;
                 }
             }
             //If the current cell is the goal, return the found path
-            if (cCell.Equals(cEnd)) {
+            if (cCell.Equals(cEnd))
+            {
                 return ReconstructPath(cCell, cStart);
             }
 
@@ -75,22 +144,27 @@ public class AIController : MonoBehaviour {
             open.Remove(cCell);
             closed.Add(cCell);
 
-            //Loop through the neighbors of cCell
-            foreach (AICell nCell in ValidNeighbors(cCell)) {
+            //Loop through the valid neighbors of cCell
+            foreach (AICell nCell in ValidNeighbors(cCell))
+            {
                 //If the neighbor node is already in the closed set, don't evaluate
                 if (closed.Contains(nCell)) { continue; }
 
                 //If the neighbor isn't in the open set
-                if (!open.Contains(nCell)) {
+                if (!open.Contains(nCell))
+                {
                     //Initialize it's g-value and parent
                     nCell.g = cCell.g + DistBetween(cCell, nCell);
                     nCell.parent = cCell;
                     //Add it to the open set
                     open.Add(nCell);
-                //Neighbor is already in the open set
-                } else {
+                    //Neighbor is already in the open set
+                }
+                else
+                {
                     //If moving from the cCell would be quicker than the current saved path
-                    if (nCell.g > cCell.g + DistBetween(cCell, nCell)) {
+                    if (nCell.g > cCell.g + DistBetween(cCell, nCell))
+                    {
                         //Override previous shortest-path data to the nCell
                         nCell.g = cCell.g + DistBetween(cCell, nCell);
                         nCell.parent = cCell;
@@ -100,30 +174,6 @@ public class AIController : MonoBehaviour {
         }
         //No path found, return null
         return null;
-    }
-
-    public List<AICell> ReachableInSteps(int[] center, int steps) {
-        List<AICell> visited = new List<AICell>();
-        visited.Add(pathGrid[center[0], center[1], center[2]]);
-
-        List<List<AICell>> fringes = new List<List<AICell>>();
-        fringes.Add(new List<AICell>());
-        fringes[0].Add(pathGrid[center[0], center[1], center[2]]);
-
-        for (int k=1; k<=steps; k++) {
-            fringes.Add(new List<AICell>());
-            foreach (AICell cell in fringes[k-1]) {
-                AICell[] neighbors = ValidNeighbors(cell);
-                foreach (AICell n in neighbors) {
-                    if (!visited.Contains(n)) {
-                        visited.Add(n);
-                        fringes[k].Add(n);
-                    }
-                }
-
-            }
-        }
-        return visited;
     }
 
     /// <summary>

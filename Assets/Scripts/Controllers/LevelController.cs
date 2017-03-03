@@ -11,7 +11,18 @@ public class LevelController : MonoBehaviour {
     public HexGrid<HexCellData> levelGrid = new HexGrid<HexCellData>();
     //A reference to the AIController
     public AIController aiController;
-	
+
+    /// <summary>
+    /// Allow getting/setting for the level grid using [q,r,h]
+    /// </summary>
+    /// <param name="q">column</param>
+    /// <param name="r">row</param>
+    /// <param name="h">height</param>
+    public HexCellData this[int q, int r, int h] {
+        get { return this.levelGrid[q, r, h]; }
+        set { this.levelGrid[q, r, h] = value; }
+    }
+
     /// <summary>
     /// Unity's awake method
     /// it is called before start()
@@ -37,6 +48,6 @@ public class LevelController : MonoBehaviour {
 
         //Create an ai hex object to go into the pathing grid
         AICell aiCell = new AICell(q, r, h);
-        aiController.pathGrid[q,r,h] = aiCell;
+        aiController[q,r,h] = aiCell;
     }
 }

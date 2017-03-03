@@ -15,8 +15,6 @@ public class PathfindingTest : MonoBehaviour {
 
     //Store path from start to player location
     List<int[]> path = null;
-
-    Vector3[] edgeVectors = null;
     
     /// <summary>
     /// Unity update method
@@ -38,7 +36,7 @@ public class PathfindingTest : MonoBehaviour {
         //Path from the start cell to the current cell
         path = aiController.PathBetween(startCell, curCell);
 
-        AICell cCell = aiController.pathGrid[curCell[0], curCell[1], curCell[2]];
+        AICell cCell = aiController[curCell[0], curCell[1], curCell[2]];
     }
 
     /// <summary>
