@@ -21,7 +21,7 @@ public class PathfindingTest : MonoBehaviour {
     /// </summary>
 	void Start () {
         //Grab references to the player and AIController
-        player = GameObject.Find("FPSController") as GameObject;
+		player = GameObject.FindGameObjectWithTag("Player");
         aiController = GameObject.Find("AIController").GetComponent<AIController>() as AIController;
 	}
 

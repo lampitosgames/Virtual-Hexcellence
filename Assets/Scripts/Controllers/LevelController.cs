@@ -11,6 +11,7 @@ public class LevelController : MonoBehaviour {
     public HexGrid<HexCellData> levelGrid = new HexGrid<HexCellData>();
     //A reference to the AIController
     public AIController aiController;
+	public UIController uiController;
 
     /// <summary>
     /// Allow getting/setting for the level grid using [q,r,h]
@@ -30,6 +31,7 @@ public class LevelController : MonoBehaviour {
 	void Awake() {
         //Get a reference to the AIController
         aiController = GameObject.Find("AIController").GetComponent<AIController>() as AIController;
+		uiController = GameObject.Find ("UIController").GetComponent<UIController> () as UIController;
 	}
 
     /// <summary>
@@ -49,5 +51,8 @@ public class LevelController : MonoBehaviour {
         //Create an ai hex object to go into the pathing grid
         AICell aiCell = new AICell(q, r, h);
         aiController[q,r,h] = aiCell;
+
+		UICell uiCell = new UICell(q,r,h);
+		uiController.addCellToUIMap (uiCell);
     }
 }
