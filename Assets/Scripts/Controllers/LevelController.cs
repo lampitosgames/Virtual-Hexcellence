@@ -52,7 +52,10 @@ public class LevelController : MonoBehaviour {
         AICell aiCell = new AICell(q, r, h);
         aiController[q,r,h] = aiCell;
 
+        //Create a UI cell object to go into the UI grid
 		UICell uiCell = new UICell(q,r,h);
-		uiController.addCellToUIMap (uiCell);
+		uiController.addCellToUIMap(uiCell);
+        //Set the scale of the object to equal the world hex it represents
+        uiController[q, r, h].setModelScale(cellObj.GetComponent<HexCellObj>().modelScale);
     }
 }

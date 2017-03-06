@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4053669286223708}
   - component: {fileID: 23986427287206372}
-  - component: {fileID: 64643111922240012}
   - component: {fileID: 33128288871613378}
   m_Layer: 0
   m_Name: UIHexObj
@@ -55,7 +54,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 514fbc01ab11b98438068593adef00a7, type: 2}
+  - {fileID: 2100000, guid: 1655da43c2590644e913d5d976180f2b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -79,18 +78,4 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1252648911595812}
-  m_Mesh: {fileID: 4300002, guid: f6bf2459fdafd07408ceb33a49cadec7, type: 3}
---- !u!64 &64643111922240012
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1252648911595812}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Convex: 0
-  m_InflateMesh: 0
-  m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300002, guid: f6bf2459fdafd07408ceb33a49cadec7, type: 3}

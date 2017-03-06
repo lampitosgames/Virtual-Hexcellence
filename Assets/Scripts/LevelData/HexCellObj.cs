@@ -7,8 +7,8 @@ using UnityEngine;
 /// </summary>
 // TODO: Abstract HexGrid cells.  There is a lot of repeated functionality.
 public class HexCellObj : MonoBehaviour {
-    //Model height
-    public float modelHeight;
+    //Model height/scale
+    public float modelHeight, modelScale;
 
     //Coordinates
     public int q, r, h;
@@ -18,7 +18,7 @@ public class HexCellObj : MonoBehaviour {
     /// </summary>
     void Start() {
         modelHeight = gameObject.GetComponent<Renderer>().bounds.size.y;
-        //modelHeight *= transform.localScale.y;
+        modelScale = gameObject.transform.localScale.y;
         //Save the grid game object
         LevelController levelController = GameObject.Find("LevelController").GetComponent("LevelController") as LevelController;
 
