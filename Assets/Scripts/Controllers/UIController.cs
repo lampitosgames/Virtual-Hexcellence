@@ -8,10 +8,16 @@ using UnityEngine;
 public class UIController : MonoBehaviour {
 	//Assign the prefab in editor to spawn as minimap hex object
 	public GameObject uiGridPrefab;
-
+	public GameObject playerFigurePrefab;
     //uiGrid holds all UICells which relate to each hex on the map
     public HexGrid<UICell> uiGrid = new HexGrid<UICell>();
+	private GameObject playerFigure;
+	LevelController levelController;
 
+	void Start(){
+		levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
+		spawnPlayerFigure ();
+	}
 
     /// <summary>
     /// Allow getting/setting for the UI grid using [q,r,h]
@@ -38,15 +44,81 @@ public class UIController : MonoBehaviour {
 		newHologramCell.transform.parent = this.gameObject.transform;
 	}
 
+	/// <summary>
+	/// Create player figure if there isnt already one
+	/// </summary>
+	void spawnPlayerFigure(){
+		if (!playerFigure) {
+			playerFigure = (GameObject)Instantiate (playerFigurePrefab, transform.position, transform.rotation);
+			playerFigure.transform.parent = this.gameObject.transform;
+		}else{playerFigure.transform.position = this.transform.position;}
+	}
+
+
+	/// <summary>
+	/// Called by a canvas button when minimap is open, Moves the player to the hex corresponding to the player figure
+	/// </summary>
+	public void doMove(){
+
+		//Subtract the player position
+		Vector3 scaledFigurePosition = new Vector3 (playerFigure.transform.position.x-transform.parent.position.x,playerFigure.transform.position.y-transform.parent.position.y,playerFigure.transform.position.z-transform.parent.position.z);
+		//Scale up the position from the miniature to full scale and reset the y axis
+		scaledFigurePosition = scaledFigurePosition * 50;
+		scaledFigurePosition.y = scaledFigurePosition.y - 50;
+
+
+
+		//Convert the position into hex coordinates and move the player
+		int[] figurePositionHex = HexConst.CoordToHexIndex (scaledFigurePosition);
+		if (levelController.levelGrid.GetHex(figurePositionHex[0], figurePositionHex[1], figurePositionHex[2]) != null) {
+			print ("There is a Hex Here");
+			Vector3 newPosition = HexConst.HexToWorldCoord(figurePositionHex[0], figurePositionHex[1], figurePositionHex[2]);
+			GameObject.FindGameObjectWithTag ("Player").transform.position = newPosition;
+		}else{
+			Debug.LogError ("OH NO!! THERE IS NO HEX WHERE THE PLAYER FIGURE IS!!" + "q: "+figurePositionHex[0]+ "r: "+figurePositionHex[1]+ "h: "+figurePositionHex[2]);
+		}
+	}
+
     /// <summary>
     /// This is tomporary to test different scales and positions of the minimap
     /// </summary>
     void Update(){
 		if(Input.GetKeyDown("up")){
-			transform.localScale = transform.localScale*0.5f;
-			transform.position = new Vector3 (0,1,0);
+			scaleandReposition ();
+		}
+		if(Input.GetKeyDown("m")){
+			setVisibility (true);
+		}
+		if(Input.GetKeyDown("n")){
+			setVisibility (false);
+		}
+		if(Input.GetKeyDown("b")){
+			doMove ();
 		}
 	}
-		
+
+	/// <summary>
+	/// Rescale and move
+	/// </summary>
+	void scaleandReposition(){
+		transform.localScale = transform.localScale*0.02f;
+		transform.position = new Vector3 (0,1,0);
+		spawnPlayerFigure ();
+	}
+
+	/// <summary>
+	/// Enable/Disable the renderer this will eventually become on/off for the minimap
+	/// </summary>
+	public void setVisibility(bool visible){
+		if (visible) {
+			foreach (MeshRenderer renderer in transform.GetComponentsInChildren<MeshRenderer>()) {
+				renderer.enabled = true;
+			}
+		} else {
+			foreach (MeshRenderer renderer in transform.GetComponentsInChildren<MeshRenderer>()) {
+				renderer.enabled = false;
+			}
+		}
+	}
 
 }
