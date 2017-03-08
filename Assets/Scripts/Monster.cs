@@ -5,16 +5,16 @@ using UnityEngine;
 /// <summary>
 /// A temporary script to test and showcase the pathfinding logic
 /// </summary>
-public class PathfindingTest : MonoBehaviour {
+public class Monster : MonoBehaviour {
     //Player object reference
     GameObject player;
     //AI Controller reference
     AIController aiController;
     //Current cell of the player, 
-    int[] curCell = null, startCell = new int[] { 0, 0, 0 };
+    int[] curCell = null, playerCell = new int[] { 0, 0, 0 };
 
     //Store path from start to player location
-    List<int[]> path = null;
+    List<int[]> pathToPlayer = null;
     
     /// <summary>
     /// Unity update method
@@ -32,9 +32,9 @@ public class PathfindingTest : MonoBehaviour {
         //Get the position of the player's feet
         Vector3 playerPos = player.GetComponent<Transform>().position - new Vector3(0, 0.8f, 0);
         //Get the cell the player is standing on
-        curCell = HexConst.CoordToHexIndex(playerPos);
+        playerCell = HexConst.CoordToHexIndex(playerPos);
         //Path from the start cell to the current cell
-        path = aiController.PathBetween(startCell, curCell);
+        pathToPlayer = aiController.PathBetween(playerCell, curCell);
 
         AICell cCell = aiController[curCell[0], curCell[1], curCell[2]];
     }

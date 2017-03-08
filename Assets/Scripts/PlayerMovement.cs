@@ -4,105 +4,95 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
 	public int q, r, h;
-	LevelController levelController;
+
+    //Materials for hexes being walked over
+    public Material currenthexmaterial;
+    public Material normalhexmaterial;
+    public Material neighborhexmaterial;
+    public Material highlightMaterial;
+
+    //Global controllers
+    LevelController levelController;
+    AIController aiController;
+    //Relevant Gameobjects
+    GameObject playerCamera;
+
+    //State variables
+    public List<AICell> movable = new List<AICell>();
+    public bool playerMoving = true;
 
 
 	// Use this for initialization
 	void Start () {
-		int[] hexCoords = HexConst.CoordToHexIndex(gameObject.transform.position);
-		q = hexCoords[0];
-		r = hexCoords[1];
-		h = hexCoords[2];
 		levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
+        aiController = GameObject.Find("AIController").GetComponent<AIController>();
+        playerCamera = this.transform.FindChild("FirstPersonCharacter").gameObject as GameObject;
 	}
 
 	// Update is called once per frame
 	void Update () {
-		//Up
-		if (Input.GetKeyDown("[8]")) {
-			MoveDir(8);
-		}
-		//Down
-		else if (Input.GetKeyDown("[2]")) {
-			MoveDir(5);
-		}
-		//UpLeft
-		else if (Input.GetKeyDown("[7]")) {
-			MoveDir(7);
-		}
-		//UpRight
-		else if (Input.GetKeyDown("[9]")) {
-			MoveDir(9);
-		}
-		//DownLeft
-		else if (Input.GetKeyDown("[1]")) {
-			MoveDir(1);
-		}
-		//DownRight
-		else if (Input.GetKeyDown("[3]")) {
-			MoveDir(3);
-		}
+        //Reset all neighbor cells
+        foreach (AICell cell in movable) {
+            HexCellData hexCell = levelController[cell.q, cell.r, cell.h];
+            hexCell.hexCellObject.GetComponent<Renderer>().material = normalhexmaterial;
+        }
+
+        //Get player position
+        int[] hexCoords = HexConst.CoordToHexIndex(new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z));
+        q = hexCoords[0];
+        r = hexCoords[1];
+        h = hexCoords[2];
+
+        if (playerMoving) {
+            playerMoving = !MovePlayer();
+        }
 	}
 
-	void MoveDir(int dir) {
-		switch (dir)
-		{
-		case 8:
-			if (levelController.levelGrid.GetHex(this.q, this.r, this.h) != null) {
-				this.q += 1;
-				Vector3 newPosition = HexConst.HexToWorldCoord(this.q, this.r, this.h);
-				gameObject.transform.position = newPosition;
-			}
+    /// <summary>
+    /// Display UI for player movement
+    /// </summary>
+    /// <returns>Returns true when movement has happened</returns>
+    public bool MovePlayer() {
+        //Get the neighbors of the current hex
+        if (aiController[q, r, h] != null) {
+            movable = aiController.ReachableInSteps(new int[] { q, r, h }, 2);
+        }
+        //Give all valid neighbors the neighbor material
+        foreach (AICell cell in movable) {
+            HexCellData hexCell = levelController[cell.q, cell.r, cell.h];
+            hexCell.hexCellObject.GetComponent<Renderer>().material = neighborhexmaterial;
+        }
 
-			break;
-		case 5:
-			if (levelController.levelGrid.GetHex(this.q, this.r, this.h) != null) {
-				this.q -= 1;
-				Vector3 newPosition = HexConst.HexToWorldCoord(this.q, this.r, this.h);
-				gameObject.transform.position = newPosition;
+        //If the player is standing on a hex (not falling, jumping)
+        if (levelController[q,r,h] != null) {
+            //Give the current hex the current hex material
+            levelController[q, r, h].hexCellObject.GetComponent<Renderer>().material = currenthexmaterial;
+        }
 
-			}
-
-			break;
-		case 7:
-			if (levelController.levelGrid.GetHex(this.q, this.r, this.h) != null) {
-				this.q += 1;
-				this.r -= 1;
-				Vector3 newPosition = HexConst.HexToWorldCoord(this.q, this.r, this.h);
-				gameObject.transform.position = newPosition;
-			}
-			break;
-		case 9:
-			if (levelController.levelGrid.GetHex(this.q, this.r, this.h) != null) {
-				this.q += 0;
-				this.r += 1;
-				Vector3 newPosition = HexConst.HexToWorldCoord(this.q, this.r, this.h);
-				gameObject.transform.position = newPosition;
-			}
-
-			break;
-		case 1:
-			if (levelController.levelGrid.GetHex(this.q, this.r, this.h) != null) {
-				this.q += 0;
-				this.r -= 1;
-				Vector3 newPosition = HexConst.HexToWorldCoord(this.q, this.r, this.h);
-				gameObject.transform.position = newPosition;
-			}
-
-			break;
-		case 3:
-			if (levelController.levelGrid.GetHex(this.q, this.r, this.h) != null) {
-				this.q -= 1;
-				this.r += 1;
-				Vector3 newPosition = HexConst.HexToWorldCoord(this.q, this.r, this.h);
-				gameObject.transform.position = newPosition;
-			}
-
-			break;
-		default:
-			break;
-		}
-		print("Moving");
-	}
-
+        //Get the cell the player is looking at
+        //TODO: Delete this absolute abomination of nested code
+        Vector3 lineOfSight = playerCamera.transform.forward * 1000;
+        RaycastHit hit;
+        if (Physics.Raycast(playerCamera.transform.position, lineOfSight, out hit)) {
+            HexCellObj hitObj = hit.transform.gameObject.GetComponent<HexCellObj>() as HexCellObj;
+            if (hitObj != null) {
+                if (aiController[hitObj.q, hitObj.r, hitObj.h] != null) {
+                    //get the selected cell
+                    AICell lookedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
+                    foreach (AICell m in movable) {
+                        if (lookedCell.Equals(m) && !lookedCell.Equals(aiController[q, r, h])) {
+                            //set the material
+                            levelController[hitObj.q, hitObj.r, hitObj.h].hexCellObject.gameObject.GetComponent<Renderer>().material = highlightMaterial;
+                            //If the player clicks, move them there and end movement
+                            if (Input.GetMouseButtonUp(0)) {
+                                gameObject.transform.position = HexConst.HexToWorldCoord(hitObj.q, hitObj.r, hitObj.h) + new Vector3(0, 0.8f, 0);
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }

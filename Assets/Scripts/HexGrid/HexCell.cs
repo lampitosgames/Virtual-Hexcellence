@@ -24,4 +24,13 @@ public abstract class HexCell {
         this.h = h;
         this.centerPos = HexConst.HexToWorldCoord(q, r, h);
     }
+
+    /// <summary>
+    /// Comparitor
+    /// </summary>
+    /// <param name="o">other AICell</param>
+    /// <returns></returns>
+    public bool Equals(HexCell o) {
+        return (q == o.q && r == o.r && h == o.h);
+    }
 }
