@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,10 @@ public class AIController : MonoBehaviour {
     //The path grid holds a list of AICells. These cells have useful information for pathfinding and AI awareness.
     public HexGrid<AICell> pathGrid = new HexGrid<AICell>();
 
+    //A list holding all active monsters
+    public List<Monster> monsters = new List<Monster>();
+    int curMonster = 0;
+
     /// <summary>
     /// Allow getting/setting for the level grid using [q,r,h]
     /// </summary>
@@ -18,6 +23,22 @@ public class AIController : MonoBehaviour {
     public AICell this[int q, int r, int h] {
         get { return this.pathGrid[q, r, h]; }
         set { this.pathGrid[q, r, h] = value; }
+    }
+
+    /// <summary>
+    /// Call every step on the monster's turn.
+    /// Returns true once all monsters have completed their turns
+    /// </summary>
+    /// <returns>Have all monsters finished thier turns?</returns>
+    public bool MonsterTurn() {
+        if (curMonster >= monsters.Count) {
+            curMonster = 0;
+            return true;
+        }
+        if (monsters[curMonster].TakeTurn()) {
+            curMonster += 1;
+        }
+        return false;
     }
 
     /// <summary>
@@ -190,11 +211,6 @@ public class AIController : MonoBehaviour {
         int[] bc = HexConst.AxialToCube(cell2.q, cell2.r, cell2.h);
         //Calculate the cell distance
         return ((int)Mathf.Abs(ac[0] - bc[0]) + (int)Mathf.Abs(ac[1] - bc[1]) + (int)Mathf.Abs(ac[2] - bc[2])) / 2;
-    }
-
-    public AICell[] Neighbors(AICell cell) {
-
-        return null;
     }
 
     /// <summary>

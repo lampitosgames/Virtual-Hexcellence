@@ -9,6 +9,8 @@ public class AICell : HexCell {
     //Pathing algorithm fields
     public AICell parent = null;
     public int g = int.MaxValue;
+    //Is there an enemy standing on this cell?
+    public bool hasEnemy = false;
 
     /// <summary>
     /// Constructor

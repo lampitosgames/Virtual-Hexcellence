@@ -13,6 +13,10 @@ public class LevelController : MonoBehaviour {
     public AIController aiController;
 	public UIController uiController;
 
+    //A reference to the player
+    public Player player;
+    bool playerTurn = true;
+
     /// <summary>
     /// Allow getting/setting for the level grid using [q,r,h]
     /// </summary>
@@ -33,6 +37,39 @@ public class LevelController : MonoBehaviour {
         aiController = GameObject.Find("AIController").GetComponent<AIController>() as AIController;
 		uiController = GameObject.Find ("UIController").GetComponent<UIController> () as UIController;
 	}
+
+    void Update() {
+        //If it is the player turn
+        if (playerTurn) {
+            //Step through player's turn.  This will return true when the player's turn is over
+            if (player.TakeTurn()) {
+                //Switch to monster's turn after the player turn
+                this.StartMonsterTurn();
+            }
+        //Not player turn
+        } else {
+            //If the monster turn is over
+            if (aiController.MonsterTurn()) {
+                //Switch to player turn
+                this.StartPlayerTurn();
+            }
+        }
+    }
+
+    public void StartMonsterTurn() {
+        player.actionPoints = 0;
+        player.playerMoving = false;
+        foreach (Monster m in aiController.monsters) {
+            m.ResetTurn();
+        }
+        this.playerTurn = false;
+    }
+
+    public void StartPlayerTurn() {
+        player.actionPoints = 3;
+        player.playerMoving = false;
+        this.playerTurn = true;
+    }
 
     /// <summary>
     /// AddCell is what the individual cell objects use to dynamically generate the level at runtime
