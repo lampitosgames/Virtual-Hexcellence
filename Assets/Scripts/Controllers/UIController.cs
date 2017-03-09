@@ -86,13 +86,13 @@ public class UIController : MonoBehaviour {
 		if(Input.GetKeyDown("up")){
 			scaleandReposition ();
 		}
-		if(Input.GetKeyDown("m")){
+		if(Input.GetKeyDown("b")){
 			setVisibility (true);
 		}
 		if(Input.GetKeyDown("n")){
 			setVisibility (false);
 		}
-		if(Input.GetKeyDown("b")){
+		if(Input.GetKeyDown("v")){
 			doMove ();
 		}
 	}
