@@ -1590,7 +1590,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1694858644656844
 GameObject:
   m_ObjectHideFlags: 1
@@ -7856,6 +7856,10 @@ MonoBehaviour:
   q: 0
   r: 0
   h: 0
+  currenthexmaterial: {fileID: 0}
+  highlightMaterial: {fileID: 0}
+  playerMoving: 0
+  actionPoints: 3
 --- !u!114 &114043173542290534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7871,6 +7875,9 @@ MonoBehaviour:
     type: 2}
   playerFigurePrefab: {fileID: 1948796379129800, guid: e9c391004ac69014faa22bf4f58d0ef4,
     type: 2}
+  defaultHexMaterial: {fileID: 0}
+  neighborhexmaterial: {fileID: 0}
+  highlightMaterial: {fileID: 0}
 --- !u!114 &114043551593110510
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9771,6 +9778,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43982a696f48b3c4db30f0afe74a8f7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  monsters: []
 --- !u!114 &114844612121405398
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -9835,6 +9843,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aiController: {fileID: 0}
   uiController: {fileID: 0}
+  player: {fileID: 0}
 --- !u!114 &114890049776093568
 MonoBehaviour:
   m_ObjectHideFlags: 1

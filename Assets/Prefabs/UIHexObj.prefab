@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 23986427287206372}
   - component: {fileID: 33128288871613378}
   - component: {fileID: 64546942242440424}
+  - component: {fileID: 114628830147270510}
   m_Layer: 0
   m_Name: UIHexObj
   m_TagString: Untagged
@@ -94,3 +95,17 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300002, guid: f6bf2459fdafd07408ceb33a49cadec7, type: 3}
+--- !u!114 &114628830147270510
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1252648911595812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dfa3262d907ea747ab12393e90e5149, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  q: 0
+  r: 0
+  h: 0
