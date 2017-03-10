@@ -22,6 +22,8 @@ public class Player : MonoBehaviour {
     public bool playerMoving = false;
     public int actionPoints = 3;
 
+	//Debug: used for fpsController grabbing
+	GameObject grabbedObject;
 
 	// Use this for initialization
 	void Start () {
@@ -45,12 +47,45 @@ public class Player : MonoBehaviour {
                 this.playerMoving = true;
             }
         }
+
+		//Really nasty debug code for picking up objects with the fps controller
+		if (Input.GetMouseButtonDown (0)) {
+			print ("Clicky");
+			Vector3 lineOfSight = playerCamera.transform.forward * 1000;
+			RaycastHit hit;
+			if (Physics.Raycast (playerCamera.transform.position, lineOfSight, out hit)) {
+				GameObject grabObj = hit.transform.gameObject;
+				if (grabObj.GetComponent<Rigidbody>() != null) {
+					grabObj.transform.parent = playerCamera.transform;
+					grabbedObject = grabObj;
+					grabbedObject.GetComponent<Rigidbody> ().isKinematic = true;
+					grabbedObject.GetComponent<BoxCollider> ().enabled = false;
+				}
+			}
+		}
+
+		if (Input.GetMouseButtonDown (1)) {
+			print ("Droppy");
+
+			if (grabbedObject != null) {
+				grabbedObject.transform.parent = GameObject.Find("UIController").transform;
+				grabbedObject.GetComponent<BoxCollider> ().enabled = true;
+				grabbedObject.GetComponent<Rigidbody> ().isKinematic = false;
+				grabbedObject = null;
+			}
+		}
+
+
     }
 
     void OnGUI() {
         //Make a new background box
-        GUI.Box(new Rect(10, 10, 140, 90), "Actions: " + this.actionPoints);
+        GUI.Box(new Rect(10, 10, 180, 90), "Actions: " + this.actionPoints);
         GUI.Label(new Rect(20, 40, 120, 20), "Press 'm' to move");
+		GUI.Label(new Rect(20, 60, 120, 20), "Press 'up' to scale map");
+		GUI.Label(new Rect(20, 80, 120, 20), "Press 'v' to use minimap movement");
+		GUI.Label(new Rect(20, 100, 120, 20), "Left Click to grab");
+		GUI.Label(new Rect(20, 120, 120, 20), "Right Click to drop");
     }
 
     public bool TakeTurn() {
@@ -122,4 +157,9 @@ public class Player : MonoBehaviour {
         }
         return false;
     }
+
+
+
+
 }
+
