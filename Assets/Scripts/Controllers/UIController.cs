@@ -45,8 +45,12 @@ public class UIController : MonoBehaviour {
         //Create a new GameObject to represent a location in the world
         GameObject newHologramCell = (GameObject)Instantiate(uiGridPrefab, cell.centerPos, transform.rotation);
         cell.setGameObject(newHologramCell);
+        newHologramCell.GetComponent<UICellObj>().parent = cell;
+        newHologramCell.GetComponent<UICellObj>().q = cell.q;
+        newHologramCell.GetComponent<UICellObj>().r = cell.r;
+        newHologramCell.GetComponent<UICellObj>().h = cell.h;
         //Put the cell into the UIGrid
-		uiGrid[cell.q, cell.r, cell.h] = cell;
+        uiGrid[cell.q, cell.r, cell.h] = cell;
         //Set the game object's parent transform for scaling/rotation purposes.
 		newHologramCell.transform.SetParent(gameObject.transform);
 	}
@@ -91,6 +95,7 @@ public class UIController : MonoBehaviour {
 			print ("There is a Hex Here");
 			Vector3 newPosition = HexConst.HexToWorldCoord(figurePositionHex[0], figurePositionHex[1], figurePositionHex[2]);
 			GameObject.FindGameObjectWithTag ("Player").transform.position = newPosition;
+            ClearCells();
 		}else{
 			Debug.LogError ("OH NO!! THERE IS NO HEX WHERE THE PLAYER FIGURE IS!!" + "q: "+figurePositionHex[0]+ "r: "+figurePositionHex[1]+ "h: "+figurePositionHex[2]);
 		}

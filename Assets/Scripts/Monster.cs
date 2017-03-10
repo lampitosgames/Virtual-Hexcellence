@@ -43,7 +43,7 @@ public class Monster : MonoBehaviour {
             //If there is not a current path to the player
             if (pathToPlayer == null) {
                 //Get the position of the player's feet
-                Vector3 playerPos = player.GetComponent<Transform>().position - new Vector3(0, 0.8f, 0);
+                Vector3 playerPos = player.GetComponent<Transform>().position;
                 //Get the cell the player is standing on
                 playerCell = HexConst.CoordToHexIndex(playerPos);
                 curCell = HexConst.CoordToHexIndex(transform.position - new Vector3(0, 0.8f, 0));
