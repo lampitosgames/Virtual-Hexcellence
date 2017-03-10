@@ -54,12 +54,12 @@ public class Player : MonoBehaviour {
 
     void OnGUI() {
         //Make a new background box
-        GUI.Box(new Rect(10, 10, 180, 180), "Actions: " + this.actionPoints);
+        GUI.Box(new Rect(10, 10, 180, 90), "Actions: " + this.actionPoints);
         GUI.Label(new Rect(20, 40, 120, 20), "Press 'm' to move");
-		GUI.Label(new Rect(20, 60, 120, 20), "Press 'up' to scale map");
-		GUI.Label(new Rect(20, 80, 120, 20), "Press 'v' to use minimap movement");
-		GUI.Label(new Rect(20, 100, 120, 20), "Left Click to grab");
-		GUI.Label(new Rect(20, 120, 120, 20), "Right Click to drop");
+		//GUI.Label(new Rect(20, 60, 120, 20), "Press 'up' to scale map");
+		//GUI.Label(new Rect(20, 80, 120, 20), "Press 'v' to use minimap movement");
+		//GUI.Label(new Rect(20, 100, 120, 20), "Left Click to grab");
+		//GUI.Label(new Rect(20, 120, 120, 20), "Right Click to drop");
     }
 
     public bool TakeTurn() {
