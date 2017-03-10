@@ -12,11 +12,18 @@ public class UIController : MonoBehaviour {
     //uiGrid holds all UICells which relate to each hex on the map
     public HexGrid<UICell> uiGrid = new HexGrid<UICell>();
 	private GameObject playerFigure;
+    int[] figurePositionHex;
 	LevelController levelController;
 
-	void Start(){
+    //Materials for hexes
+    public Material defaultHexMaterial;
+    public Material neighborhexmaterial;
+    public Material highlightMaterial;
+
+    void Start(){
 		levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
 		spawnPlayerFigure ();
+        setVisibility(false);
 	}
 
     /// <summary>
@@ -41,8 +48,20 @@ public class UIController : MonoBehaviour {
         //Put the cell into the UIGrid
 		uiGrid[cell.q, cell.r, cell.h] = cell;
         //Set the game object's parent transform for scaling/rotation purposes.
-		newHologramCell.transform.parent = this.gameObject.transform;
+		newHologramCell.transform.SetParent(gameObject.transform);
 	}
+
+    public void ShowValidMoves(List<int[]> hexCells) {
+        foreach (int[] coords in hexCells) {
+            uiGrid[coords[0], coords[1], coords[2]].gameObject.GetComponent<Renderer>().material = neighborhexmaterial;
+        }
+    }
+
+    public void ClearCells() {
+        foreach (UICell cell in uiGrid) {
+            cell.gameObject.GetComponent<Renderer>().material = defaultHexMaterial;
+        }
+    }
 
 	/// <summary>
 	/// Create player figure if there isnt already one
@@ -50,24 +69,22 @@ public class UIController : MonoBehaviour {
 	void spawnPlayerFigure(){
 		if (!playerFigure) {
 			playerFigure = (GameObject)Instantiate (playerFigurePrefab, transform.position, transform.rotation);
-			playerFigure.transform.parent = this.gameObject.transform;
-		}else{playerFigure.transform.position = this.transform.position;}
+			playerFigure.transform.SetParent(gameObject.transform);
+            //Subtract the player position
+            figurePositionHex = HexConst.CoordToHexIndex(new Vector3(playerFigure.transform.position.x - transform.parent.position.x, playerFigure.transform.position.y - transform.parent.position.y, playerFigure.transform.position.z - transform.parent.position.z));
+        } else{playerFigure.transform.position = this.transform.position;}
 	}
 
 
 	/// <summary>
 	/// Called by a canvas button when minimap is open, Moves the player to the hex corresponding to the player figure
 	/// </summary>
-	public void doMove(){
-
+	public void doMove() {
 		//Subtract the player position
 		Vector3 scaledFigurePosition = new Vector3 (playerFigure.transform.position.x-transform.parent.position.x,playerFigure.transform.position.y-transform.parent.position.y,playerFigure.transform.position.z-transform.parent.position.z);
 		//Scale up the position from the miniature to full scale and reset the y axis
 		scaledFigurePosition = scaledFigurePosition * 50;
 		scaledFigurePosition.y = scaledFigurePosition.y - 50;
-
-
-
 		//Convert the position into hex coordinates and move the player
 		int[] figurePositionHex = HexConst.CoordToHexIndex (scaledFigurePosition);
 		if (levelController.levelGrid.GetHex(figurePositionHex[0], figurePositionHex[1], figurePositionHex[2]) != null) {
@@ -93,7 +110,7 @@ public class UIController : MonoBehaviour {
 			setVisibility (false);
 		}
 		if(Input.GetKeyDown("v")){
-			doMove ();
+			doMove();
 		}
 	}
 
