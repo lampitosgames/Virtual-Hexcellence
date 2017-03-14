@@ -106,6 +106,7 @@ public class Player : MonoBehaviour {
             //if it isn't null
             if (hitObj != null) {
                 //get the selected cell
+				Debug.Log("q " + hitObj.q  + "r " +hitObj.r  + "h" + hitObj.h );
                 AICell lookedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
                 foreach (AICell m in movable) {
                     if (lookedCell.Equals(m) && !lookedCell.Equals(aiController[q, r, h])) {
