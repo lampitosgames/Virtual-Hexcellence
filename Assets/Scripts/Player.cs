@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR;
+using UnityEngine.VR;
 
 public class Player : MonoBehaviour {
 	public int q, r, h;
@@ -20,6 +22,7 @@ public class Player : MonoBehaviour {
     public List<AICell> movable = new List<AICell>();
     public bool playerMoving = false;
     public int actionPoints = 3;
+	public bool vrActive = false;
 
 	/// <summary>
     /// Unity's start() function called after the object is initialized
@@ -30,17 +33,34 @@ public class Player : MonoBehaviour {
         aiController = GameObject.Find("AIController").GetComponent<AIController>();
         uiController = GameObject.Find("UIController").GetComponent<UIController>();
 		playerCamera = GetComponentInChildren<Camera> ().gameObject;
+		if (GameObject.Find ("FPSController") == null) {
+			vrActive = true;
+
+		} else {
+			SteamVR.SafeDispose ();
+			VRSettings.enabled = false;
+			playerCamera.GetComponent<Camera> ().fieldOfView = 60;
+		}
 	}
 
 	/// <summary>
     /// Unity's Update() function called once per step
     /// </summary>
 	void Update () {
-        //Get player position
-        int[] hexCoords = HexConst.CoordToHexIndex(new Vector3(transform.position.x, uiController.transform.position.y, transform.position.z));
-        q = hexCoords[0];
-        r = hexCoords[1];
-        h = hexCoords[2];
+		
+        //Get player position after checking whether the game is in VR
+		if (vrActive) {
+			int[] hexCoords = HexConst.CoordToHexIndex (new Vector3 (transform.position.x, uiController.transform.position.y, transform.position.z));
+			q = hexCoords[0];
+			r = hexCoords[1];
+			h = hexCoords[2];
+		} else{
+			int[] hexCoords = HexConst.CoordToHexIndex (new Vector3 (transform.position.x, transform.position.y, transform.position.z));
+			q = hexCoords[0];
+			r = hexCoords[1];
+			h = hexCoords[2];
+		}
+
 
         //If player presses "m" to move
         if (Input.GetKeyUp("m")) {
@@ -82,8 +102,10 @@ public class Player : MonoBehaviour {
     /// </summary>
     /// <returns>Returns true when movement has happened</returns>
     public bool MovePlayer() {
+		print ("MovePlayer");
         //If the player is standing on a hex (not falling, jumping)
         if (levelController[q, r, h] != null) {
+			print ("levelcontrollergoofd");
             //Get the neighbors of the current hex
             movable = aiController.ReachableInSteps(new int[] { q, r, h }, 2);
             //Get an integer list of the neighboring coordinates
@@ -106,7 +128,6 @@ public class Player : MonoBehaviour {
             //if it isn't null
             if (hitObj != null) {
                 //get the selected cell
-				Debug.Log("q " + hitObj.q  + "r " +hitObj.r  + "h" + hitObj.h );
                 AICell lookedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
                 foreach (AICell m in movable) {
                     if (lookedCell.Equals(m) && !lookedCell.Equals(aiController[q, r, h])) {

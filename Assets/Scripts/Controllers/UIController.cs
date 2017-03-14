@@ -136,10 +136,16 @@ public class UIController : MonoBehaviour {
 			foreach (MeshRenderer renderer in transform.GetComponentsInChildren<MeshRenderer>()) {
 				renderer.enabled = true;
 			}
+			foreach (Collider col in transform.GetComponentsInChildren<Collider>()) {
+				col.enabled = true;
+			}
 
 		} else {
 			foreach (MeshRenderer renderer in transform.GetComponentsInChildren<MeshRenderer>()) {
 				renderer.enabled = false;
+			}
+			foreach (Collider col in transform.GetComponentsInChildren<Collider>()) {
+				col.enabled = false;
 			}
 		}
 	}
