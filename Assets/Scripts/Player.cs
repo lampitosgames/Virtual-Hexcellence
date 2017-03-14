@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR;
+using UnityEngine.VR;
 
 public class Player : MonoBehaviour {
 	public int q, r, h;
@@ -20,6 +22,7 @@ public class Player : MonoBehaviour {
     public List<AICell> movable = new List<AICell>();
     public bool playerMoving = false;
     public int actionPoints = 3;
+	public bool vrActive = false;
 
 	/// <summary>
     /// Unity's start() function called after the object is initialized
@@ -29,18 +32,35 @@ public class Player : MonoBehaviour {
         levelController.player = this;
         aiController = GameObject.Find("AIController").GetComponent<AIController>();
         uiController = GameObject.Find("UIController").GetComponent<UIController>();
-        playerCamera = this.transform.FindChild("FirstPersonCharacter").gameObject as GameObject;
+		playerCamera = GetComponentInChildren<Camera> ().gameObject;
+		if (GameObject.Find ("FPSController") == null) {
+			vrActive = true;
+
+		} else {
+			SteamVR.SafeDispose ();
+			VRSettings.enabled = false;
+			playerCamera.GetComponent<Camera> ().fieldOfView = 60;
+		}
 	}
 
 	/// <summary>
     /// Unity's Update() function called once per step
     /// </summary>
 	void Update () {
-        //Get player position
-        int[] hexCoords = HexConst.CoordToHexIndex(new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z));
-        q = hexCoords[0];
-        r = hexCoords[1];
-        h = hexCoords[2];
+		
+        //Get player position after checking whether the game is in VR
+		if (vrActive) {
+			int[] hexCoords = HexConst.CoordToHexIndex (new Vector3 (transform.position.x, uiController.transform.position.y, transform.position.z));
+			q = hexCoords[0];
+			r = hexCoords[1];
+			h = hexCoords[2];
+		} else{
+			int[] hexCoords = HexConst.CoordToHexIndex (new Vector3 (transform.position.x, transform.position.y, transform.position.z));
+			q = hexCoords[0];
+			r = hexCoords[1];
+			h = hexCoords[2];
+		}
+
 
         //If player presses "m" to move
         if (Input.GetKeyUp("m")) {
