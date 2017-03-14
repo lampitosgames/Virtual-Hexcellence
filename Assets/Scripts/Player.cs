@@ -102,10 +102,8 @@ public class Player : MonoBehaviour {
     /// </summary>
     /// <returns>Returns true when movement has happened</returns>
     public bool MovePlayer() {
-		print ("MovePlayer");
         //If the player is standing on a hex (not falling, jumping)
         if (levelController[q, r, h] != null) {
-			print ("levelcontrollergoofd");
             //Get the neighbors of the current hex
             movable = aiController.ReachableInSteps(new int[] { q, r, h }, 2);
             //Get an integer list of the neighboring coordinates
