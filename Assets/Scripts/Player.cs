@@ -29,7 +29,7 @@ public class Player : MonoBehaviour {
         levelController.player = this;
         aiController = GameObject.Find("AIController").GetComponent<AIController>();
         uiController = GameObject.Find("UIController").GetComponent<UIController>();
-        playerCamera = this.transform.FindChild("FirstPersonCharacter").gameObject as GameObject;
+		playerCamera = GetComponentInChildren<Camera> ().gameObject;
 	}
 
 	/// <summary>
@@ -37,7 +37,7 @@ public class Player : MonoBehaviour {
     /// </summary>
 	void Update () {
         //Get player position
-        int[] hexCoords = HexConst.CoordToHexIndex(new Vector3(transform.position.x, transform.position.y - 0.8f, transform.position.z));
+        int[] hexCoords = HexConst.CoordToHexIndex(new Vector3(transform.position.x, uiController.transform.position.y, transform.position.z));
         q = hexCoords[0];
         r = hexCoords[1];
         h = hexCoords[2];
