@@ -23,6 +23,7 @@ public class Player : MonoBehaviour {
     public bool playerMoving = false;
     public int actionPoints = 3;
 	public bool vrActive = false;
+	private bool vrMoveComplete = false;
 
 	/// <summary>
     /// Unity's start() function called after the object is initialized
@@ -35,8 +36,8 @@ public class Player : MonoBehaviour {
 		playerCamera = GetComponentInChildren<Camera> ().gameObject;
 		if (GameObject.Find ("FPSController") == null) {
 			vrActive = true;
-
 		} else {
+			//Disable everything VR related and fix FOV of Camera
 			SteamVR.SafeDispose ();
 			VRSettings.enabled = false;
 			playerCamera.GetComponent<Camera> ().fieldOfView = 60;
@@ -70,6 +71,16 @@ public class Player : MonoBehaviour {
             }
         }
     }
+
+	/// <summary>
+	/// This is called from the Controller input class on the camera rig
+	/// </summary>
+	public void onTouchpadUp(){
+		if (actionPoints > 0 && !playerMoving) {
+			this.playerMoving = true;
+			uiController.setVisibility(true);
+		}
+	}
 
     /// <summary>
     /// Draw a GUI to the screen
@@ -117,36 +128,53 @@ public class Player : MonoBehaviour {
             uiController[q, r, h].gameObject.GetComponent<Renderer>().material = currenthexmaterial;
         }
 
-        //Get the cell the player is looking at
-        Vector3 lineOfSight = playerCamera.transform.forward * 1000;
-        RaycastHit hit;
-        if (Physics.Raycast(playerCamera.transform.position, lineOfSight, out hit)) {
-            //Get the UI hex cell the player is looking at
-            UICellObj hitObj = hit.transform.gameObject.GetComponent<UICellObj>() as UICellObj;
-            //if it isn't null
-            if (hitObj != null) {
-                //get the selected cell
-                AICell lookedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
-                foreach (AICell m in movable) {
-                    if (lookedCell.Equals(m) && !lookedCell.Equals(aiController[q, r, h])) {
-                        //set the material
-                        hitObj.gameObject.GetComponent<Renderer>().material = highlightMaterial;
-                        //If the player clicks, move them there and end movement
-                        if (Input.GetMouseButtonUp(0)) {
-                            transform.parent.transform.position = levelController[hitObj.q, hitObj.r, hitObj.h].centerPos;
-                            actionPoints -= 1;
-                            uiController.ClearCells();
-                            uiController.setVisibility(false);
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
+		//Non VR Movement
+		if (!vrActive) {
+			//Get the cell the player is looking at
+			Vector3 lineOfSight = playerCamera.transform.forward * 1000;
+			RaycastHit hit;
+			if (Physics.Raycast (playerCamera.transform.position, lineOfSight, out hit)) {
+				//Get the UI hex cell the player is looking at
+				UICellObj hitObj = hit.transform.gameObject.GetComponent<UICellObj> () as UICellObj;
+				//if it isn't null
+				if (hitObj != null) {
+					//get the selected cell
+					AICell lookedCell = aiController [hitObj.q, hitObj.r, hitObj.h];
+					foreach (AICell m in movable) {
+						if (lookedCell.Equals (m) && !lookedCell.Equals (aiController [q, r, h])) {
+							//set the material
+							hitObj.gameObject.GetComponent<Renderer> ().material = highlightMaterial;
+							//If the player clicks, move them there and end movement
+							if (Input.GetMouseButtonUp (0)) {
+								transform.parent.transform.position = levelController [hitObj.q, hitObj.r, hitObj.h].centerPos;
+								actionPoints -= 1;
+								uiController.ClearCells ();
+								uiController.setVisibility (false);
+								return true;
+							}
+						}
+					}
+				}
+			}
+		} 
+		//VR Specific movement
+		else {
+			if (vrMoveComplete) {
+				vrMoveComplete = false;
+				return true;
+			}
+		}
         return false;
     }
 
-
+	public void vrMove(Vector3 targetPosition){
+		int[] figurePositionHex = HexConst.CoordToHexIndex (targetPosition);
+		transform.position = levelController [figurePositionHex [0], figurePositionHex [1], figurePositionHex [2]].centerPos;
+		actionPoints -= 1;
+		uiController.ClearCells ();
+		uiController.setVisibility (false);
+		vrMoveComplete = true;
+	}
 
 
 }
