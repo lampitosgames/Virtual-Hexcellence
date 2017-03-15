@@ -35,8 +35,8 @@ public class Player : MonoBehaviour {
 		playerCamera = GetComponentInChildren<Camera> ().gameObject;
 		if (GameObject.Find ("FPSController") == null) {
 			vrActive = true;
-
 		} else {
+			//Disable everything VR related and fix FOV of Camera
 			SteamVR.SafeDispose ();
 			VRSettings.enabled = false;
 			playerCamera.GetComponent<Camera> ().fieldOfView = 60;
@@ -117,32 +117,39 @@ public class Player : MonoBehaviour {
             uiController[q, r, h].gameObject.GetComponent<Renderer>().material = currenthexmaterial;
         }
 
-        //Get the cell the player is looking at
-        Vector3 lineOfSight = playerCamera.transform.forward * 1000;
-        RaycastHit hit;
-        if (Physics.Raycast(playerCamera.transform.position, lineOfSight, out hit)) {
-            //Get the UI hex cell the player is looking at
-            UICellObj hitObj = hit.transform.gameObject.GetComponent<UICellObj>() as UICellObj;
-            //if it isn't null
-            if (hitObj != null) {
-                //get the selected cell
-                AICell lookedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
-                foreach (AICell m in movable) {
-                    if (lookedCell.Equals(m) && !lookedCell.Equals(aiController[q, r, h])) {
-                        //set the material
-                        hitObj.gameObject.GetComponent<Renderer>().material = highlightMaterial;
-                        //If the player clicks, move them there and end movement
-                        if (Input.GetMouseButtonUp(0)) {
-                            transform.parent.transform.position = levelController[hitObj.q, hitObj.r, hitObj.h].centerPos;
-                            actionPoints -= 1;
-                            uiController.ClearCells();
-                            uiController.setVisibility(false);
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
+		//Non VR Movement
+		if (!vrActive) {
+			//Get the cell the player is looking at
+			Vector3 lineOfSight = playerCamera.transform.forward * 1000;
+			RaycastHit hit;
+			if (Physics.Raycast (playerCamera.transform.position, lineOfSight, out hit)) {
+				//Get the UI hex cell the player is looking at
+				UICellObj hitObj = hit.transform.gameObject.GetComponent<UICellObj> () as UICellObj;
+				//if it isn't null
+				if (hitObj != null) {
+					//get the selected cell
+					AICell lookedCell = aiController [hitObj.q, hitObj.r, hitObj.h];
+					foreach (AICell m in movable) {
+						if (lookedCell.Equals (m) && !lookedCell.Equals (aiController [q, r, h])) {
+							//set the material
+							hitObj.gameObject.GetComponent<Renderer> ().material = highlightMaterial;
+							//If the player clicks, move them there and end movement
+							if (Input.GetMouseButtonUp (0)) {
+								transform.parent.transform.position = levelController [hitObj.q, hitObj.r, hitObj.h].centerPos;
+								actionPoints -= 1;
+								uiController.ClearCells ();
+								uiController.setVisibility (false);
+								return true;
+							}
+						}
+					}
+				}
+			}
+		} 
+		//VR Specific movement
+		else {
+			
+		}
         return false;
     }
 
