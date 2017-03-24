@@ -209,7 +209,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8f55f6f6d8bffaf43b6e119393af3045, type: 2}
+  - {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -240,7 +240,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8f55f6f6d8bffaf43b6e119393af3045, type: 2}
+  - {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -302,7 +302,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8f55f6f6d8bffaf43b6e119393af3045, type: 2}
+  - {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -333,7 +333,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 8f55f6f6d8bffaf43b6e119393af3045, type: 2}
+  - {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -421,11 +421,12 @@ MonoBehaviour:
   grabAttachMechanicScript: {fileID: 0}
   secondaryGrabActionScript: {fileID: 0}
   isUsable: 1
-  holdButtonToUse: 1
+  holdButtonToUse: 0
   useOnlyIfGrabbed: 0
   pointerActivatesUseAction: 0
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
-  snappedFigure: {fileID: 0}
+  holographicFigure: {fileID: 1050350323304460, guid: 55b1739bd7c3bfa4a99c6859027be865,
+    type: 2}
   lineMaterial: {fileID: 2100000, guid: 2f5ef0f02ee61c34382c915dfcbfc436, type: 2}
