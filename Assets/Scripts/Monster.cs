@@ -40,6 +40,7 @@ public class Monster : MonoBehaviour {
     /// <returns>turn is over?</returns>
     public bool TakeTurn() {
         if (this.actionPoints > 0) {
+			print ("Monster taking turn");
             //If there is not a current path to the player
             if (pathToPlayer == null) {
                 //Get the position of the player's feet
