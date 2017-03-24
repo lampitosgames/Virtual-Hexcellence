@@ -23,7 +23,6 @@ public class Player : MonoBehaviour {
     public bool playerMoving = false;
     public int actionPoints = 3;
 	public bool vrActive = false;
-	private bool vrMoveComplete = false;
 
 	/// <summary>
     /// Unity's start() function called after the object is initialized
@@ -71,16 +70,6 @@ public class Player : MonoBehaviour {
             }
         }
     }
-
-	/// <summary>
-	/// This is called from the Controller input class on the camera rig
-	/// </summary>
-	public void onTouchpadUp(){
-		if (actionPoints > 0 && !playerMoving) {
-			this.playerMoving = true;
-			uiController.setVisibility(true);
-		}
-	}
 
     /// <summary>
     /// Draw a GUI to the screen
@@ -159,22 +148,12 @@ public class Player : MonoBehaviour {
 		} 
 		//VR Specific movement
 		else {
-			if (vrMoveComplete) {
-				vrMoveComplete = false;
-				return true;
-			}
+			
 		}
         return false;
     }
 
-	public void vrMove(Vector3 targetPosition){
-		int[] figurePositionHex = HexConst.CoordToHexIndex (targetPosition);
-		transform.position = levelController [figurePositionHex [0], figurePositionHex [1], figurePositionHex [2]].centerPos;
-		actionPoints -= 1;
-		uiController.ClearCells ();
-		uiController.setVisibility (false);
-		vrMoveComplete = true;
-	}
+
 
 
 }
