@@ -19,7 +19,7 @@ public class Player : MonoBehaviour {
     GameObject playerCamera;
 
     //State variables
-    public List<AICell> movable = new List<AICell>();
+    public List<List<AICell>> movable = new List<List<AICell>>();
     public bool playerMoving = false;
     public int actionPoints = 3;
 	public bool vrActive = false;
@@ -116,10 +116,10 @@ public class Player : MonoBehaviour {
         //If the player is standing on a hex (not falling, jumping)
         if (levelController[q, r, h] != null) {
             //Get the neighbors of the current hex
-            movable = aiController.ReachableInSteps(new int[] { q, r, h }, 2);
+            movable = aiController.ReachableInSteps(new int[] { q, r, h }, 2, actionPoints);
             //Get an integer list of the neighboring coordinates
             List<int[]> validMoves = new List<int[]>();
-            foreach (AICell cell in movable) {
+            foreach (AICell cell in movable[0]) {
                 validMoves.Add(new int[] { cell.q, cell.r, cell.h });
             }
             //Give all valid neighbors the neighbor material
@@ -140,7 +140,7 @@ public class Player : MonoBehaviour {
 				if (hitObj != null) {
 					//get the selected cell
 					AICell lookedCell = aiController [hitObj.q, hitObj.r, hitObj.h];
-					foreach (AICell m in movable) {
+					foreach (AICell m in movable[0]) {
 						if (lookedCell.Equals (m) && !lookedCell.Equals (aiController [q, r, h])) {
 							//set the material
 							hitObj.gameObject.GetComponent<Renderer> ().material = highlightMaterial;

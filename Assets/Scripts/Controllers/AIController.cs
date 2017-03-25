@@ -80,9 +80,10 @@ public class AIController : MonoBehaviour {
     /// 1 step is defined as a single movement from a start hex to an adjacent, unblocked hex
     /// </summary>
     /// <param name="center">start cell</param>
-    /// <param name="steps">number of steps to search</param>
-    /// <returns></returns>
-    public List<AICell> ReachableInSteps(int[] center, int steps) {
+    /// <param name="stepsPerTurn">number of steps in each turn</param>
+    /// <param name="turnsToSearch">how many turns forward to search</param>
+    /// <returns>List of turns. index 0 is all AICells reachable on turn 1, index 1 is all AICells reachable on turn two, etc.</returns>
+    public List<List<AICell>> ReachableInSteps(int[] center, int stepsPerTurn, int turnsToSearch) {
         //Store a list of cells that are reachable within the number of steps
         List<AICell> visited = new List<AICell>();
         //Add the start to the visited list
@@ -98,12 +99,21 @@ public class AIController : MonoBehaviour {
         fringes.Add(new List<AICell>());
         fringes[0].Add(pathGrid[center[0], center[1], center[2]]);
 
+        //The turn list.  Every list inside is a single turn's possible movement
+        List<List<AICell>> turns = new List<List<AICell>>();
+
         //For every possible step
-        for (int k=1; k<=steps; k++) {
+        for (int k = 1; k <= stepsPerTurn*turnsToSearch; k++) {
             //Create a list for this index
             fringes.Add(new List<AICell>());
+
+            //If this k is searching for the next turn, add a new list to the turns
+            if ((k-1) % stepsPerTurn == 0) {
+                turns.Add(new List<AICell>());
+            }
+
             //For each cell in the previous index
-            foreach (AICell cell in fringes[k-1]) {
+            foreach (AICell cell in fringes[k - 1]) {
                 //Expand it to visible neighbors
                 AICell[] neighbors = ValidNeighbors(cell);
                 //Add all visible neighbors to the visited set
@@ -112,12 +122,13 @@ public class AIController : MonoBehaviour {
                     if (!visited.Contains(n)) {
                         visited.Add(n);
                         fringes[k].Add(n);
+                        turns[turns.Count - 1].Add(n);
                     }
                 }
 
             }
         }
-        return visited;
+        return turns;
     }
 
     /// <summary>
