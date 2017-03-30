@@ -48,8 +48,14 @@ public class Monster : MonoBehaviour {
                 //Get the cell the player is standing on
                 playerCell = HexConst.CoordToHexIndex(playerPos);
                 curCell = HexConst.CoordToHexIndex(transform.position - new Vector3(0, 0.8f, 0));
+                //Update the AI controller.  Enemy is moving off of this cell
+                aiController[curCell[0], curCell[1], curCell[2]].hasEnemy = false;
                 //Try to path from this cell to the player's cell
                 pathToPlayer = aiController.PathBetween(playerCell, curCell);
+                //If there is no valid path, end turn
+                if (pathToPlayer == null) {
+                    return EndTurn();
+                }
                 curPInd = 0;
 
                 //There is a path
