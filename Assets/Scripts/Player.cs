@@ -117,13 +117,8 @@ public class Player : MonoBehaviour {
         if (levelController[q, r, h] != null) {
             //Get the neighbors of the current hex
             movable = aiController.ReachableInSteps(new int[] { q, r, h }, 2, actionPoints);
-            //Get an integer list of the neighboring coordinates
-            List<int[]> validMoves = new List<int[]>();
-            foreach (AICell cell in movable[0]) {
-                validMoves.Add(new int[] { cell.q, cell.r, cell.h });
-            }
             //Give all valid neighbors the neighbor material
-            uiController.ShowValidMoves(validMoves);
+            uiController.ShowValidMoves(movable);
             //Give the current hex the current hex material
             uiController[q, r, h].gameObject.GetComponent<Renderer>().material = currenthexmaterial;
         }
@@ -140,20 +135,22 @@ public class Player : MonoBehaviour {
 				if (hitObj != null) {
 					//get the selected cell
 					AICell lookedCell = aiController [hitObj.q, hitObj.r, hitObj.h];
-					foreach (AICell m in movable[0]) {
-						if (lookedCell.Equals (m) && !lookedCell.Equals (aiController [q, r, h])) {
-							//set the material
-							hitObj.gameObject.GetComponent<Renderer> ().material = highlightMaterial;
-							//If the player clicks, move them there and end movement
-							if (Input.GetMouseButtonUp (0)) {
-								transform.parent.transform.position = levelController [hitObj.q, hitObj.r, hitObj.h].centerPos;
-								actionPoints -= 1;
-								uiController.ClearCells ();
-								uiController.setVisibility (false);
-								return true;
-							}
-						}
-					}
+                    for (int i = 0; i < movable.Count; i++) {
+                        foreach (AICell m in movable[i]) {
+                            if (lookedCell.Equals(m) && !lookedCell.Equals(aiController[q, r, h])) {
+                                //set the material
+                                hitObj.gameObject.GetComponent<Renderer>().material = highlightMaterial;
+                                //If the player clicks, move them there and end movement
+                                if (Input.GetMouseButtonUp(0)) {
+                                    transform.parent.transform.position = levelController[hitObj.q, hitObj.r, hitObj.h].centerPos;
+                                    actionPoints -= i+1;
+                                    uiController.ClearCells();
+                                    uiController.setVisibility(false);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
 				}
 			}
 		} 

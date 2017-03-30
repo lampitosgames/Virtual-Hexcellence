@@ -17,7 +17,9 @@ public class UIController : MonoBehaviour {
 
     //Materials for hexes
     public Material defaultHexMaterial;
-    public Material neighborhexmaterial;
+    public Material possibleMoveMat1;
+    public Material possibleMoveMat2;
+    public Material possibleMoveMat3;
     public Material highlightMaterial;
 
     void Start(){
@@ -55,9 +57,19 @@ public class UIController : MonoBehaviour {
 		newHologramCell.transform.SetParent(gameObject.transform);
 	}
 
-    public void ShowValidMoves(List<int[]> hexCells) {
-        foreach (int[] coords in hexCells) {
-            uiGrid[coords[0], coords[1], coords[2]].gameObject.GetComponent<Renderer>().material = neighborhexmaterial;
+    public void ShowValidMoves(List<List<AICell>> hexCells) {
+        Material matToUse;
+        for (int i = 0; i < hexCells.Count; i++) {
+            foreach (AICell coords in hexCells[i]) {
+                if (i == 0) {
+                    matToUse = possibleMoveMat1;
+                } else if (i == 1) {
+                    matToUse = possibleMoveMat2;
+                } else {
+                    matToUse = possibleMoveMat3;
+                }
+                uiGrid[coords.q, coords.r, coords.h].gameObject.GetComponent<Renderer>().material = matToUse;
+            }
         }
     }
 
