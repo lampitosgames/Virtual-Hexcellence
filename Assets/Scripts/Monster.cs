@@ -10,8 +10,13 @@ public class Monster : MonoBehaviour {
     GameObject player;
     //AI Controller reference
     AIController aiController;
+    //Level Controller reference
+    LevelController levelController;
     //Current cell of the player, 
     int[] curCell = null, playerCell = new int[] { 0, 0, 0 };
+
+    //Attack material
+    public Material attackMaterial;
 
     //Store path from start to player location
     List<int[]> pathToPlayer = null;
@@ -31,7 +36,8 @@ public class Monster : MonoBehaviour {
 		player = GameObject.FindGameObjectWithTag("Player");
         aiController = GameObject.Find("AIController").GetComponent<AIController>() as AIController;
         aiController.monsters.Add(this);
-	}
+        levelController = GameObject.Find("LevelController").GetComponent<LevelController>() as LevelController;
+    }
 
     /// <summary>
     /// Call this every step for the monster to take it's turn.
@@ -40,7 +46,6 @@ public class Monster : MonoBehaviour {
     /// <returns>turn is over?</returns>
     public bool TakeTurn() {
         if (this.actionPoints > 0) {
-			print ("Monster taking turn");
             //If there is not a current path to the player
             if (pathToPlayer == null) {
                 //Get the position of the player's feet
@@ -69,6 +74,8 @@ public class Monster : MonoBehaviour {
             } else if (pathToPlayer.Count == 2) {
                 //TODO: Attack player
                 Debug.Log("ATTACKING PLAYER");
+                levelController.EndGame(false);
+                gameObject.GetComponent<Renderer>().material = attackMaterial;
                 pathToPlayer = null;
                 actionPoints -= 1;
             } else {

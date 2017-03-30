@@ -87,7 +87,8 @@ public class Player : MonoBehaviour {
     /// </summary>
     void OnGUI() {
         //Make a new background box
-        GUI.Box(new Rect(10, 10, 180, 90), "Actions: " + this.actionPoints);
+        GUI.skin.label.fontSize = 12;
+        GUI.Box(new Rect(10, 10, 200, 100), "Actions: " + this.actionPoints);
         GUI.Label(new Rect(20, 40, 120, 20), "Press 'm' to move");
         GUI.Label(new Rect(20, 60, 120, 20), "Press 'up' to scale map");
         GUI.Label(new Rect(20, 80, 120, 20), "Click on the destination hex");
@@ -143,6 +144,10 @@ public class Player : MonoBehaviour {
                                 //If the player clicks, move them there and end movement
                                 if (Input.GetMouseButtonUp(0)) {
                                     transform.parent.transform.position = levelController[hitObj.q, hitObj.r, hitObj.h].centerPos;
+                                    if (levelController[hitObj.q, hitObj.r, hitObj.h].hasGoal) {
+                                        levelController.numOfGoals -= 1;
+                                        levelController[hitObj.q, hitObj.r, hitObj.h].goal.GetComponent<Renderer>().enabled = false;
+                                    }
                                     actionPoints -= i+1;
                                     uiController.ClearCells();
                                     uiController.setVisibility(false);

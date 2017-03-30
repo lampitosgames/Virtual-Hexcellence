@@ -12,6 +12,8 @@ using UnityEngine;
 public class HexCellData : HexCell {
     //Reference to the cell's game object
     public GameObject hexCellObject;
+    public GameObject goal;
+    public bool hasGoal;
 
     /// <summary>
     /// Constructor
