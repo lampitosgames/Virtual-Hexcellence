@@ -55,6 +55,10 @@ public class AIController : MonoBehaviour {
 
         //Loop through all possible neighbors
         foreach (AICell n in neighbors) {
+            //If the neighbor has a unit, don't bother checking if it is a valid move
+            if (n.hasEnemy) {
+                continue;
+            }
             //Get the vector that points to the edge of the hex in the direction of the neighbor
             Vector3 toEdge = (n.centerPos - cell.centerPos) / 2;
 

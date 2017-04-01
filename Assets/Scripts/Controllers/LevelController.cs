@@ -17,6 +17,12 @@ public class LevelController : MonoBehaviour {
     public Player player;
     bool playerTurn = true;
 
+    //Goal-related variables
+    public int numOfGoals = 0;
+    public List<int[]> goalHexes = new List<int[]>();
+    bool win = false;
+    bool lose = false;
+
     /// <summary>
     /// Allow getting/setting for the level grid using [q,r,h]
     /// </summary>
@@ -39,19 +45,24 @@ public class LevelController : MonoBehaviour {
 	}
 
     void Update() {
-        //If it is the player turn
-        if (playerTurn) {
-            //Step through player's turn.  This will return true when the player's turn is over
-            if (player.TakeTurn()) {
-                //Switch to monster's turn after the player turn
-                this.StartMonsterTurn();
+        if (!this.win && !this.lose) {
+            if (numOfGoals <= 0) {
+                this.EndGame(true);
             }
-        //Not player turn
-        } else {
-            //If the monster turn is over
-            if (aiController.MonsterTurn()) {
-                //Switch to player turn
-                this.StartPlayerTurn();
+            //If it is the player turn
+            if (playerTurn) {
+                //Step through player's turn.  This will return true when the player's turn is over
+                if (player.TakeTurn()) {
+                    //Switch to monster's turn after the player turn
+                    this.StartMonsterTurn();
+                }
+                //Not player turn
+            } else {
+                //If the monster turn is over
+                if (aiController.MonsterTurn()) {
+                    //Switch to player turn
+                    this.StartPlayerTurn();
+                }
             }
         }
     }
@@ -69,6 +80,23 @@ public class LevelController : MonoBehaviour {
         player.actionPoints = 3;
         player.playerMoving = false;
         this.playerTurn = true;
+    }
+
+    public void EndGame(bool playerWon) {
+        if (playerWon) {
+            this.win = true;
+        } else {
+            this.lose = true;
+        }
+    }
+
+    void OnGUI() {
+        GUI.skin.label.fontSize = 72;
+        if (this.win) {
+            GUI.Label(new Rect(Screen.width/2 - 250, Screen.height/2 - 250, 500, 500), "You Win!");
+        } else if (this.lose) {
+            GUI.Label(new Rect(Screen.width / 2 - 250, Screen.height / 2 - 250, 500, 500), "You Lose D:");
+        }
     }
 
     /// <summary>
@@ -94,5 +122,11 @@ public class LevelController : MonoBehaviour {
 		uiController.addCellToUIMap(uiCell);
         //Set the scale of the object to equal the world hex it represents
         uiController[q, r, h].setModelScale(cellObj.GetComponent<HexCellObj>().modelScale);
+    }
+
+    public void AddGoal(int q, int r, int h, GameObject goalObj) {
+        this.levelGrid[q, r, h].hasGoal = true;
+        this.levelGrid[q, r, h].goal = goalObj;
+        this.numOfGoals += 1;
     }
 }

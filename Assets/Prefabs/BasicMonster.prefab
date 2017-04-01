@@ -92,6 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc05fcb0a0813cf43ac87759c8883fdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackMaterial: {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
   aggroRadius: 10
   movementSpeed: 2
   realtimeSpeed: 4
