@@ -15,6 +15,7 @@ public class Player : MonoBehaviour {
     LevelController levelController;
     AIController aiController;
     UIController uiController;
+    InventoryController inventoryController;
     //Relevant Gameobjects
     GameObject playerCamera;
 
@@ -33,6 +34,7 @@ public class Player : MonoBehaviour {
         levelController.player = this;
         aiController = GameObject.Find("AIController").GetComponent<AIController>();
         uiController = GameObject.Find("UIController").GetComponent<UIController>();
+        inventoryController = GameObject.Find("InventoryController").GetComponent<InventoryController>();
 		playerCamera = GetComponentInChildren<Camera> ().gameObject;
 		if (GameObject.Find ("FPSController") == null) {
 			vrActive = true;
@@ -87,10 +89,12 @@ public class Player : MonoBehaviour {
     /// </summary>
     void OnGUI() {
         //Make a new background box
-        GUI.Box(new Rect(10, 10, 180, 90), "Actions: " + this.actionPoints);
-        GUI.Label(new Rect(20, 40, 120, 20), "Press 'm' to move");
-        GUI.Label(new Rect(20, 60, 120, 20), "Press 'up' to scale map");
-        GUI.Label(new Rect(20, 80, 120, 20), "Click on the destination hex");
+        GUI.Box(new Rect(10, 10, 180, 150), "Actions: " + this.actionPoints);
+        GUI.Label(new Rect(20, 40, 180, 20), "Press 'm' to move");
+        GUI.Label(new Rect(20, 60, 180, 20), "Press 'up' to scale map");
+        GUI.Label(new Rect(20, 80, 180, 20), "Click on the destination hex");
+        GUI.Label(new Rect(20, 100, 180, 20), "Press 'e' to pick up nearby items.");
+        GUI.Label(new Rect(20, 120, 180, 20), "Press 'x' to drop an item from your inventory.");
     }
 
     /// <summary>

@@ -63,7 +63,7 @@ public class InventoryController : MonoBehaviour {
         }
 	}
 
-    //Check to see if there are any Items nearby.
+    //Check to see if there are any Items nearby and add them if any are present.
     //Return whether there are Items nearby
     List<GameObject> ItemCheck()
     {
