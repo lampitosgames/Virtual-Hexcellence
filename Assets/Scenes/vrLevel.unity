@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028377, g: 0.22571409, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.16788329, g: 0.21073541, b: 0.2899403, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -2077,6 +2077,50 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: efea1913d91bcdf4aa4cdf31213f6bf1, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &302600547
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 302600548}
+  - component: {fileID: 302600549}
+  m_Layer: 0
+  m_Name: InventoryController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &302600548
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 302600547}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 783494906}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &302600549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 302600547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c9c28c629ef9ef4ca374d7a64ce83e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSearchRadius: 2
+  collectKey: 101
+  dropKey: 120
+  itemsContained: []
 --- !u!4 &314808446 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4150616748318214, guid: efea1913d91bcdf4aa4cdf31213f6bf1,
@@ -5568,6 +5612,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 87f0668a52c637248861bbbe3c7402f4, type: 2}
   m_IsPrefabParent: 0
+--- !u!4 &783494906 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4138828729286084, guid: 87f0668a52c637248861bbbe3c7402f4,
+    type: 2}
+  m_PrefabInternal: {fileID: 783494905}
 --- !u!1001 &785337613
 Prefab:
   m_ObjectHideFlags: 0
