@@ -20,7 +20,7 @@ public class Player : MonoBehaviour {
     GameObject playerCamera;
 
     //State variables
-    public List<List<AICell>> movable = new List<List<AICell>>();
+    public List<List<PathCell>> movable = new List<List<PathCell>>();
     public bool playerMoving = false;
     public int actionPoints = 3;
 	public bool vrActive = false;
@@ -136,12 +136,13 @@ public class Player : MonoBehaviour {
 			if (Physics.Raycast (playerCamera.transform.position, lineOfSight, out hit)) {
 				//Get the UI hex cell the player is looking at
 				UICellObj hitObj = hit.transform.gameObject.GetComponent<UICellObj> () as UICellObj;
+
 				//if it isn't null
 				if (hitObj != null) {
 					//get the selected cell
-					AICell lookedCell = aiController [hitObj.q, hitObj.r, hitObj.h];
+					PathCell lookedCell = aiController [hitObj.q, hitObj.r, hitObj.h];
                     for (int i = 0; i < movable.Count; i++) {
-                        foreach (AICell m in movable[i]) {
+                        foreach (PathCell m in movable[i]) {
                             if (lookedCell.Equals(m) && !lookedCell.Equals(aiController[q, r, h])) {
                                 //set the material
                                 hitObj.gameObject.GetComponent<Renderer>().material = highlightMaterial;

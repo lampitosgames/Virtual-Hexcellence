@@ -1035,8 +1035,11 @@ MonoBehaviour:
     type: 2}
   playerFigurePrefab: {fileID: 1948796379129800, guid: e9c391004ac69014faa22bf4f58d0ef4,
     type: 2}
+  uiScale: 0.02
   defaultHexMaterial: {fileID: 2100000, guid: 1655da43c2590644e913d5d976180f2b, type: 2}
-  neighborhexmaterial: {fileID: 2100000, guid: 3e70e3e16dd2be440a77ed4f5e8ab162, type: 2}
+  possibleMoveMat1: {fileID: 2100000, guid: aea90284173e984459c9c58f4e515040, type: 2}
+  possibleMoveMat2: {fileID: 2100000, guid: a4c3d9c06e6dcf3419c5c9cac1fd918a, type: 2}
+  possibleMoveMat3: {fileID: 2100000, guid: 3e70e3e16dd2be440a77ed4f5e8ab162, type: 2}
   highlightMaterial: {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
 --- !u!1001 &234359246
 Prefab:
