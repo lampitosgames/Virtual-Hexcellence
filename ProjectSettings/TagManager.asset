@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Item
+  - FxTemporaire
+  - projectile
+  - TeleportIgnore
+  - Deadly
+  - Target
   layers:
   - Default
   - TransparentFX
