@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 33917553114891652}
   m_Layer: 0
   m_Name: HexCellObj_Small
-  m_TagString: Untagged
+  m_TagString: Target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -37,8 +37,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1470478331551354}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.465, y: 0, z: 6.001556}
-  m_LocalScale: {x: 0.025, y: 0.025, z: 0.025}
+  m_LocalPosition: {x: -14.805, y: -0.5868362, z: 3.819172}
+  m_LocalScale: {x: 0.024999999, y: 0.10717027, z: 0.024999999}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -56,7 +56,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 1655da43c2590644e913d5d976180f2b, type: 2}
+  - {fileID: 2100000, guid: b3af4595d46b88f4eb3190eb7a7cb8db, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -107,6 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modelHeight: 20.514015
+  modelScale: 0
   q: 0
   r: 0
   h: 0
