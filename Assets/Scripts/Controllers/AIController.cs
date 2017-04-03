@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public class AIController : MonoBehaviour {
     //The path grid holds a list of AICells. These cells have useful information for pathfinding and AI awareness.
-    public HexGrid<AICell> pathGrid = new HexGrid<AICell>();
+    public HexGrid<PathCell> pathGrid = new HexGrid<PathCell>();
 
     //A list holding all active monsters
     public List<Monster> monsters = new List<Monster>();
@@ -20,7 +20,7 @@ public class AIController : MonoBehaviour {
     /// <param name="q">column</param>
     /// <param name="r">row</param>
     /// <param name="h">height</param>
-    public AICell this[int q, int r, int h] {
+    public PathCell this[int q, int r, int h] {
         get { return this.pathGrid[q, r, h]; }
         set { this.pathGrid[q, r, h] = value; }
     }
@@ -48,13 +48,13 @@ public class AIController : MonoBehaviour {
     /// <param name="cell">Center AICell</param>
     /// <param name="searchHeight">How high (up or down) does the algorithm search for neighbors?  -1 is unbounded</param>
     /// <returns></returns>
-    public AICell[] ValidNeighbors(AICell cell, int searchHeight = 1) {
+    public PathCell[] ValidNeighbors(PathCell cell, int searchHeight = 1) {
         //Get neighbors normally
-        AICell[] neighbors = (AICell[])pathGrid.GetRadius(cell.q, cell.r, cell.h, 1, searchHeight);
-        List<AICell> returnNeighbors = new List<AICell>();
+        PathCell[] neighbors = (PathCell[])pathGrid.GetRadius(cell.q, cell.r, cell.h, 1, searchHeight);
+        List<PathCell> returnNeighbors = new List<PathCell>();
 
         //Loop through all possible neighbors
-        foreach (AICell n in neighbors) {
+        foreach (PathCell n in neighbors) {
             //If the neighbor has a unit, don't bother checking if it is a valid move
             if (n.hasEnemy) {
                 continue;
@@ -87,9 +87,9 @@ public class AIController : MonoBehaviour {
     /// <param name="stepsPerTurn">number of steps in each turn</param>
     /// <param name="turnsToSearch">how many turns forward to search</param>
     /// <returns>List of turns. index 0 is all AICells reachable on turn 1, index 1 is all AICells reachable on turn two, etc.</returns>
-    public List<List<AICell>> ReachableInSteps(int[] center, int stepsPerTurn, int turnsToSearch) {
+    public List<List<PathCell>> ReachableInSteps(int[] center, int stepsPerTurn, int turnsToSearch) {
         //Store a list of cells that are reachable within the number of steps
-        List<AICell> visited = new List<AICell>();
+        List<PathCell> visited = new List<PathCell>();
         //Add the start to the visited list
         visited.Add(pathGrid[center[0], center[1], center[2]]);
 
@@ -98,31 +98,31 @@ public class AIController : MonoBehaviour {
         //Index 1 contains all cells reachable in 1 step
         //Index 2 contains all cells reachable in 2 steps
         //Etc.  it might be helpful to return the fringes in the future for display purposes
-        List<List<AICell>> fringes = new List<List<AICell>>();
+        List<List<PathCell>> fringes = new List<List<PathCell>>();
         //Add the start cell at index 0
-        fringes.Add(new List<AICell>());
+        fringes.Add(new List<PathCell>());
         fringes[0].Add(pathGrid[center[0], center[1], center[2]]);
 
         //The turn list.  Every list inside is a single turn's possible movement
-        List<List<AICell>> turns = new List<List<AICell>>();
+        List<List<PathCell>> turns = new List<List<PathCell>>();
 
         //For every possible step
         for (int k = 1; k <= stepsPerTurn*turnsToSearch; k++) {
             //Create a list for this index
-            fringes.Add(new List<AICell>());
+            fringes.Add(new List<PathCell>());
 
             //If this k is searching for the next turn, add a new list to the turns
             if ((k-1) % stepsPerTurn == 0) {
-                turns.Add(new List<AICell>());
+                turns.Add(new List<PathCell>());
             }
 
             //For each cell in the previous index
-            foreach (AICell cell in fringes[k - 1]) {
+            foreach (PathCell cell in fringes[k - 1]) {
                 //Expand it to visible neighbors
-                AICell[] neighbors = ValidNeighbors(cell);
+                PathCell[] neighbors = ValidNeighbors(cell);
                 //Add all visible neighbors to the visited set
                 //Also add them to the current fringe index for use in the next iteration
-                foreach (AICell n in neighbors) {
+                foreach (PathCell n in neighbors) {
                     if (!visited.Contains(n)) {
                         visited.Add(n);
                         fringes[k].Add(n);
@@ -144,14 +144,14 @@ public class AIController : MonoBehaviour {
     public List<int[]> PathBetween(int[] startCoords, int[] endCoords)
     {
         //Get references to the start and end path objects
-        AICell cStart = pathGrid[startCoords[0], startCoords[1], startCoords[2]];
-        AICell cEnd = pathGrid[endCoords[0], endCoords[1], endCoords[2]];
+        PathCell cStart = pathGrid[startCoords[0], startCoords[1], startCoords[2]];
+        PathCell cEnd = pathGrid[endCoords[0], endCoords[1], endCoords[2]];
         //If the start is the end, there is no path
         if (cStart == null || cEnd == null) { return null; }
 
         //Initialize the open and closed sets.  Sets instead of lists because they need to be unique.
-        HashSet<AICell> closed = new HashSet<AICell>();
-        HashSet<AICell> open = new HashSet<AICell>();
+        HashSet<PathCell> closed = new HashSet<PathCell>();
+        HashSet<PathCell> open = new HashSet<PathCell>();
 
         //Initialize the start node's values
         cStart.g = DistBetween(cStart, cEnd);
@@ -161,8 +161,8 @@ public class AIController : MonoBehaviour {
         while (open.Count > 0)
         {
             //Get the lowest g-valued cell;
-            AICell cCell = null;
-            foreach (AICell cell in open)
+            PathCell cCell = null;
+            foreach (PathCell cell in open)
             {
                 if (cCell == null) { cCell = cell; continue; }
                 if (cCell.g > cell.g)
@@ -181,7 +181,7 @@ public class AIController : MonoBehaviour {
             closed.Add(cCell);
 
             //Loop through the valid neighbors of cCell
-            foreach (AICell nCell in ValidNeighbors(cCell))
+            foreach (PathCell nCell in ValidNeighbors(cCell))
             {
                 //If the neighbor node is already in the closed set, don't evaluate
                 if (closed.Contains(nCell)) { continue; }
@@ -220,7 +220,7 @@ public class AIController : MonoBehaviour {
     /// <param name="cell1">Start cell</param>
     /// <param name="cell2">End cell</param>
     /// <returns>Integer cell distance</returns>
-    public int DistBetween(AICell cell1, AICell cell2) {
+    public int DistBetween(PathCell cell1, PathCell cell2) {
         //Convert the axial coordinates to cube coordinates for both cells
         int[] ac = HexConst.AxialToCube(cell1.q, cell1.r, cell1.h);
         int[] bc = HexConst.AxialToCube(cell2.q, cell2.r, cell2.h);
@@ -234,13 +234,13 @@ public class AIController : MonoBehaviour {
     /// <param name="endCell">End of path</param>
     /// <param name="startCell">Start of path</param>
     /// <returns>A list of integer axial coordinate arrays that form a path</returns>
-    private List<int[]> ReconstructPath(AICell endCell, AICell startCell) {
+    private List<int[]> ReconstructPath(PathCell endCell, PathCell startCell) {
         //Create the return list
         List<int[]> returnList = new List<int[]>();
         //If the end cell is the same as the start cell, return an empty list (no path)
         if (endCell.Equals(startCell)) { return returnList; }
         //Create a temporary cell
-        AICell temp = endCell;
+        PathCell temp = endCell;
         
         do {
             //Add temp to the return list

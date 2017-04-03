@@ -15,11 +15,12 @@ public class Player : MonoBehaviour {
     LevelController levelController;
     AIController aiController;
     UIController uiController;
+    InventoryController inventoryController;
     //Relevant Gameobjects
     GameObject playerCamera;
 
     //State variables
-    public List<List<AICell>> movable = new List<List<AICell>>();
+    public List<List<PathCell>> movable = new List<List<PathCell>>();
     public bool playerMoving = false;
     public int actionPoints = 3;
 	public bool vrActive = false;
@@ -33,6 +34,7 @@ public class Player : MonoBehaviour {
         levelController.player = this;
         aiController = GameObject.Find("AIController").GetComponent<AIController>();
         uiController = GameObject.Find("UIController").GetComponent<UIController>();
+        inventoryController = GameObject.Find("InventoryController").GetComponent<InventoryController>();
 		playerCamera = GetComponentInChildren<Camera> ().gameObject;
 		if (GameObject.Find ("FPSController") == null) {
 			vrActive = true;
@@ -88,10 +90,12 @@ public class Player : MonoBehaviour {
     void OnGUI() {
         //Make a new background box
         GUI.skin.label.fontSize = 12;
-        GUI.Box(new Rect(10, 10, 200, 100), "Actions: " + this.actionPoints);
-        GUI.Label(new Rect(20, 40, 120, 20), "Press 'm' to move");
-        GUI.Label(new Rect(20, 60, 120, 20), "Press 'up' to scale map");
-        GUI.Label(new Rect(20, 80, 120, 20), "Click on the destination hex");
+        GUI.Box(new Rect(10, 10, 180, 150), "Actions: " + this.actionPoints);
+        GUI.Label(new Rect(20, 40, 180, 20), "Press 'm' to move");
+        GUI.Label(new Rect(20, 60, 180, 20), "Press 'up' to scale map");
+        GUI.Label(new Rect(20, 80, 180, 20), "Click on the destination hex");
+        GUI.Label(new Rect(20, 100, 180, 20), "Press 'e' to pick up nearby items.");
+        GUI.Label(new Rect(20, 120, 180, 20), "Press 'x' to drop an item from your inventory.");
     }
 
     /// <summary>
@@ -132,12 +136,13 @@ public class Player : MonoBehaviour {
 			if (Physics.Raycast (playerCamera.transform.position, lineOfSight, out hit)) {
 				//Get the UI hex cell the player is looking at
 				UICellObj hitObj = hit.transform.gameObject.GetComponent<UICellObj> () as UICellObj;
+
 				//if it isn't null
 				if (hitObj != null) {
 					//get the selected cell
-					AICell lookedCell = aiController [hitObj.q, hitObj.r, hitObj.h];
+					PathCell lookedCell = aiController [hitObj.q, hitObj.r, hitObj.h];
                     for (int i = 0; i < movable.Count; i++) {
-                        foreach (AICell m in movable[i]) {
+                        foreach (PathCell m in movable[i]) {
                             if (lookedCell.Equals(m) && !lookedCell.Equals(aiController[q, r, h])) {
                                 //set the material
                                 hitObj.gameObject.GetComponent<Renderer>().material = highlightMaterial;

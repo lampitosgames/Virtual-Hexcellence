@@ -10,8 +10,8 @@ public class LevelController : MonoBehaviour {
     //The level grid holds HexCellData objects, the meat of cell states
     public HexGrid<HexCellData> levelGrid = new HexGrid<HexCellData>();
     //A reference to the AIController
-    public AIController aiController;
-	public UIController uiController;
+    public AIController aiController; //Handles AI and pathfinding
+	public UIController uiController; //Handles UI interactions
 
     //A reference to the player
     public Player player;
@@ -41,7 +41,7 @@ public class LevelController : MonoBehaviour {
 	void Awake() {
         //Get a reference to the AIController
         aiController = GameObject.Find("AIController").GetComponent<AIController>() as AIController;
-		uiController = GameObject.Find ("UIController").GetComponent<UIController> () as UIController;
+		uiController = GameObject.Find ("UIController").GetComponent<UIController>() as UIController;
 	}
 
     void Update() {
@@ -113,9 +113,9 @@ public class LevelController : MonoBehaviour {
         HexCellData newCell = new HexCellData(q, r, h, cellObj);
         levelGrid[q,r,h] = newCell;
 
-        //Create an ai hex object to go into the pathing grid
-        AICell aiCell = new AICell(q, r, h);
-        aiController[q,r,h] = aiCell;
+        //Create an pathing hex object to go into the pathing grid
+        PathCell pathCell = new PathCell(q, r, h);
+        aiController[q,r,h] = pathCell;
 
         //Create a UI cell object to go into the UI grid
 		UICell uiCell = new UICell(q,r,h);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Manages the palyer's UI
+/// Manages the player's UI
 /// </summary>
 public class UIController : MonoBehaviour {
 	//Assign the prefab in editor to spawn as minimap hex object
@@ -15,16 +15,19 @@ public class UIController : MonoBehaviour {
     int[] figurePositionHex;
 	LevelController levelController;
 
+    public float uiScale = 0.02f; //the scale of the minimap compared to the world map.
+
     //Materials for hexes
     public Material defaultHexMaterial;
     public Material possibleMoveMat1;
     public Material possibleMoveMat2;
     public Material possibleMoveMat3;
     public Material highlightMaterial;
-
+    
     void Start(){
 		levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
 		spawnPlayerFigure ();
+        scaleandReposition(); //properly scales down the UI grid.
         setVisibility(false);
 	}
 
@@ -57,10 +60,10 @@ public class UIController : MonoBehaviour {
 		newHologramCell.transform.SetParent(gameObject.transform);
 	}
 
-    public void ShowValidMoves(List<List<AICell>> hexCells) {
+    public void ShowValidMoves(List<List<PathCell>> hexCells) {
         Material matToUse;
         for (int i = 0; i < hexCells.Count; i++) {
-            foreach (AICell coords in hexCells[i]) {
+            foreach (PathCell coords in hexCells[i]) {
                 if (i == 0) {
                     matToUse = possibleMoveMat1;
                 } else if (i == 1) {
@@ -88,7 +91,8 @@ public class UIController : MonoBehaviour {
 			playerFigure.transform.SetParent(gameObject.transform);
             //Subtract the player position
             figurePositionHex = HexConst.CoordToHexIndex(new Vector3(playerFigure.transform.position.x - transform.parent.position.x, playerFigure.transform.position.y - transform.parent.position.y, playerFigure.transform.position.z - transform.parent.position.z));
-        } else{playerFigure.transform.position = this.transform.position;}
+        } else{playerFigure.transform.position = this.transform.position;
+        }
 	}
 
 
@@ -114,11 +118,11 @@ public class UIController : MonoBehaviour {
 	}
 
     /// <summary>
-    /// This is tomporary to test different scales and positions of the minimap
+    /// This is temporary to test different scales and positions of the minimap
     /// </summary>
     void Update(){
 		if(Input.GetKeyDown("up")){
-			scaleandReposition ();
+			//scaleandReposition (); //commented out because we only need to do this once at the beginning.
 		}
 		if(Input.GetKeyDown("b")){
 			setVisibility (true);
@@ -135,7 +139,7 @@ public class UIController : MonoBehaviour {
 	/// Rescale and move
 	/// </summary>
 	void scaleandReposition(){
-		transform.localScale = transform.localScale*0.02f;
+        transform.localScale = transform.localScale * uiScale;
 		transform.position = new Vector3 (0,1,0);
 		spawnPlayerFigure ();
 	}

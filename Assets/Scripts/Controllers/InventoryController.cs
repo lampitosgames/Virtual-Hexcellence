@@ -26,7 +26,7 @@ public class InventoryController : MonoBehaviour {
             List<GameObject> nearbyObjects = ItemCheck();
             if (nearbyObjects.Count > 0)
             {
-                Debug.Log("An item is nearby. Items collected: " + itemsContained.Count);
+                //Debug.Log("An item is nearby. Items collected: " + itemsContained.Count);
                 if (Input.GetKeyDown(collectKey))
                 {
                     for (int i = 0; i < nearbyObjects.Count; i++)
@@ -34,7 +34,7 @@ public class InventoryController : MonoBehaviour {
                         //if we have more than 12 items, the inventory is full
                         if (itemsContained.Count >= 12)
                         {
-                            Debug.Log("Inventory full.");
+                            //Debug.Log("Inventory full.");
                             i = nearbyObjects.Count;
                         }
                         AddItemToInventory(nearbyObjects[i]);
@@ -44,7 +44,7 @@ public class InventoryController : MonoBehaviour {
             }
             else
             {
-                Debug.Log("An item is not nearby. Items collected: " + itemsContained.Count);
+                //Debug.Log("An item is not nearby. Items collected: " + itemsContained.Count);
             }
         }
         else
@@ -57,13 +57,13 @@ public class InventoryController : MonoBehaviour {
                 }
                 else
                 {
-                    Debug.Log("Your inventory is already empty.");
+                    //Debug.Log("Your inventory is already empty.");
                 }
             }
         }
 	}
 
-    //Check to see if there are any Items nearby.
+    //Check to see if there are any Items nearby and add them if any are present.
     //Return whether there are Items nearby
     List<GameObject> ItemCheck()
     {
@@ -101,6 +101,6 @@ public class InventoryController : MonoBehaviour {
         temp.gameObject.transform.position = gameObject.transform.position+gameObject.transform.forward+gameObject.transform.right*Random.Range(-0.5f,0.5f);
         temp.SetActive(true);
         itemsContained.RemoveAt(index);
-        Debug.Log("Removed the item at "+index+" from inventory");
+        //Debug.Log("Removed the item at "+index+" from inventory");
     }
 }
