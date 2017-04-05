@@ -9,12 +9,15 @@ public class ControllerInput : MonoBehaviour {
 	SteamVR_TrackedObject trackedObj;
 	SteamVR_Controller.Device device;
 	Player player;
+    UIController uiCont;
 
 	// Use this for initialization
 	void Awake () {
 		trackedObj = GetComponent<SteamVR_TrackedObject> ();
 		player = GameObject.FindGameObjectWithTag ("Player").GetComponent<Player>();
-	}
+        uiCont = GameObject.Find("UIController").GetComponent<UIController>();
+
+    }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
@@ -28,6 +31,11 @@ public class ControllerInput : MonoBehaviour {
 				print ("UP");
 				player.onTouchpadUp();
 			}
+            else if(touchpad.x > 0.7f)
+            {
+                uiCont.toggleUserInterface();
+            }
 		}
+        
 	}
 }
