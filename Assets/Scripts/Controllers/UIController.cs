@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 /// <summary>
 /// Manages the player's UI
 /// </summary>
@@ -17,6 +17,7 @@ public class UIController : MonoBehaviour {
     private List<GameObject> uiMonsters;
     private List<int[]> uiMonsterHexIndeces;
     private Animator userIntefaceAnimator;
+    public List<GameObject> vrControllers;
 
     private bool expandUI = false;
 
@@ -29,14 +30,15 @@ public class UIController : MonoBehaviour {
     public Material possibleMoveMat3;
     public Material highlightMaterial;
 
-    
+    private Dictionary<string, GameObject> userInterfaceElements;
     void Start(){
 		levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
-		spawnPlayerFigure ();
+        vrControllers = new List<GameObject>();
+        spawnPlayerFigure ();
         scaleandReposition(); //properly scales down the UI grid.
         setVisibility(false);
         userIntefaceAnimator = GameObject.Find("UserInterface").GetComponent<Animator>();
-
+        SetupUserInterfaceDictionary();
     }
 
     /// <summary>
@@ -48,6 +50,10 @@ public class UIController : MonoBehaviour {
     public UICell this[int q, int r, int h] {
         get { return this.uiGrid[q, r, h]; }
         set { this.uiGrid[q, r, h] = value; }
+    }
+    public void AssignControllers(GameObject controller)
+    {
+        vrControllers.Add(controller);
     }
 
     /// <summary>
@@ -212,7 +218,47 @@ public class UIController : MonoBehaviour {
         }
     }
 
-
+    private void SetupUserInterfaceDictionary()
+    {
+        userInterfaceElements = new Dictionary<string, GameObject>();
+        userInterfaceElements.Add("itemCollected", GameObject.Find("ItemCollectedPrompt") as GameObject);
+        userInterfaceElements.Add("inventory", GameObject.Find("InventoryUI") as GameObject);
+        HideInterfaces();
+    }
+    private void HideInterfaces()
+    {
+        foreach (KeyValuePair<string, GameObject> io in userInterfaceElements)
+        {
+            io.Value.SetActive(false);
+        }
+        toggleInterfaces("inventory");
+    }
+    public void toggleInterfaces(string interfaceObj)
+    {
+        foreach (KeyValuePair<string, GameObject> io in userInterfaceElements)
+        {
+            if(io.Key == interfaceObj)
+            {
+                io.Value.SetActive(true);
+            }
+            else
+            {
+                io.Value.SetActive(false);
+            }
+        }
+    }
+    public void DisplayUserInterface(bool display)
+    {
+        if(display)
+        {
+            expandUI = true;
+        }
+        else
+        {
+            expandUI = false;
+        }
+        userIntefaceAnimator.SetBool("ExpandUI", expandUI);
+    }
     public void toggleUserInterface()
     {
         expandUI = !expandUI;

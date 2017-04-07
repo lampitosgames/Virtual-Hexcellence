@@ -15,23 +15,33 @@ public class InventoryController : MonoBehaviour
     public List<GameObject> uiItems;
     public GameObject userInterface;
     private GameObject player;
-    private GameObject vrController;
     GameObject inventoryUI;
+
+    public GameObject GrabbedObject;
+    public GameObject GrabbedObjectController;
+
+    public Material uiSeeThroughMaterial;
+
+    private List<GameObject> vrControllers;
+
+    UIController uiCont;
     // Use this for initialization
     void Start()
     {
+        uiCont = GameObject.Find("UIController").GetComponent<UIController>();
         inventoryUI = GameObject.Find("InventoryUI");
         player = GameObject.Find("Camera (eye)");
         SetupItemPickupUI();
         BuildInventoryUI();
-    }
-    void Awake()
-    {
-        vrController = GameObject.Find("Controller (right)");
+        
     }
     // Update is called once per frame
     void Update()
     {
+        if(vrControllers == null && uiCont.vrControllers != null)
+        {
+            vrControllers = uiCont.vrControllers;
+        }
         //Check to see if we're dropping any items; if we are then we probably going to not want to pick them back up again immediately
         if (!Input.GetButtonUp("DropItem"))
         {
@@ -79,6 +89,8 @@ public class InventoryController : MonoBehaviour
         InventoryUIMovement(); //Needs work
     }
 
+    
+
     //OUTDATED, DEPRECIATED
     //Check to see if there are any Items nearby.
     //Return whether there are Items nearby
@@ -114,9 +126,8 @@ public class InventoryController : MonoBehaviour
     //New system of collecting items, grab an object in 3D, hit the collect button then it gets added to inventory
     public void CollectItem(GameObject item)
     {
-        ParticleSystem.Destroy(item.transform.FindChild("ItemParticle").gameObject);
         Sprite icon = item.transform.FindChild("ItemCollectUI").GetComponent<ItemUI>().ReturnSpriteImage();
-        Destroy(item.transform.FindChild("ItemParticle").gameObject);
+        //Destroy(item.transform.FindChild("ItemParticle").gameObject);
         AddItemToInventory(item, icon);
         item.transform.DetachChildren();
         Destroy(item);
@@ -146,8 +157,8 @@ public class InventoryController : MonoBehaviour
     //Build out the UI elements required to fill the inventory, right now spawning on canvas at 0,0
     void AddUIElementToInventory(GameObject item, Sprite icon)
     {
-        string itemName = item.transform.Find("ItemName").GetComponent<Text>().text;
-        string itemDesc = item.transform.Find("ItemDescription").GetComponent<Text>().text;
+        string itemName = item.transform.Find("ItemCollectUI").FindChild("ItemName").GetComponent<Text>().text;
+        string itemDesc = item.transform.Find("ItemCollectUI").FindChild("ItemDescription").GetComponent<Text>().text;
 
         GameObject inventoryItemParent = new GameObject();
         GameObject inventoryItemText = new GameObject();
@@ -166,6 +177,7 @@ public class InventoryController : MonoBehaviour
         inventoryText.alignment = TextAnchor.MiddleCenter;
         inventoryText.color = Color.white;
         inventoryText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+        inventoryText.material = uiSeeThroughMaterial;
         RectTransform textTrans = inventoryItemText.GetComponent<RectTransform>();
         textTrans.sizeDelta = new Vector2(100, 30);
 
@@ -174,6 +186,7 @@ public class InventoryController : MonoBehaviour
         inventoryItemImage.name = "ItemImg";
         Image invImg = inventoryItemImage.GetComponent<Image>();
         invImg.sprite = icon;
+        invImg.material = uiSeeThroughMaterial;
 
         GameObject newItemParent = (GameObject)Instantiate(inventoryItemParent, new Vector3(0, 0, 0), Quaternion.identity);
         GameObject newItemText = (GameObject)Instantiate(inventoryItemText, new Vector3(0, 0, 0), Quaternion.identity);
@@ -186,7 +199,7 @@ public class InventoryController : MonoBehaviour
         newItemText.name = inventoryItemText.name;
         newItemText.transform.SetParent(newItemParent.transform, false);
         newItemParent.name = inventoryItemParent.name;
-        newItemParent.transform.SetParent(inventoryUI.transform, false);
+        newItemParent.transform.SetParent(inventoryUI.transform.FindChild("InventoryPanel").transform, false);
         newItemParent.tag = "UI_Item";
 
         RectTransform parentItemTrans = newItemParent.GetComponent<RectTransform>();
@@ -220,13 +233,15 @@ public class InventoryController : MonoBehaviour
             /*Vector3 forward = vrController.transform.TransformDirection(vrController.transform.forward);
             Vector3 toOther = inventoryUI.transform.position - vrController.transform.position;
             float dotProd = Vector3.Dot(forward, toOther);*/
-            Vector3 heading = vrController.transform.forward - vrController.transform.position;
+            Vector3 heading = vrControllers[0].transform.forward;
             Vector3 projection = Vector3.Project(heading, inventoryUI.transform.position);
-            Debug.Log("MOVEMENT");
+            Vector3 center = inventoryUI.transform.position;
+            Vector3 direction = center - projection; 
+            //projection = new Vector3(projection.x * Time.deltaTime, projection.y * Time.deltaTime, 0);
             Debug.Log(projection.x + " || " + projection.y + " || " + projection.z);
             foreach (GameObject uiElement in uiItems)
             {
-                uiElement.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                //uiElement.GetComponent<RectTransform>().Translate(projection);
             }
         }
     }
