@@ -1,19 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 /// <summary>
-/// Manages the player's UI (preferably the minimap UI.)
+/// Manages the player's UI
 /// </summary>
 public class UIController : MonoBehaviour {
 	//Assign the prefab in editor to spawn as minimap hex object
 	public GameObject uiGridPrefab;
 	public GameObject playerFigurePrefab;
     //uiGrid holds all UICells which relate to each hex on the map
-    public HexGrid<UICell> minimap = new HexGrid<UICell>();
+    public HexGrid<UICell> uiGrid = new HexGrid<UICell>();
 	private GameObject playerFigure;
     int[] figurePositionHex;
 	LevelController levelController;
+    private List<GameObject> uiMonsters;
+    private List<int[]> uiMonsterHexIndeces;
+    private Animator userIntefaceAnimator;
+    public List<GameObject> vrControllers;
+
+    private bool expandUI = false;
 
     public float uiScale = 0.02f; //the scale of the minimap compared to the world map.
 
@@ -23,13 +29,17 @@ public class UIController : MonoBehaviour {
     public Material possibleMoveMat2;
     public Material possibleMoveMat3;
     public Material highlightMaterial;
-    
+
+    private Dictionary<string, GameObject> userInterfaceElements;
     void Start(){
 		levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
-		spawnPlayerFigure();
+        vrControllers = new List<GameObject>();
+        spawnPlayerFigure ();
         scaleandReposition(); //properly scales down the UI grid.
         setVisibility(false);
-	}
+        userIntefaceAnimator = GameObject.Find("UserInterface").GetComponent<Animator>();
+        SetupUserInterfaceDictionary();
+    }
 
     /// <summary>
     /// Allow getting/setting for the UI grid using [q,r,h]
@@ -38,8 +48,12 @@ public class UIController : MonoBehaviour {
     /// <param name="r">row</param>
     /// <param name="h">height</param>
     public UICell this[int q, int r, int h] {
-        get { return this.minimap[q, r, h]; }
-        set { this.minimap[q, r, h] = value; }
+        get { return this.uiGrid[q, r, h]; }
+        set { this.uiGrid[q, r, h] = value; }
+    }
+    public void AssignControllers(GameObject controller)
+    {
+        vrControllers.Add(controller);
     }
 
     /// <summary>
@@ -55,12 +69,12 @@ public class UIController : MonoBehaviour {
         newHologramCell.GetComponent<UICellObj>().r = cell.r;
         newHologramCell.GetComponent<UICellObj>().h = cell.h;
         //Put the cell into the UIGrid
-        minimap[cell.q, cell.r, cell.h] = cell;
+        uiGrid[cell.q, cell.r, cell.h] = cell;
         //Set the game object's parent transform for scaling/rotation purposes.
 		newHologramCell.transform.SetParent(gameObject.transform);
 	}
 
-    //Shows valid places for the player to move to while the UI is active.
+    //Show valid moves for the player's move command.
     public void ShowValidMoves(List<List<PathCell>> hexCells) {
         Material matToUse;
         for (int i = 0; i < hexCells.Count; i++) {
@@ -72,13 +86,36 @@ public class UIController : MonoBehaviour {
                 } else {
                     matToUse = possibleMoveMat3;
                 }
-                minimap[coords.q, coords.r, coords.h].gameObject.GetComponent<Renderer>().material = matToUse;
+                uiGrid[coords.q, coords.r, coords.h].gameObject.GetComponent<Renderer>().material = matToUse;
             }
         }
     }
 
+    /// <summary>
+    /// Displays the top-down radius around an area.
+    /// Currently used for ability ranges.
+    /// Will likely abstract some of this at some point.
+    /// </summary>
+    public void ShowValidTopDownRadius(int q, int r, int h, int radius, bool includeOrigin = false, MaterialEnum matParam = MaterialEnum.COSTS_ONE)
+    {
+        Material matToUse;
+        switch (matParam)
+        {
+            case MaterialEnum.COSTS_ONE: matToUse = possibleMoveMat1; break;
+            case MaterialEnum.COSTS_TWO: matToUse = possibleMoveMat2; break;
+            case MaterialEnum.COSTS_THREE: matToUse = possibleMoveMat3; break;
+            case MaterialEnum.TARGETED_ZONE: matToUse = highlightMaterial; break;
+            default: matToUse = possibleMoveMat1; break;
+        }
+        UICell[] topDown = uiGrid.TopDownRadius(q, r, h, radius, includeOrigin);
+        foreach(UICell rangeTile in topDown)
+        {
+            rangeTile.gameObject.GetComponent<Renderer>().material = matToUse;
+        }
+    }
+
     public void ClearCells() {
-        foreach (UICell cell in minimap) {
+        foreach (UICell cell in uiGrid) {
             cell.gameObject.GetComponent<Renderer>().material = defaultHexMaterial;
         }
     }
@@ -122,7 +159,6 @@ public class UIController : MonoBehaviour {
     /// This is temporary to test different scales and positions of the minimap
     /// </summary>
     void Update(){
-
 		if(Input.GetKeyDown("up")){
 			//scaleandReposition (); //commented out because we only need to do this once at the beginning.
 		}
@@ -135,6 +171,7 @@ public class UIController : MonoBehaviour {
 		if(Input.GetKeyDown("v")){
 			doMove();
 		}
+        
 	}
 
 	/// <summary>
@@ -168,4 +205,87 @@ public class UIController : MonoBehaviour {
 		}
 	}
 
+    void spawnMonsterFigures()
+    {
+        if (uiMonsters == null)
+        {
+            uiMonsters = new List<GameObject>();
+            uiMonsterHexIndeces = new List<int[]>();
+            foreach (Monster monster in levelController.returnMonsters())
+            {
+                GameObject newMonster = monster.GetMonsterPrefab();
+                newMonster = (GameObject)Instantiate(newMonster, monster.transform.position, transform.rotation);
+                newMonster.name = "UI_" + monster.name;
+                newMonster.transform.localScale *= 3;
+                newMonster.transform.SetParent(gameObject.transform);
+                uiMonsterHexIndeces.Add(HexConst.CoordToHexIndex(new Vector3(newMonster.transform.position.x - transform.parent.position.x, newMonster.transform.position.y + 4.0f - transform.parent.position.y, newMonster.transform.position.z - transform.parent.position.z)));
+                uiMonsters.Add(newMonster);
+            }
+        }
+        else
+        {
+
+        }
+    }
+    public void moveMonsters()
+    {
+        int index = 0;
+        foreach (GameObject monster in uiMonsters)
+        {
+            uiMonsterHexIndeces[index] = HexConst.CoordToHexIndex(new Vector3(monster.transform.position.x - transform.parent.position.x, monster.transform.position.y + 4.0f - transform.parent.position.y, monster.transform.position.z - transform.parent.position.z));
+            if (levelController.levelGrid.GetHex(uiMonsterHexIndeces[index][0], uiMonsterHexIndeces[index][1], uiMonsterHexIndeces[index][2]) != null)
+            {
+                Vector3 newPos = HexConst.HexToWorldCoord(uiMonsterHexIndeces[index][0], uiMonsterHexIndeces[index][1], uiMonsterHexIndeces[index][2]);
+                monster.transform.position = newPos;
+            }
+            index++;
+        }
+    }
+
+    private void SetupUserInterfaceDictionary()
+    {
+        userInterfaceElements = new Dictionary<string, GameObject>();
+        userInterfaceElements.Add("itemCollected", GameObject.Find("ItemCollectedPrompt") as GameObject);
+        userInterfaceElements.Add("inventory", GameObject.Find("InventoryUI") as GameObject);
+        HideInterfaces();
+    }
+    private void HideInterfaces()
+    {
+        foreach (KeyValuePair<string, GameObject> io in userInterfaceElements)
+        {
+            io.Value.SetActive(false);
+        }
+        toggleInterfaces("inventory");
+    }
+    public void toggleInterfaces(string interfaceObj)
+    {
+        foreach (KeyValuePair<string, GameObject> io in userInterfaceElements)
+        {
+            if(io.Key == interfaceObj)
+            {
+                io.Value.SetActive(true);
+            }
+            else
+            {
+                io.Value.SetActive(false);
+            }
+        }
+    }
+    public void DisplayUserInterface(bool display)
+    {
+        if(display)
+        {
+            expandUI = true;
+        }
+        else
+        {
+            expandUI = false;
+        }
+        userIntefaceAnimator.SetBool("ExpandUI", expandUI);
+    }
+    public void toggleUserInterface()
+    {
+        expandUI = !expandUI;
+        userIntefaceAnimator.SetBool("ExpandUI", expandUI);
+    }
 }

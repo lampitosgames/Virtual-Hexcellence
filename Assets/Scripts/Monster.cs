@@ -134,7 +134,11 @@ public class Monster : MonoBehaviour {
         pathToPlayer = null;
         actionPoints = 2;
     }
-
+    public GameObject GetMonsterPrefab()
+    {
+        GameObject monster = this.gameObject;
+        return monster;
+    }
     /// <summary>
     /// Unity draw gizmos function
     /// </summary>

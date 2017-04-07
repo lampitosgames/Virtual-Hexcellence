@@ -5,8 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Item
-  - MapCell
-  - AbilityCell
+  - FxTemporaire
+  - projectile
+  - TeleportIgnore
+  - Deadly
+  - Target
+  - UI_Item
   layers:
   - Default
   - TransparentFX
