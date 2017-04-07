@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 478a813b47ec97f47af787731ae19459
 timeCreated: 1491369895
+=======
+guid: a34cf2b34269ccc498a3ebe2446efc1b
+timeCreated: 1491234267
+>>>>>>> parent of 1aca692... Started ImagineRIT tutorial/demo level greyboxing
 licenseType: Free
 NativeFormatImporter:
   userData: 

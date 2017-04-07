@@ -1,37 +1,51 @@
 fileFormatVersion: 2
-guid: cbfebd334a2e1d14eb918b7dcb4031f1
-timeCreated: 1491249377
+guid: 35273ced5618c3f43b2523c4781b7c95
+timeCreated: 1487961450
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: body
-    100002: clothes
-    100004: left
-    100006: mouse
-    100008: pPlane1
-    100010: pSphere1
-    100012: //RootNode
-    400000: body
-    400002: clothes
-    400004: left
-    400006: mouse
-    400008: pPlane1
-    400010: pSphere1
-    400012: //RootNode
-    2300000: body
-    2300002: clothes
-    2300004: pPlane1
-    2300006: pSphere1
-    3300000: body
-    3300002: clothes
-    3300004: pPlane1
-    3300006: pSphere1
-    4300000: pSphere1
-    4300002: pPlane1
-    4300004: body
-    4300006: clothes
-    9500000: //RootNode
+    100000: deer
+    100002: deerTree
+    100004: leave1
+    100006: leave2
+    100008: leave3
+    100010: leave4
+    100012: leave5
+    100014: leave6
+    100016: leave7
+    100018: leave7 1
+    100020: //RootNode
+    100022: transform1
+    100024: transform2
+    100026: transform3
+    100028: transform4
+    100030: transform5
+    100032: transform6
+    100034: transform7
+    100036: transform8
+    400000: deer
+    400002: deerTree
+    400004: leave1
+    400006: leave2
+    400008: leave3
+    400010: leave4
+    400012: leave5
+    400014: leave6
+    400016: leave7
+    400018: leave7 1
+    400020: //RootNode
+    400022: transform1
+    400024: transform2
+    400026: transform3
+    400028: transform4
+    400030: transform5
+    400032: transform6
+    400034: transform7
+    400036: transform8
+    2300000: leave7
+    3300000: leave7
+    4300000: leave7
   materials:
     importMaterials: 1
     materialName: 0
@@ -94,7 +108,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
