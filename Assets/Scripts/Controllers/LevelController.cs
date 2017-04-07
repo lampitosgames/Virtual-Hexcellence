@@ -129,4 +129,8 @@ public class LevelController : MonoBehaviour {
         this.levelGrid[q, r, h].goal = goalObj;
         this.numOfGoals += 1;
     }
+    public List<Monster> returnMonsters()
+    {
+        return aiController.monsters;
+    }
 }

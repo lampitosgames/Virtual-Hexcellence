@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 /// <summary>
 /// Manages the player's UI
 /// </summary>
@@ -14,6 +14,12 @@ public class UIController : MonoBehaviour {
 	private GameObject playerFigure;
     int[] figurePositionHex;
 	LevelController levelController;
+    private List<GameObject> uiMonsters;
+    private List<int[]> uiMonsterHexIndeces;
+    private Animator userIntefaceAnimator;
+    public List<GameObject> vrControllers;
+
+    private bool expandUI = false;
 
     public float uiScale = 0.02f; //the scale of the minimap compared to the world map.
 
@@ -23,13 +29,17 @@ public class UIController : MonoBehaviour {
     public Material possibleMoveMat2;
     public Material possibleMoveMat3;
     public Material highlightMaterial;
-    
+
+    private Dictionary<string, GameObject> userInterfaceElements;
     void Start(){
 		levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
-		spawnPlayerFigure ();
+        vrControllers = new List<GameObject>();
+        spawnPlayerFigure ();
         scaleandReposition(); //properly scales down the UI grid.
         setVisibility(false);
-	}
+        userIntefaceAnimator = GameObject.Find("UserInterface").GetComponent<Animator>();
+        SetupUserInterfaceDictionary();
+    }
 
     /// <summary>
     /// Allow getting/setting for the UI grid using [q,r,h]
@@ -40,6 +50,10 @@ public class UIController : MonoBehaviour {
     public UICell this[int q, int r, int h] {
         get { return this.uiGrid[q, r, h]; }
         set { this.uiGrid[q, r, h] = value; }
+    }
+    public void AssignControllers(GameObject controller)
+    {
+        vrControllers.Add(controller);
     }
 
     /// <summary>
@@ -133,6 +147,7 @@ public class UIController : MonoBehaviour {
 		if(Input.GetKeyDown("v")){
 			doMove();
 		}
+        
 	}
 
 	/// <summary>
@@ -166,4 +181,87 @@ public class UIController : MonoBehaviour {
 		}
 	}
 
+    void spawnMonsterFigures()
+    {
+        if (uiMonsters == null)
+        {
+            uiMonsters = new List<GameObject>();
+            uiMonsterHexIndeces = new List<int[]>();
+            foreach (Monster monster in levelController.returnMonsters())
+            {
+                GameObject newMonster = monster.GetMonsterPrefab();
+                newMonster = (GameObject)Instantiate(newMonster, monster.transform.position, transform.rotation);
+                newMonster.name = "UI_" + monster.name;
+                newMonster.transform.localScale *= 3;
+                newMonster.transform.SetParent(gameObject.transform);
+                uiMonsterHexIndeces.Add(HexConst.CoordToHexIndex(new Vector3(newMonster.transform.position.x - transform.parent.position.x, newMonster.transform.position.y + 4.0f - transform.parent.position.y, newMonster.transform.position.z - transform.parent.position.z)));
+                uiMonsters.Add(newMonster);
+            }
+        }
+        else
+        {
+
+        }
+    }
+    public void moveMonsters()
+    {
+        int index = 0;
+        foreach (GameObject monster in uiMonsters)
+        {
+            uiMonsterHexIndeces[index] = HexConst.CoordToHexIndex(new Vector3(monster.transform.position.x - transform.parent.position.x, monster.transform.position.y + 4.0f - transform.parent.position.y, monster.transform.position.z - transform.parent.position.z));
+            if (levelController.levelGrid.GetHex(uiMonsterHexIndeces[index][0], uiMonsterHexIndeces[index][1], uiMonsterHexIndeces[index][2]) != null)
+            {
+                Vector3 newPos = HexConst.HexToWorldCoord(uiMonsterHexIndeces[index][0], uiMonsterHexIndeces[index][1], uiMonsterHexIndeces[index][2]);
+                monster.transform.position = newPos;
+            }
+            index++;
+        }
+    }
+
+    private void SetupUserInterfaceDictionary()
+    {
+        userInterfaceElements = new Dictionary<string, GameObject>();
+        userInterfaceElements.Add("itemCollected", GameObject.Find("ItemCollectedPrompt") as GameObject);
+        userInterfaceElements.Add("inventory", GameObject.Find("InventoryUI") as GameObject);
+        HideInterfaces();
+    }
+    private void HideInterfaces()
+    {
+        foreach (KeyValuePair<string, GameObject> io in userInterfaceElements)
+        {
+            io.Value.SetActive(false);
+        }
+        toggleInterfaces("inventory");
+    }
+    public void toggleInterfaces(string interfaceObj)
+    {
+        foreach (KeyValuePair<string, GameObject> io in userInterfaceElements)
+        {
+            if(io.Key == interfaceObj)
+            {
+                io.Value.SetActive(true);
+            }
+            else
+            {
+                io.Value.SetActive(false);
+            }
+        }
+    }
+    public void DisplayUserInterface(bool display)
+    {
+        if(display)
+        {
+            expandUI = true;
+        }
+        else
+        {
+            expandUI = false;
+        }
+        userIntefaceAnimator.SetBool("ExpandUI", expandUI);
+    }
+    public void toggleUserInterface()
+    {
+        expandUI = !expandUI;
+        userIntefaceAnimator.SetBool("ExpandUI", expandUI);
+    }
 }
