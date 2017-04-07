@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Manages the player's UI
+/// Manages the player's UI (preferably the minimap UI.)
 /// </summary>
 public class UIController : MonoBehaviour {
 	//Assign the prefab in editor to spawn as minimap hex object
 	public GameObject uiGridPrefab;
 	public GameObject playerFigurePrefab;
     //uiGrid holds all UICells which relate to each hex on the map
-    public HexGrid<UICell> uiGrid = new HexGrid<UICell>();
+    public HexGrid<UICell> minimap = new HexGrid<UICell>();
 	private GameObject playerFigure;
     int[] figurePositionHex;
 	LevelController levelController;
@@ -26,7 +26,7 @@ public class UIController : MonoBehaviour {
     
     void Start(){
 		levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
-		spawnPlayerFigure ();
+		spawnPlayerFigure();
         scaleandReposition(); //properly scales down the UI grid.
         setVisibility(false);
 	}
@@ -38,8 +38,8 @@ public class UIController : MonoBehaviour {
     /// <param name="r">row</param>
     /// <param name="h">height</param>
     public UICell this[int q, int r, int h] {
-        get { return this.uiGrid[q, r, h]; }
-        set { this.uiGrid[q, r, h] = value; }
+        get { return this.minimap[q, r, h]; }
+        set { this.minimap[q, r, h] = value; }
     }
 
     /// <summary>
@@ -55,11 +55,12 @@ public class UIController : MonoBehaviour {
         newHologramCell.GetComponent<UICellObj>().r = cell.r;
         newHologramCell.GetComponent<UICellObj>().h = cell.h;
         //Put the cell into the UIGrid
-        uiGrid[cell.q, cell.r, cell.h] = cell;
+        minimap[cell.q, cell.r, cell.h] = cell;
         //Set the game object's parent transform for scaling/rotation purposes.
 		newHologramCell.transform.SetParent(gameObject.transform);
 	}
 
+    //Shows valid places for the player to move to while the UI is active.
     public void ShowValidMoves(List<List<PathCell>> hexCells) {
         Material matToUse;
         for (int i = 0; i < hexCells.Count; i++) {
@@ -71,13 +72,13 @@ public class UIController : MonoBehaviour {
                 } else {
                     matToUse = possibleMoveMat3;
                 }
-                uiGrid[coords.q, coords.r, coords.h].gameObject.GetComponent<Renderer>().material = matToUse;
+                minimap[coords.q, coords.r, coords.h].gameObject.GetComponent<Renderer>().material = matToUse;
             }
         }
     }
 
     public void ClearCells() {
-        foreach (UICell cell in uiGrid) {
+        foreach (UICell cell in minimap) {
             cell.gameObject.GetComponent<Renderer>().material = defaultHexMaterial;
         }
     }
@@ -121,6 +122,7 @@ public class UIController : MonoBehaviour {
     /// This is temporary to test different scales and positions of the minimap
     /// </summary>
     void Update(){
+
 		if(Input.GetKeyDown("up")){
 			//scaleandReposition (); //commented out because we only need to do this once at the beginning.
 		}

@@ -103,18 +103,22 @@ public class Player : MonoBehaviour {
     /// Returns true when the player's turn has ended
     /// </summary>
     /// <returns>is the player turn over?</returns>
-    public bool TakeTurn() {
-        if (playerMoving) {
+    public bool TakeTurn()
+    {
+        if (playerMoving)
+        {
             playerMoving = !MovePlayer();
         }
-        if (actionPoints == 0) {
+        if (actionPoints == 0)
+        {
             return true;
         }
         return false;
     }
 
+
     /// <summary>
-    /// Display UI for player movement
+    /// Update the UI for player movement and item usage
     /// </summary>
     /// <returns>Returns true when movement has happened</returns>
     public bool MovePlayer() {
@@ -139,6 +143,7 @@ public class Player : MonoBehaviour {
 
 				//if it isn't null
 				if (hitObj != null) {
+
 					//get the selected cell
 					PathCell lookedCell = aiController [hitObj.q, hitObj.r, hitObj.h];
                     for (int i = 0; i < movable.Count; i++) {
