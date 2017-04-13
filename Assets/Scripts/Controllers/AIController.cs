@@ -12,6 +12,7 @@ public class AIController : MonoBehaviour {
 
     //A list holding all active monsters
     public List<Monster> monsters = new List<Monster>();
+    //Used in the game loop to continuously update the proper monster
     int curMonster = 0;
 
     /// <summary>
@@ -31,13 +32,16 @@ public class AIController : MonoBehaviour {
     /// </summary>
     /// <returns>Have all monsters finished thier turns?</returns>
     public bool MonsterTurn() {
+        //If the current monster has been incremented past the total number of monsters, reset the variable and end the monsters' turn
         if (curMonster >= monsters.Count) {
             curMonster = 0;
             return true;
         }
+        //If the current monster's turn is over, increment to the next monster
         if (monsters[curMonster].TakeTurn()) {
             curMonster += 1;
         }
+        //Monster turn is not over
         return false;
     }
 
