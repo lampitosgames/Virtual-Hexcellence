@@ -8,7 +8,7 @@ using UnityEngine;
 public class UICell : HexCell {
 	public GameObject gameObject;
     //public GameObject associatedHexData; //The data for the corresponding hex.
-
+    
 	/// <summary>
 	/// Constructor
 	/// </summary>

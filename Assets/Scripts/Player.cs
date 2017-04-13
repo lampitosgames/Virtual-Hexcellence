@@ -103,18 +103,34 @@ public class Player : MonoBehaviour {
     /// Returns true when the player's turn has ended
     /// </summary>
     /// <returns>is the player turn over?</returns>
-    public bool TakeTurn() {
-        if (playerMoving) {
-            playerMoving = !MovePlayer();
+    public bool TakeTurn()
+    {
+        if (playerMoving)
+        {
+            //playerMoving = !MovePlayer();
+
+            //Testing the ability selection
+            if (Input.GetKey(KeyCode.Alpha1))
+            {
+                uiController.ClearCells();
+                testFireball();
+            }
+            else
+            {
+                playerMoving = !MovePlayer();
+            }
+            //TO-DO: If player is casting an ability, call an appropriate method.
         }
-        if (actionPoints == 0) {
+        if (actionPoints == 0)
+        {
             return true;
         }
         return false;
     }
 
+
     /// <summary>
-    /// Display UI for player movement
+    /// Update the UI for player movement and item usage
     /// </summary>
     /// <returns>Returns true when movement has happened</returns>
     public bool MovePlayer() {
@@ -139,6 +155,7 @@ public class Player : MonoBehaviour {
 
 				//if it isn't null
 				if (hitObj != null) {
+
 					//get the selected cell
 					PathCell lookedCell = aiController [hitObj.q, hitObj.r, hitObj.h];
                     for (int i = 0; i < movable.Count; i++) {
@@ -183,6 +200,47 @@ public class Player : MonoBehaviour {
 		vrMoveComplete = true;
 	}
 
+    //Testing methods for calling/using abilities.
+    //Currently hooking these up in Player itself as a temporary thing.
+    //I'll make sure these work with everything later; for now I just want to have some sort of abilities I can call
+    //and a way to test the "select within a radius" functionality.
+    //Ability effect not functional; ability targeting is.
+    public bool testFireball()
+    {
+        //If the player is standing on a hex (not falling, jumping)
+        if (levelController[q, r, h] != null)
+        {
+            //Get the area around the current hex
+            uiController.ShowValidTopDownRadius(q,r,h,5,true);
+        }
 
+        //I don't know how to do the VR version; will likely test that whenever I get the opportunity.
+        
+        //Get the cell the player is looking at
+        Vector3 lineOfSight = playerCamera.transform.forward * 1000;
+        RaycastHit hit;
+        if (Physics.Raycast(playerCamera.transform.position, lineOfSight, out hit))
+        {
+            //Get the UI hex cell the player is looking at
+            UICellObj hitObj = hit.transform.gameObject.GetComponent<UICellObj>() as UICellObj;
+
+            //if it isn't null
+            if (hitObj != null)
+            {
+                //get the selected cell; if it's within 5 units of the starting cell show the ability AoE
+                PathCell lookedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
+                PathCell startCell = aiController[q, r, h];
+
+                if (aiController.DistBetween(lookedCell, startCell) <= 5)
+                {
+                    uiController.ShowValidTopDownRadius(hitObj.q, hitObj.r, hitObj.h,1,true,MaterialEnum.TARGETED_ZONE);
+                }
+            }
+        }
+    
+
+
+        return true;
+    }
 }
 

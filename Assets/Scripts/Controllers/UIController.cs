@@ -60,6 +60,7 @@ public class UIController : MonoBehaviour {
 		newHologramCell.transform.SetParent(gameObject.transform);
 	}
 
+    //Show valid moves for the player's move command.
     public void ShowValidMoves(List<List<PathCell>> hexCells) {
         Material matToUse;
         for (int i = 0; i < hexCells.Count; i++) {
@@ -73,6 +74,29 @@ public class UIController : MonoBehaviour {
                 }
                 uiGrid[coords.q, coords.r, coords.h].gameObject.GetComponent<Renderer>().material = matToUse;
             }
+        }
+    }
+
+    /// <summary>
+    /// Displays the top-down radius around an area.
+    /// Currently used for ability ranges.
+    /// Will likely abstract some of this at some point.
+    /// </summary>
+    public void ShowValidTopDownRadius(int q, int r, int h, int radius, bool includeOrigin = false, MaterialEnum matParam = MaterialEnum.COSTS_ONE)
+    {
+        Material matToUse;
+        switch (matParam)
+        {
+            case MaterialEnum.COSTS_ONE: matToUse = possibleMoveMat1; break;
+            case MaterialEnum.COSTS_TWO: matToUse = possibleMoveMat2; break;
+            case MaterialEnum.COSTS_THREE: matToUse = possibleMoveMat3; break;
+            case MaterialEnum.TARGETED_ZONE: matToUse = highlightMaterial; break;
+            default: matToUse = possibleMoveMat1; break;
+        }
+        UICell[] topDown = uiGrid.TopDownRadius(q, r, h, radius, includeOrigin);
+        foreach(UICell rangeTile in topDown)
+        {
+            rangeTile.gameObject.GetComponent<Renderer>().material = matToUse;
         }
     }
 
