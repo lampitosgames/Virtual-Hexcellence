@@ -10,7 +10,6 @@ TagManager:
   - TeleportIgnore
   - Deadly
   - Target
-  - UI_Item
   layers:
   - Default
   - TransparentFX

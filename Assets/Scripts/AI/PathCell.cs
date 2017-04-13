@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-/// <summary>
+﻿/// <summary>
 /// The PathCells hold state for individual cells in the AIController's pathGrid
 /// </summary>
 public class PathCell : HexCell {
@@ -18,7 +14,7 @@ public class PathCell : HexCell {
     /// <param name="q">column</param>
     /// <param name="r">row</param>
     /// <param name="h">height</param>
-    public PathCell(int q, int r, int h) : base(q, r, h) {}
+    public PathCell(int q, int r, int h) : base(q, r, h) { }
 
     /// <summary>
     /// Comparitor
