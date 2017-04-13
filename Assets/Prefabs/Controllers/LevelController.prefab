@@ -52,3 +52,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aiController: {fileID: 0}
+  uiController: {fileID: 0}
+  player: {fileID: 0}
+  numOfGoals: 0

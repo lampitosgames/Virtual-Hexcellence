@@ -53,4 +53,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiGridPrefab: {fileID: 1252648911595812, guid: 0be7e287c78955340a6a4919ee752c15,
     type: 2}
-  uiGrid: []
+  playerFigurePrefab: {fileID: 0}
+  uiScale: 0.02
+  defaultHexMaterial: {fileID: 0}
+  possibleMoveMat1: {fileID: 0}
+  possibleMoveMat2: {fileID: 0}
+  possibleMoveMat3: {fileID: 0}
+  highlightMaterial: {fileID: 0}

@@ -51,3 +51,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43982a696f48b3c4db30f0afe74a8f7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  monsters: []
