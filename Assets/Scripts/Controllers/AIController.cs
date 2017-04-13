@@ -48,6 +48,7 @@ public class AIController : MonoBehaviour {
     /// <summary>
     /// A much slower GetRadius function, but more accurate.  It uses collision box projectsions to determine blocked edges that break
     /// connections to neighboring hex cells, even if those cells exist.  This is useful for finding valid paths through impassible game objects.
+    /// ValidNeighbors is used as the main pathfinding function
     /// </summary>
     /// <param name="cell">Center AICell</param>
     /// <param name="searchHeight">How high (up or down) does the algorithm search for neighbors?  -1 is unbounded</param>
@@ -74,8 +75,7 @@ public class AIController : MonoBehaviour {
             Vector3 colliderPos = toEdge + cell.centerPos + new Vector3(0, 1, 0);
 
             //Check the location for physics collisions (if it collides with the middle third of the edge)
-            //TODO: Make sure this doesn't collide with the player.
-            if (!Physics.CheckBox(colliderPos, new Vector3(HexConst.radius/6f, 0.5f, 0.1f), rotation)) {
+            if (!Physics.CheckBox(colliderPos, new Vector3(HexConst.radius / 6f, 0.5f, 0.1f), rotation)) {
                 //If it is a valid location, add this to the list.
                 returnNeighbors.Add(n);
             }
@@ -101,7 +101,6 @@ public class AIController : MonoBehaviour {
         //Index 0 contains the center cell
         //Index 1 contains all cells reachable in 1 step
         //Index 2 contains all cells reachable in 2 steps
-        //Etc.  it might be helpful to return the fringes in the future for display purposes
         List<List<PathCell>> fringes = new List<List<PathCell>>();
         //Add the start cell at index 0
         fringes.Add(new List<PathCell>());
@@ -111,12 +110,12 @@ public class AIController : MonoBehaviour {
         List<List<PathCell>> turns = new List<List<PathCell>>();
 
         //For every possible step
-        for (int k = 1; k <= stepsPerTurn*turnsToSearch; k++) {
+        for (int k = 1; k <= stepsPerTurn * turnsToSearch; k++) {
             //Create a list for this index
             fringes.Add(new List<PathCell>());
 
             //If this k is searching for the next turn, add a new list to the turns
-            if ((k-1) % stepsPerTurn == 0) {
+            if ((k - 1) % stepsPerTurn == 0) {
                 turns.Add(new List<PathCell>());
             }
 
@@ -145,8 +144,7 @@ public class AIController : MonoBehaviour {
     /// <param name="startCoords">start hex coordinate array</param>
     /// <param name="endCoords">end hex coordinate array</param>
     /// <returns>A list of hex coordinates that form a path.  Null if no path possible</returns>
-    public List<int[]> PathBetween(int[] startCoords, int[] endCoords)
-    {
+    public List<int[]> PathBetween(int[] startCoords, int[] endCoords) {
         //Get references to the start and end path objects
         PathCell cStart = pathGrid[startCoords[0], startCoords[1], startCoords[2]];
         PathCell cEnd = pathGrid[endCoords[0], endCoords[1], endCoords[2]];
@@ -162,21 +160,17 @@ public class AIController : MonoBehaviour {
         open.Add(cStart);
 
         //While items exist in the open set
-        while (open.Count > 0)
-        {
+        while (open.Count > 0) {
             //Get the lowest g-valued cell;
             PathCell cCell = null;
-            foreach (PathCell cell in open)
-            {
+            foreach (PathCell cell in open) {
                 if (cCell == null) { cCell = cell; continue; }
-                if (cCell.g > cell.g)
-                {
+                if (cCell.g > cell.g) {
                     cCell = cell;
                 }
             }
             //If the current cell is the goal, return the found path
-            if (cCell.Equals(cEnd))
-            {
+            if (cCell.Equals(cEnd)) {
                 return ReconstructPath(cCell, cStart);
             }
 
@@ -185,26 +179,21 @@ public class AIController : MonoBehaviour {
             closed.Add(cCell);
 
             //Loop through the valid neighbors of cCell
-            foreach (PathCell nCell in ValidNeighbors(cCell))
-            {
+            foreach (PathCell nCell in ValidNeighbors(cCell)) {
                 //If the neighbor node is already in the closed set, don't evaluate
                 if (closed.Contains(nCell)) { continue; }
 
                 //If the neighbor isn't in the open set
-                if (!open.Contains(nCell))
-                {
+                if (!open.Contains(nCell)) {
                     //Initialize it's g-value and parent
                     nCell.g = cCell.g + DistBetween(cCell, nCell);
                     nCell.parent = cCell;
                     //Add it to the open set
                     open.Add(nCell);
                     //Neighbor is already in the open set
-                }
-                else
-                {
+                } else {
                     //If moving from the cCell would be quicker than the current saved path
-                    if (nCell.g > cCell.g + DistBetween(cCell, nCell))
-                    {
+                    if (nCell.g > cCell.g + DistBetween(cCell, nCell)) {
                         //Override previous shortest-path data to the nCell
                         nCell.g = cCell.g + DistBetween(cCell, nCell);
                         nCell.parent = cCell;
@@ -245,7 +234,7 @@ public class AIController : MonoBehaviour {
         if (endCell.Equals(startCell)) { return returnList; }
         //Create a temporary cell
         PathCell temp = endCell;
-        
+
         do {
             //Add temp to the return list
             returnList.Add(new int[] { temp.q, temp.r, temp.h });
