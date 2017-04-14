@@ -2,56 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// TODO: Severely refactor this to be more robust
+/// Everything having to do with the inventory.  Interactions in the game world can put items into the player's inventory (like weapons and ability runes)
+/// </summary>
 public class InventoryController : MonoBehaviour {
-    //Note: Current inventory implementation is temporary and subject to change.
-
-    //public int bobblesCollected=0;
+    //Radius in the world to search for items when picking up
+    //This functionality is temporary
     public float itemSearchRadius = 5.0f;
     public KeyCode collectKey = KeyCode.E;
     public KeyCode dropKey = KeyCode.X;
-    //protected bool itemDropped=false;
-
+    //Items in the inventory
     public List<GameObject> itemsContained;
 
-    // Use this for initialization
-    void Start() {
-
-    }
-
-    // Update is called once per frame
+    /// <summary>
+    /// Unity update method
+    /// </summary>
     void Update() {
-        //Check to see if we're dropping any items; if we are then we probably going to not want to pick them back up again immediately
-        if (!Input.GetKey(dropKey)) {
+        //If the player is trying to pick up an item (and not currently dropping one)
+        if (!Input.GetKey(dropKey) && Input.GetKeyUp(collectKey)) {
+            //Get nearby objects
             List<GameObject> nearbyObjects = ItemCheck();
+            //If objects are nearby for pickup
             if (nearbyObjects.Count > 0) {
-                //Debug.Log("An item is nearby. Items collected: " + itemsContained.Count);
-                if (Input.GetKeyDown(collectKey)) {
-                    for (int i = 0; i < nearbyObjects.Count; i++) {
-                        //if we have more than 12 items, the inventory is full
-                        if (itemsContained.Count >= 12) {
-                            //Debug.Log("Inventory full.");
-                            i = nearbyObjects.Count;
-                        }
-                        AddItemToInventory(nearbyObjects[i]);
-                    }
+                //Add the first one to the inventory
+                AddItemToInventory(nearbyObjects[0]);
+            }
 
-                }
-            } else {
-                //Debug.Log("An item is not nearby. Items collected: " + itemsContained.Count);
-            }
-        } else {
-            if (Input.GetKeyDown(dropKey)) {
-                if (itemsContained.Count > 0) {
-                    RemoveItemFromInventory(itemsContained.Count - 1);
-                } else {
-                    //Debug.Log("Your inventory is already empty.");
-                }
-            }
+            //If the player is dropping an item
+        } else if (Input.GetKeyUp(dropKey) && itemsContained.Count > 0) {
+            //Drop it
+            RemoveItemFromInventory(itemsContained.Count - 1);
         }
     }
 
-    //Check to see if there are any Items nearby and add them if any are present.
-    //Return whether there are Items nearby
+    /// <summary>
+    /// Check to see if there are any items nearby
+    /// </summary>
+    /// <returns>List of nearby items</returns>
     List<GameObject> ItemCheck() {
         List<GameObject> tempItems = new List<GameObject>();
         //Get all items
@@ -69,20 +57,25 @@ public class InventoryController : MonoBehaviour {
         return tempItems;
     }
 
-    //Takes an item from the game world, moves it to the inventory and adds it to your inventory.
+    /// <summary>
+    /// Places an item from the game world into the player's inventory
+    /// </summary>
+    /// <param name="item">Item in the game</param>
     void AddItemToInventory(GameObject item) {
         itemsContained.Add(item);
         item.gameObject.SetActive(false);
     }
 
-    //Takes an item at the given index in the inventory and removes it.
-    //Presumes that items contained indeed contains an item at that position.
+    /// <summary>
+    /// Removes an item at a given index in the inventory
+    /// </summary>
+    /// <param name="index">Index of the item in the items list</param>
     void RemoveItemFromInventory(int index) {
-        //Move the item then reactivate it.
-        GameObject temp = itemsContained[index];
-        temp.gameObject.transform.position = gameObject.transform.position + gameObject.transform.forward + gameObject.transform.right * Random.Range(-0.5f, 0.5f);
-        temp.SetActive(true);
+        //Move the item to the player and then re-activate it
+        GameObject item = itemsContained[index];
+        //This transforms it to be located at the inventory controller?
+        item.gameObject.transform.position = gameObject.transform.position + gameObject.transform.forward + gameObject.transform.right * Random.Range(-0.5f, 0.5f);
+        item.SetActive(true);
         itemsContained.RemoveAt(index);
-        //Debug.Log("Removed the item at "+index+" from inventory");
     }
 }

@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// The actual mesh representing the cell in the game world
+/// The object representing the cell in the game world
 /// </summary>
-// TODO: Abstract HexGrid cells.  There is a lot of repeated functionality.
 public class HexCellObj : MonoBehaviour {
     //Model height/scale
     public float modelHeight, modelScale;
@@ -17,13 +16,16 @@ public class HexCellObj : MonoBehaviour {
     /// Unity start method
     /// </summary>
     void Start() {
+        //Get the model height & scale from the renderer
         modelHeight = gameObject.GetComponent<Renderer>().bounds.size.y;
         modelScale = gameObject.transform.localScale.y;
-        //Save the grid game object
+        
+        //Get a reference to the level controller
         LevelController levelController = GameObject.Find("LevelController").GetComponent("LevelController") as LevelController;
 
         //Get the hex index for this hex cell.  Pass in the transform.
-        int[] thisHexIndex = HexConst.CoordToHexIndex(transform.position + new Vector3(0, 0.5f*modelHeight, 0));
+        //Use the model height to allow for y-scaling.  This lets the engine handle hex cell models with variable heights
+        int[] thisHexIndex = HexConst.CoordToHexIndex(transform.position + new Vector3(0, 0.5f * modelHeight, 0));
         q = thisHexIndex[0];
         r = thisHexIndex[1];
         h = thisHexIndex[2];

@@ -6,11 +6,12 @@ using System.Collections.Generic;
 /// <summary>
 /// A hex-based grid
 /// INCREDIBLY USEFUL ARTICLE: http://www.redblobgames.com/grids/hexagons
-/// That article is basically a hexagon bible.  I took a ton of pseudocode from it
 /// </summary>
 /// <typeparam name="T">Data type held at each hex</typeparam>
 public class HexGrid<T> : IEnumerable<T> {
-    //The first dimensional dictionary accesses items by hashed coordinate values.  The second-dimensional dictionary hold cell heights
+    //Dictionary to hold the data
+    //The first-dimensional dictionary accesses items by hashed coordinate values.
+    //The second-dimensional dictionary hold cell heights
     private Dictionary<int, Dictionary<int, T>> hexGrid = new Dictionary<int, Dictionary<int, T>>();
 
     /// <summary>
@@ -32,12 +33,14 @@ public class HexGrid<T> : IEnumerable<T> {
     /// <param name="r">height</param>
     /// <param name="cell">cell item</param>
     public void SetHex(int q, int r, int h, T cell) {
+        //hash the planar coordiantes
         int coords = Hash(new int[] { q, r });
-        //If there is not a height dictionary at these coordinates
+        //If there is not a height dictionary at the coordinates
         if (!hexGrid.ContainsKey(coords)) {
+            //Add a height dictionary
             hexGrid[coords] = new Dictionary<int, T>();
         }
-        //Add the cell at this height
+        //Add the cell at the location
         hexGrid[coords][h] = cell;
     }
 
@@ -68,12 +71,17 @@ public class HexGrid<T> : IEnumerable<T> {
     /// Optional parameters allow for search height (+/- how much height will it search)
     /// Iteration over height is middle-out (starts at 0, then +1, then -1, then +2, etc.)
     /// If nearby cells have a lot of height variance, set searchHeight to -1.  The program will do a dictionary key lookup instead of looping.
+    /// If you want to get all cells in a radius even if two or more exist at the same height, set searchHeight to -2
     /// </summary>
     /// <param name="q">column</param>
     /// <param name="r">row</param>
     /// <param name="h">height</param>
     /// <param name="radius">radius around cell (in steps)</param>
-    /// <param name="searchHeight">Search Height.  Default == 1.  -1 just finds the nearest y-shifted neighbor</param>
+    /// <param name="searchHeight">Search Height.
+    ///                             * Default == 1.
+    ///                             * -1 just finds the nearest y-shifted neighbor.
+    ///                             * -2 returns all neighbors even if multiple exist in the same height dictionary
+    ///</param>
     /// <param name="includeOrigin">Include the origin cell (provided coords) in the return value.  Default == false</param>
     /// <returns></returns>
     public T[] GetRadius(int q, int r, int h, int radius, int searchHeight = 1, bool includeOrigin = false) {
@@ -101,18 +109,18 @@ public class HexGrid<T> : IEnumerable<T> {
                     //Loop through the height radius (default 1)
                     for (int k = 1; k <= searchHeight; k++) {
                         //Check up first, then down
-                        if (heightDic.ContainsKey(h+k)) {
-                            returnList.Add(heightDic[h+k]);
+                        if (heightDic.ContainsKey(h + k)) {
+                            returnList.Add(heightDic[h + k]);
                             break;
                         }
-                        if (heightDic.ContainsKey(h-k)) {
-                            returnList.Add(heightDic[h-k]);
+                        if (heightDic.ContainsKey(h - k)) {
+                            returnList.Add(heightDic[h - k]);
                             break;
                         }
                     }
 
                 //Height is unbounded, find nearest neighbor
-                } else {
+                } else if (searchHeight == -1) {
                     //Initialize a "closest" value
                     int closestIndex = int.MaxValue;
                     //Loop through all keys in the height dictionary
@@ -122,12 +130,19 @@ public class HexGrid<T> : IEnumerable<T> {
                     }
                     //Add the closest cell to the return list
                     returnList.Add(heightDic[closestIndex]);
+                
+                //Disregard height.  Return all elements in the height dictionary
+                } else if (searchHeight == -2) {
+                    //Loop through all keys in the height dictionary
+                    foreach (KeyValuePair<int, T> height in heightDic) {
+                        returnList.Add(height.Value);
+                    }
                 }
             }
         }
         return returnList.ToArray();
     }
-    
+
     /// <summary>
     /// Get hex cells in a radius surrounding the origin.  Gets only the highest cells (top-down)
     /// </summary>

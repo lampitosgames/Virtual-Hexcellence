@@ -4,18 +4,24 @@ using UnityEngine;
 using Valve.VR;
 using UnityEngine.VR;
 
+/// <summary>
+/// The player object in the game.
+/// The player can be an FPS controller or a VR player
+/// </summary>
 public class Player : MonoBehaviour {
-	public int q, r, h;
+    //player coords
+    public int q, r, h;
 
-    ////Materials for hexes being walked over
+    //Materials for hexes being walked over
     public Material currenthexmaterial;
     public Material highlightMaterial;
 
-    //Global controllers
+    //Controller references
     LevelController levelController;
     AIController aiController;
     UIController uiController;
     InventoryController inventoryController;
+
     //Relevant Gameobjects
     GameObject playerCamera;
 
@@ -23,69 +29,73 @@ public class Player : MonoBehaviour {
     public List<List<PathCell>> movable = new List<List<PathCell>>();
     public bool playerMoving = false;
     public int actionPoints = 3;
-	public bool vrActive = false;
-	private bool vrMoveComplete = false;
+    public bool vrActive = false;
+    private bool vrMoveComplete = false;
 
-	/// <summary>
+    /// <summary>
     /// Unity's start() function called after the object is initialized
     /// </summary>
-	void Start () {
-		levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
-        levelController.player = this;
+    void Start() {
+        //Get controller references
+        levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
         aiController = GameObject.Find("AIController").GetComponent<AIController>();
         uiController = GameObject.Find("UIController").GetComponent<UIController>();
         inventoryController = GameObject.Find("InventoryController").GetComponent<InventoryController>();
-		playerCamera = GetComponentInChildren<Camera> ().gameObject;
-		if (GameObject.Find ("FPSController") == null) {
-			vrActive = true;
-		} else {
-			//Disable everything VR related and fix FOV of Camera
-			SteamVR.SafeDispose ();
-			VRSettings.enabled = false;
-			playerCamera.GetComponent<Camera> ().fieldOfView = 60;
-		}
-	}
 
-	/// <summary>
-    /// Unity's Update() function called once per step
-    /// </summary>
-	void Update () {
-		
-        //Get player position after checking whether the game is in VR
-		if (vrActive) {
-			int[] hexCoords = HexConst.CoordToHexIndex (new Vector3 (transform.position.x, uiController.transform.position.y, transform.position.z));
-			q = hexCoords[0];
-			r = hexCoords[1];
-			h = hexCoords[2];
-		} else{
-			int[] hexCoords = HexConst.CoordToHexIndex (new Vector3 (transform.position.x, transform.position.y, transform.position.z));
-			q = hexCoords[0];
-			r = hexCoords[1];
-			h = hexCoords[2];
-		}
+        //Pass self reference to level controller
+        levelController.player = this;
+        //Get a reference to the main game camera
+        playerCamera = GetComponentInChildren<Camera>().gameObject;
 
-
-        //If player presses "m" to move
-        if (Input.GetKeyUp("m")) {
-            if (actionPoints > 0 && !playerMoving) {
-                this.playerMoving = true;
-                uiController.setVisibility(true);
-            }
+        //Check for VR
+        if (GameObject.Find("FPSController") == null) {
+            vrActive = true;
+        } else {
+            //Disable everything VR related and fix FOV of Camera
+            SteamVR.SafeDispose();
+            VRSettings.enabled = false;
+            playerCamera.GetComponent<Camera>().fieldOfView = 60;
         }
     }
 
-	/// <summary>
-	/// This is called from the Controller input class on the camera rig
-	/// </summary>
-	public void onTouchpadUp(){
-		if (actionPoints > 0 && !playerMoving) {
-			this.playerMoving = true;
-			uiController.setVisibility(true);
-		}
-	}
+    /// <summary>
+    /// Unity's Update() function called once per step
+    /// </summary>
+    void Update() {
+        //Get player position.  Different in VR
+        if (vrActive) {
+            int[] hexCoords = HexConst.CoordToHexIndex(new Vector3(transform.position.x, uiController.transform.position.y, transform.position.z));
+            q = hexCoords[0];
+            r = hexCoords[1];
+            h = hexCoords[2];
+        } else {
+            int[] hexCoords = HexConst.CoordToHexIndex(new Vector3(transform.position.x, transform.position.y, transform.position.z));
+            q = hexCoords[0];
+            r = hexCoords[1];
+            h = hexCoords[2];
+        }
+
+        //If player presses "m" to move, aren't yet moving, and have enough action points to do so
+        if (Input.GetKeyUp("m") && actionPoints > 0 && !playerMoving) {
+            //Start movement
+            this.playerMoving = true;
+            uiController.setVisibility(true);
+        }
+    }
 
     /// <summary>
-    /// Draw a GUI to the screen
+    /// This is called from the Controller input class on the camera rig
+    /// </summary>
+    public void onTouchpadUp() {
+        //Start movement
+        if (actionPoints > 0 && !playerMoving) {
+            this.playerMoving = true;
+            uiController.setVisibility(true);
+        }
+    }
+
+    /// <summary>
+    /// Draw a GUI to the screen.  This is debug
     /// </summary>
     void OnGUI() {
         //Make a new background box
@@ -103,26 +113,18 @@ public class Player : MonoBehaviour {
     /// Returns true when the player's turn has ended
     /// </summary>
     /// <returns>is the player turn over?</returns>
-    public bool TakeTurn()
-    {
-        if (playerMoving)
-        {
-            //playerMoving = !MovePlayer();
-
+    public bool TakeTurn() {
+        if (playerMoving) {
             //Testing the ability selection
-            if (Input.GetKey(KeyCode.Alpha1))
-            {
+            if (Input.GetKey(KeyCode.Alpha1)) {
                 uiController.ClearCells();
                 testFireball();
-            }
-            else
-            {
+            } else {
                 playerMoving = !MovePlayer();
             }
             //TO-DO: If player is casting an ability, call an appropriate method.
         }
-        if (actionPoints == 0)
-        {
+        if (actionPoints == 0) {
             return true;
         }
         return false;
@@ -144,20 +146,19 @@ public class Player : MonoBehaviour {
             uiController[q, r, h].gameObject.GetComponent<Renderer>().material = currenthexmaterial;
         }
 
-		//Non VR Movement
-		if (!vrActive) {
-			//Get the cell the player is looking at
-			Vector3 lineOfSight = playerCamera.transform.forward * 1000;
-			RaycastHit hit;
-			if (Physics.Raycast (playerCamera.transform.position, lineOfSight, out hit)) {
-				//Get the UI hex cell the player is looking at
-				UICellObj hitObj = hit.transform.gameObject.GetComponent<UICellObj> () as UICellObj;
+        //Non VR Movement
+        if (!vrActive) {
+            //Get the cell the player is looking at
+            Vector3 lineOfSight = playerCamera.transform.forward * 1000;
+            RaycastHit hit;
+            if (Physics.Raycast(playerCamera.transform.position, lineOfSight, out hit)) {
+                //Get the UI hex cell the player is looking at
+                UICellObj hitObj = hit.transform.gameObject.GetComponent<UICellObj>() as UICellObj;
 
-				//if it isn't null
-				if (hitObj != null) {
-
-					//get the selected cell
-					PathCell lookedCell = aiController [hitObj.q, hitObj.r, hitObj.h];
+                //if it isn't null
+                if (hitObj != null) {
+                    //get the selected cell
+                    PathCell lookedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
                     for (int i = 0; i < movable.Count; i++) {
                         foreach (PathCell m in movable[i]) {
                             if (lookedCell.Equals(m) && !lookedCell.Equals(aiController[q, r, h])) {
@@ -168,9 +169,9 @@ public class Player : MonoBehaviour {
                                     transform.parent.transform.position = levelController[hitObj.q, hitObj.r, hitObj.h].centerPos;
                                     if (levelController[hitObj.q, hitObj.r, hitObj.h].hasGoal) {
                                         levelController.numOfGoals -= 1;
-                                        levelController[hitObj.q, hitObj.r, hitObj.h].goal.GetComponent<Renderer>().enabled = false;
+                                        levelController[hitObj.q, hitObj.r, hitObj.h].goal.SetActive(false);
                                     }
-                                    actionPoints -= i+1;
+                                    actionPoints -= i + 1;
                                     uiController.ClearCells();
                                     uiController.setVisibility(false);
                                     return true;
@@ -178,68 +179,60 @@ public class Player : MonoBehaviour {
                             }
                         }
                     }
-				}
-			}
-		} 
-		//VR Specific movement
-		else {
-			if (vrMoveComplete) {
-				vrMoveComplete = false;
-				return true;
-			}
-		}
+                }
+            }
+        }
+        //VR Specific movement
+        else {
+            if (vrMoveComplete) {
+                vrMoveComplete = false;
+                return true;
+            }
+        }
         return false;
     }
 
-	public void vrMove(Vector3 targetPosition){
-		int[] figurePositionHex = HexConst.CoordToHexIndex (targetPosition);
-		transform.position = levelController [figurePositionHex [0], figurePositionHex [1], figurePositionHex [2]].centerPos;
-		actionPoints -= 1;
-		uiController.ClearCells ();
-		uiController.setVisibility (false);
-		vrMoveComplete = true;
-	}
+    public void vrMove(Vector3 targetPosition) {
+        int[] figurePositionHex = HexConst.CoordToHexIndex(targetPosition);
+        transform.position = levelController[figurePositionHex[0], figurePositionHex[1], figurePositionHex[2]].centerPos;
+        actionPoints -= 1;
+        uiController.ClearCells();
+        uiController.setVisibility(false);
+        vrMoveComplete = true;
+    }
 
     //Testing methods for calling/using abilities.
     //Currently hooking these up in Player itself as a temporary thing.
     //I'll make sure these work with everything later; for now I just want to have some sort of abilities I can call
     //and a way to test the "select within a radius" functionality.
     //Ability effect not functional; ability targeting is.
-    public bool testFireball()
-    {
+    public bool testFireball() {
         //If the player is standing on a hex (not falling, jumping)
-        if (levelController[q, r, h] != null)
-        {
+        if (levelController[q, r, h] != null) {
             //Get the area around the current hex
-            uiController.ShowValidTopDownRadius(q,r,h,5,true);
+            uiController.ShowValidTopDownRadius(q, r, h, 5, true);
         }
 
         //I don't know how to do the VR version; will likely test that whenever I get the opportunity.
-        
+
         //Get the cell the player is looking at
         Vector3 lineOfSight = playerCamera.transform.forward * 1000;
         RaycastHit hit;
-        if (Physics.Raycast(playerCamera.transform.position, lineOfSight, out hit))
-        {
+        if (Physics.Raycast(playerCamera.transform.position, lineOfSight, out hit)) {
             //Get the UI hex cell the player is looking at
             UICellObj hitObj = hit.transform.gameObject.GetComponent<UICellObj>() as UICellObj;
 
             //if it isn't null
-            if (hitObj != null)
-            {
+            if (hitObj != null) {
                 //get the selected cell; if it's within 5 units of the starting cell show the ability AoE
                 PathCell lookedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
                 PathCell startCell = aiController[q, r, h];
 
-                if (aiController.DistBetween(lookedCell, startCell) <= 5)
-                {
-                    uiController.ShowValidTopDownRadius(hitObj.q, hitObj.r, hitObj.h,1,true,MaterialEnum.TARGETED_ZONE);
+                if (aiController.DistBetween(lookedCell, startCell) <= 5) {
+                    uiController.ShowValidTopDownRadius(hitObj.q, hitObj.r, hitObj.h, 1, true, MaterialEnum.TARGETED_ZONE);
                 }
             }
         }
-    
-
-
         return true;
     }
 }

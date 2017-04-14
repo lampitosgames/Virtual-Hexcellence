@@ -8,12 +8,13 @@ using UnityEngine;
 /// This object type will expand over time.
 /// All HexCellData objects are built and populated at runtime.
 /// </summary>
-// TODO: Abstract HexGrid cells.  There is a lot of repeated functionality.
 public class HexCellData : HexCell {
     //Reference to the cell's game object
     public GameObject hexCellObject;
-    public GameObject goal;
+
+    //Whether or not the cell contains a goal object and a reference if it does
     public bool hasGoal;
+    public GameObject goal;
 
     /// <summary>
     /// Constructor

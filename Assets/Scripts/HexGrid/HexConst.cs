@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// A set of static functions used for hex grid calculations
+/// A set of static functions and variables used for hex grid calculations
 /// </summary>
 public static class HexConst {
     //Side length of a hex. Also distance from the hex center to any of the hex corners
-    //TODO: Change these values if/when the hex model changes
+    //Change these values if/when the hex model changes
     public const float radius = 2.52f;
     public const float height = 0.1282126f * 4f;
 
@@ -24,7 +24,7 @@ public static class HexConst {
         float z = HexConst.radius * Mathf.Sqrt(3) * (q + (r / 2f));
         return new Vector3(x, y, z);
     }
-    
+
     /// <summary>
     /// Get world coordinates and convert them to hex coordinates
     /// </summary>
@@ -48,7 +48,7 @@ public static class HexConst {
         // x = q;
         // z = r;
         // y = -x - z;
-        return new int[] { q, -q-r, r, h };
+        return new int[] { q, -q - r, r, h };
     }
 
     /// <summary>

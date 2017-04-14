@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Monster_Stats : MonoBehaviour {
+public class MonsterStats : MonoBehaviour {
 
 	public float Health;
 

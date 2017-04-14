@@ -5,16 +5,18 @@ using UnityEngine;
 /// <summary>
 /// The LevelController is the stateful holder of level data.
 /// It will accept info from lower objects and change the game state accordingly.
+/// The level controller handles the game looop.
 /// </summary>
 public class LevelController : MonoBehaviour {
     //The level grid holds HexCellData objects, the meat of cell states
     public HexGrid<HexCellData> levelGrid = new HexGrid<HexCellData>();
-    //A reference to the AIController
+    //References to other controllers
     public AIController aiController; //Handles AI and pathfinding
 	public UIController uiController; //Handles UI interactions
 
     //A reference to the player
     public Player player;
+    //Is it the player's turn
     bool playerTurn = true;
 
     //Goal-related variables
@@ -39,24 +41,36 @@ public class LevelController : MonoBehaviour {
     /// it is called before start()
     /// </summary>
 	void Awake() {
-        //Get a reference to the AIController
+        //Get a references to other controllers
         aiController = GameObject.Find("AIController").GetComponent<AIController>() as AIController;
 		uiController = GameObject.Find ("UIController").GetComponent<UIController>() as UIController;
 	}
 
+    /// <summary>
+    /// Main game loop
+    /// </summary>
     void Update() {
+        //If the player has not won or lost
         if (!this.win && !this.lose) {
+            //If the player has reached all goals, end the game with the player winning
             if (numOfGoals <= 0) {
                 this.EndGame(true);
             }
+
             //If it is the player turn
             if (playerTurn) {
                 //Step through player's turn.  This will return true when the player's turn is over
+                //DOCUMENTATION NOTE:
+                //This is the common structure for all game loop methods.  The LevelController's update function gets stuck, logically speaking, on calling this
+                //funciton every loop until it returns true.  This tells the player object to run trhough its turn logic while still allowing all objects to have
+                //individual, complex behavior like animation and basic movement (i.e. the player can move around the hex on the monster's turn).
+                //This is a common paradigm across the project
                 if (player.TakeTurn()) {
                     //Switch to monster's turn after the player turn
                     this.StartMonsterTurn();
                 }
-                //Not player turn
+
+            //Not player turn
             } else {
                 //If the monster turn is over
                 if (aiController.MonsterTurn()) {
@@ -67,6 +81,9 @@ public class LevelController : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Method that simply resets state variables so the game loop will determine the monsters to be active.
+    /// </summary>
     public void StartMonsterTurn() {
         player.actionPoints = 0;
         player.playerMoving = false;
@@ -76,12 +93,19 @@ public class LevelController : MonoBehaviour {
         this.playerTurn = false;
     }
 
+    /// <summary>
+    /// Method that resets state variables so the game loop will determine the player to be active
+    /// </summary>
     public void StartPlayerTurn() {
         player.actionPoints = 3;
         player.playerMoving = false;
         this.playerTurn = true;
     }
 
+    /// <summary>
+    /// Ends the game!  Whether the player wins or loses, sets the global state of win/loss
+    /// </summary>
+    /// <param name="playerWon">Did the player win?</param>
     public void EndGame(bool playerWon) {
         if (playerWon) {
             this.win = true;
@@ -90,6 +114,9 @@ public class LevelController : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// TEMP: Draws the win state to the screen
+    /// </summary>
     void OnGUI() {
         GUI.skin.label.fontSize = 72;
         if (this.win) {
@@ -124,6 +151,13 @@ public class LevelController : MonoBehaviour {
         uiController[q, r, h].setModelScale(cellObj.GetComponent<HexCellObj>().modelScale);
     }
 
+    /// <summary>
+    /// AddGoal is what individual goal objects use to inject themselves into the level win condition.
+    /// </summary>
+    /// <param name="q">column</param>
+    /// <param name="r">row</param>
+    /// <param name="h">heignt</param>
+    /// <param name="goalObj">self reference</param>
     public void AddGoal(int q, int r, int h, GameObject goalObj) {
         this.levelGrid[q, r, h].hasGoal = true;
         this.levelGrid[q, r, h].goal = goalObj;
