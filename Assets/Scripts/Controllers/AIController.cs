@@ -97,7 +97,7 @@ public class AIController : MonoBehaviour {
         //Add the start to the visited list
         visited.Add(pathGrid[center[0], center[1], center[2]]);
 
-        //The firnges list holds lists of cells at each tier of movement.
+        //The fringes list holds lists of cells at each tier of movement.
         //Index 0 contains the center cell
         //Index 1 contains all cells reachable in 1 step
         //Index 2 contains all cells reachable in 2 steps

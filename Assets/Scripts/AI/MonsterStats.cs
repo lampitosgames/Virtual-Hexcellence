@@ -9,7 +9,7 @@ public class MonsterStats : MonoBehaviour {
 	// Use this for initialization
 	void Update () {
 		if (Health <= 0) {
-			GetComponent<MeshRenderer> ().enabled = false;
+            this.gameObject.SetActive(false);
 		}
 	}
 	

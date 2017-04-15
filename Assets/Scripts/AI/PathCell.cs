@@ -19,7 +19,7 @@ public class PathCell : HexCell {
     /// <summary>
     /// Comparitor
     /// </summary>
-    /// <param name="o">other AICell</param>
+    /// <param name="o">other PathCell</param>
     /// <returns></returns>
     public bool Equals(PathCell o) {
         return (q == o.q && r == o.r && h == o.h);
