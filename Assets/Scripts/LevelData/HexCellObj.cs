@@ -6,11 +6,21 @@ using UnityEngine;
 /// The object representing the cell in the game world
 /// </summary>
 public class HexCellObj : MonoBehaviour {
+    public enum tileType {
+        GRASS,
+        STONE,
+        CAVE,
+        WATER
+    };
+
     //Model height/scale
     public float modelHeight, modelScale;
 
     //Coordinates
     public int q, r, h;
+
+    //Tile type (assumed grass)
+    public tileType type = tileType.GRASS;
 
     /// <summary>
     /// Unity start method
