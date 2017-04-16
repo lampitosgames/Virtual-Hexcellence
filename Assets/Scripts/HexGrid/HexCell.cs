@@ -13,6 +13,14 @@ public abstract class HexCell {
     public Vector3 centerPos;
 
     /// <summary>
+    /// Getter
+    /// Lets us quickly get q,r,h as an int[]
+    /// </summary>
+    public int[] CellCoords {
+        get { int[] temp = { q, r, h }; return temp; }
+    }
+
+    /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="q">column</param>

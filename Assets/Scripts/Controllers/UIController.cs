@@ -26,10 +26,21 @@ public class UIController : MonoBehaviour {
 
     void Start() {
         levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
+        
+        StartCoroutine(LoadTileCheck()); //Coroutine that waits for all cells to become ready before continuing.
+    }
+
+    //Helper coroutine for Start
+    //Makes sure all tiles are completely loaded before scaling, repositioning, and setting visibility.
+    //In absence of this fix, approx. 16 tiles and the player figure load before the rest, and are scaled down+set invisible while the rest remain at full size.
+    IEnumerator LoadTileCheck()
+    {
         spawnPlayerFigure();
-        scaleandReposition(); //properly scales down the UI grid.
+        yield return new WaitUntil(() => levelController.cellsReady>=236); //wait until all cells are ready
+        scaleandReposition();//properly scales down the UI grid.
         setVisibility(false);
     }
+
 
     /// <summary>
     /// Allow getting/setting for the UI grid using [q,r,h]
@@ -82,13 +93,13 @@ public class UIController : MonoBehaviour {
     /// Currently used for ability ranges.
     /// Will likely abstract some of this at some point.
     /// </summary>
-    public void ShowValidTopDownRadius(int q, int r, int h, int radius, bool includeOrigin = false, MaterialEnum matParam = MaterialEnum.COSTS_ONE) {
+    public void ShowValidTopDownRadius(int q, int r, int h, int radius, bool includeOrigin = false, TargetingMaterial matParam = TargetingMaterial.COSTS_ONE) {
         Material matToUse;
         switch (matParam) {
-            case MaterialEnum.COSTS_ONE: matToUse = possibleMoveMat1; break;
-            case MaterialEnum.COSTS_TWO: matToUse = possibleMoveMat2; break;
-            case MaterialEnum.COSTS_THREE: matToUse = possibleMoveMat3; break;
-            case MaterialEnum.TARGETED_ZONE: matToUse = highlightMaterial; break;
+            case TargetingMaterial.COSTS_ONE: matToUse = possibleMoveMat1; break;
+            case TargetingMaterial.COSTS_TWO: matToUse = possibleMoveMat2; break;
+            case TargetingMaterial.COSTS_THREE: matToUse = possibleMoveMat3; break;
+            case TargetingMaterial.TARGETED_ZONE: matToUse = highlightMaterial; break;
             default: matToUse = possibleMoveMat1; break;
         }
         UICell[] topDown = uiGrid.TopDownRadius(q, r, h, radius, includeOrigin);
@@ -161,6 +172,7 @@ public class UIController : MonoBehaviour {
     /// Rescale and move
     /// </summary>
     void scaleandReposition() {
+        Debug.Log("Scaling down.");
         transform.localScale = transform.localScale * uiScale;
         transform.position = new Vector3(0, 1, 0);
         spawnPlayerFigure();

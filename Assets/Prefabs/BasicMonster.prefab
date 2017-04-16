@@ -38,8 +38,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1366646546550100}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18.9, y: 1.0514016, z: 24.04}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 26.437, y: 3.02, z: -50.234}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -106,10 +106,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1366646546550100}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc05fcb0a0813cf43ac87759c8883fdf, type: 3}
+  m_Script: {fileID: 11500000, guid: 324b093adf315da4ba1dda9859896087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackMaterial: {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
+  attackMaterial: {fileID: 0}
   aggroRadius: 10
   movementSpeed: 2
   realtimeSpeed: 4
@@ -121,10 +121,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1366646546550100}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 327b328d56188c943a84520eefb19690, type: 3}
+  m_Script: {fileID: 11500000, guid: 1897310f07cd93f46801c72b9ee38299, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 10
+  Health: 5
 --- !u!136 &136047366834231694
 CapsuleCollider:
   m_ObjectHideFlags: 1

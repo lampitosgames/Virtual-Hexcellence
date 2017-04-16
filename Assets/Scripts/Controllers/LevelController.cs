@@ -25,6 +25,9 @@ public class LevelController : MonoBehaviour {
     bool win = false;
     bool lose = false;
 
+    //temporary for debugging
+    public int cellsReady;
+
     /// <summary>
     /// Allow getting/setting for the level grid using [q,r,h]
     /// </summary>
@@ -118,6 +121,9 @@ public class LevelController : MonoBehaviour {
     /// TEMP: Draws the win state to the screen
     /// </summary>
     void OnGUI() {
+        //Debugging
+        //GUI.skin.label.fontSize = 18;
+        //GUI.Label(new Rect(300, 100, 360, 20), "Called AddCell "+cellsReady+" times");
         GUI.skin.label.fontSize = 72;
         if (this.win) {
             GUI.Label(new Rect(Screen.width/2 - 250, Screen.height/2 - 250, 500, 500), "You Win!");
@@ -149,6 +155,8 @@ public class LevelController : MonoBehaviour {
 		uiController.addCellToUIMap(uiCell);
         //Set the scale of the object to equal the world hex it represents
         uiController[q, r, h].setModelScale(cellObj.GetComponent<HexCellObj>().modelScale);
+
+        cellsReady++;
     }
 
     /// <summary>

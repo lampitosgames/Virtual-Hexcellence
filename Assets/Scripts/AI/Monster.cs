@@ -19,6 +19,12 @@ public class Monster : MonoBehaviour {
     //Current cell of self and player 
     int[] curCell = null, playerCell = new int[] { 0, 0, 0 };
 
+    //Getter for the current cell
+    public int[] CurrentCell
+    {
+        get { return curCell; }
+    }
+
     //TEMP: Attack material (when the monster attacks, change it to this material)
     public Material attackMaterial;
 
@@ -37,6 +43,7 @@ public class Monster : MonoBehaviour {
         aiController = GameObject.Find("AIController").GetComponent<AIController>() as AIController;
         levelController = GameObject.Find("LevelController").GetComponent<LevelController>() as LevelController;
 
+        curCell = HexConst.CoordToHexIndex(transform.position - new Vector3(0, 0.8f, 0));
         //Add self to the list of monsters
         aiController.monsters.Add(this);
     }
