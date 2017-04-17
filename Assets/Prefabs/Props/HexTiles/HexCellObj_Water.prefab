@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 64580516958330092}
   - component: {fileID: 33890272549388390}
   m_Layer: 0
-  m_Name: HexCellObj_Grass 1
+  m_Name: HexCellObj_Water
   m_TagString: Target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,3 +111,4 @@ MonoBehaviour:
   q: 0
   r: 0
   h: 0
+  type: 3

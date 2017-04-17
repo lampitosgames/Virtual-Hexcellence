@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 64269508728399648}
   - component: {fileID: 33610941868599598}
   m_Layer: 0
-  m_Name: HexCellObj_Grass 1
+  m_Name: HexCellObj_Cave
   m_TagString: Target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,3 +111,4 @@ MonoBehaviour:
   q: 0
   r: 0
   h: 0
+  type: 2
