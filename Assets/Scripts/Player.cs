@@ -1,14 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using Valve.VR;
 using UnityEngine.VR;
+
 
 /// <summary>
 /// The player object in the game.
 /// The player can be an FPS controller or a VR player
 /// </summary>
 public class Player : MonoBehaviour {
+
+	public bool AttatchedToVRPlayer;
     //player coords
     public int q, r, h;
 
@@ -27,13 +31,13 @@ public class Player : MonoBehaviour {
     InventoryController inventoryController;
 
     //Relevant Gameobjects
-    GameObject playerCamera;
+    public GameObject playerCamera;
 
     //State variables
+	private bool vrActive = false;
     public List<List<PathCell>> movable = new List<List<PathCell>>();
     public bool playerMoving = false;
     public int actionPoints = 3;
-    public bool vrActive = false;
     private bool vrMoveComplete = false;
     public AbilityEnum currentAction = AbilityEnum.NOT_USING_ABILITIES_ATM; //Records the player's current ability state.
     public UICellObj gazedAt;
@@ -58,13 +62,21 @@ public class Player : MonoBehaviour {
         playerCamera = GetComponentInChildren<Camera>().gameObject;
 
         //Check for VR
-        if (GameObject.Find("FPSController") == null) {
-            vrActive = true;
+		if (PlayerSettings.virtualRealitySupported == true){
+			vrActive = true;
+			if (!AttatchedToVRPlayer) {
+				Destroy (this.gameObject);
+			}
         } else {
+			vrActive = false;
+			if (AttatchedToVRPlayer) {
+				Destroy (this.gameObject);
+			}
             //Disable everything VR related and fix FOV of Camera
             SteamVR.SafeDispose();
             VRSettings.enabled = false;
             playerCamera.GetComponent<Camera>().fieldOfView = 60;
+
         }
     }
 

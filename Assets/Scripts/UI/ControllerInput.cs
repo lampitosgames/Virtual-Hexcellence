@@ -13,7 +13,7 @@ public class ControllerInput : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		trackedObj = GetComponent<SteamVR_TrackedObject> ();
-		player = GameObject.FindGameObjectWithTag ("Player").GetComponent<Player>();
+		player = GameObject.FindGameObjectWithTag ("Player").GetComponentInChildren<Player> ();
 	}
 	
 	// Update is called once per frame
