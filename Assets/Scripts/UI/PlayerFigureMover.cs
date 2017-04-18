@@ -34,7 +34,7 @@
 			if (levelController.levelGrid.GetHex(figurePositionHex[0], figurePositionHex[1], figurePositionHex[2]) != null) {
 				print ("There is a Hex Here");
 				Vector3 newPosition = HexConst.HexToWorldCoord(figurePositionHex[0], figurePositionHex[1], figurePositionHex[2]);
-				GameObject.FindGameObjectWithTag ("Player").GetComponent<Player> ().vrMove (newPosition);
+				GameObject.FindGameObjectWithTag ("Player").GetComponentInChildren<Player> ().vrMove (newPosition);
 				playerFigure.transform.localPosition = this.transform.localPosition;
 				playerFigure.StopUsing (playerFigure.controller);
 				Destroy (this.gameObject);
