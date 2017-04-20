@@ -24,6 +24,7 @@ public class LevelController : MonoBehaviour {
     public List<int[]> goalHexes = new List<int[]>();
     bool win = false;
     bool lose = false;
+    private bool initGoals = false;
 
     //temporary for debugging
     public int cellsReady;
@@ -54,7 +55,7 @@ public class LevelController : MonoBehaviour {
     /// </summary>
     void Update() {
         //If the player has not won or lost
-        if (!this.win && !this.lose) {
+        if (!this.win && !this.lose && this.initGoals) {
             //If the player has reached all goals, end the game with the player winning
             if (numOfGoals <= 0) {
                 this.EndGame(true);
@@ -89,7 +90,7 @@ public class LevelController : MonoBehaviour {
     /// </summary>
     public void StartMonsterTurn() {
         player.actionPoints = 0;
-        player.playerMoving = false;
+        player.playerActing = false;
         foreach (Monster m in aiController.monsters) {
             m.ResetTurn();
         }
@@ -101,7 +102,7 @@ public class LevelController : MonoBehaviour {
     /// </summary>
     public void StartPlayerTurn() {
         player.actionPoints = 3;
-        player.playerMoving = false;
+        player.playerActing = false;
         this.playerTurn = true;
     }
 
@@ -170,5 +171,6 @@ public class LevelController : MonoBehaviour {
         this.levelGrid[q, r, h].hasGoal = true;
         this.levelGrid[q, r, h].goal = goalObj;
         this.numOfGoals += 1;
+        this.initGoals = true;
     }
 }

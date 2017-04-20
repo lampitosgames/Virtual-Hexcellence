@@ -40,4 +40,8 @@ public class Goal : MonoBehaviour {
             addedSelf = true;
         }
     }
+
+    public virtual void Accomplished() {
+        gameObject.SetActive(false);
+    }
 }

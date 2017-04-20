@@ -10,6 +10,7 @@ TagManager:
   - TeleportIgnore
   - Deadly
   - Target
+  - PlayerCollisionBox
   layers:
   - Default
   - TransparentFX

@@ -1447,6 +1447,10 @@ Transform:
   m_PrefabParentObject: {fileID: 4150616748318214, guid: efea1913d91bcdf4aa4cdf31213f6bf1,
     type: 2}
   m_PrefabInternal: {fileID: 1820752889}
+--- !u!1 &123920742 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100000, guid: e555b3ce48ddb61428b8b1bba3776aca, type: 3}
+  m_PrefabInternal: {fileID: 397722868}
 --- !u!4 &127024377 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4150616748318214, guid: efea1913d91bcdf4aa4cdf31213f6bf1,
@@ -4121,7 +4125,7 @@ Prefab:
       objectReference: {fileID: 2100000, guid: a23e48af90041eb43afd3f81ba33efbb, type: 2}
     - target: {fileID: 100000, guid: e555b3ce48ddb61428b8b1bba3776aca, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e555b3ce48ddb61428b8b1bba3776aca, type: 3}
@@ -4918,7 +4922,7 @@ GameObject:
   - component: {fileID: 468646890}
   m_Layer: 0
   m_Name: Cube (2)
-  m_TagString: Untagged
+  m_TagString: PlayerCollisionBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5945,50 +5949,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: efea1913d91bcdf4aa4cdf31213f6bf1, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &539731871
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 539731872}
-  - component: {fileID: 539731873}
-  m_Layer: 0
-  m_Name: InventoryController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &539731872
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 539731871}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 977280608}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &539731873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 539731871}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c9c28c629ef9ef4ca374d7a64ce83e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemSearchRadius: 2
-  collectKey: 101
-  dropKey: 120
-  itemsContained: []
 --- !u!1001 &543123163
 Prefab:
   m_ObjectHideFlags: 0
@@ -6263,7 +6223,7 @@ GameObject:
   - component: {fileID: 568767527}
   m_Layer: 0
   m_Name: Cube (1)
-  m_TagString: Untagged
+  m_TagString: PlayerCollisionBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9844,7 +9804,6 @@ Transform:
   - {fileID: 468646889}
   - {fileID: 1021883774}
   - {fileID: 207296522}
-  - {fileID: 539731872}
   - {fileID: 1132591974}
   m_Father: {fileID: 0}
   m_RootOrder: 8
@@ -10258,7 +10217,7 @@ GameObject:
   - component: {fileID: 1021883775}
   m_Layer: 0
   m_Name: Cube (3)
-  m_TagString: Untagged
+  m_TagString: PlayerCollisionBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11257,7 +11216,7 @@ Transform:
   - {fileID: 63746924}
   - {fileID: 1132604245}
   m_Father: {fileID: 977280608}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1132604245 stripped
 Transform:
@@ -14047,14 +14006,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7560c4d2b0b3d64b96d3b26799ed8d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttatchedToVRPlayer: 1
   q: 0
   r: 0
   h: 0
+  AttatchedToVRPlayer: 1
   currenthexmaterial: {fileID: 0}
   highlightMaterial: {fileID: 0}
   playerCamera: {fileID: 0}
-  playerMoving: 0
+  playerActing: 0
   actionPoints: 3
   currentAction: 0
   gazedAt: {fileID: 0}
@@ -15864,19 +15823,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7560c4d2b0b3d64b96d3b26799ed8d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttatchedToVRPlayer: 0
   q: 0
   r: 0
   h: 0
+  AttatchedToVRPlayer: 0
   currenthexmaterial: {fileID: 2100000, guid: 368e0b84603b6174e985fa929269ec00, type: 2}
   highlightMaterial: {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
   playerCamera: {fileID: 0}
-  playerMoving: 0
+  playerActing: 0
   actionPoints: 3
   currentAction: 0
   gazedAt: {fileID: 0}
   currentActionCost: 0
   extraCrispyTileMaterial: {fileID: 2100000, guid: 9c6d01987d3892e4895e793dc8b6c17b,
+    type: 2}
+--- !u!114 &1624174603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1624174596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03e5b25e92ce06f418be88fd7d411123, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arrowPrefab: {fileID: 1684331762364502, guid: f26e5169159eca64599404f0df579844,
     type: 2}
 --- !u!1001 &1624488058
 Prefab:
@@ -19841,7 +19813,8 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114955624053333090, guid: 7cc28972bcaa4974092302a783e4dc6a, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 7cc28972bcaa4974092302a783e4dc6a, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1974041408
@@ -19857,7 +19830,7 @@ GameObject:
   - component: {fileID: 1974041410}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: PlayerCollisionBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21322,6 +21295,27 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: efea1913d91bcdf4aa4cdf31213f6bf1, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &2121027415 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1473976694311238, guid: 7cc28972bcaa4974092302a783e4dc6a,
+    type: 2}
+  m_PrefabInternal: {fileID: 1970463700}
+--- !u!114 &2121027416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2121027415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c76f79e15391e841970104a9efdc50e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reached: 0
+  q: 0
+  r: 0
+  h: 0
+  gateToClose: {fileID: 123920742}
 --- !u!1001 &2123657184
 Prefab:
   m_ObjectHideFlags: 0
