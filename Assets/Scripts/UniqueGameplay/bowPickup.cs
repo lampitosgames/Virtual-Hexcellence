@@ -9,6 +9,9 @@ public class bowPickup : MonoBehaviour {
     Player player;
     bool init = false;
 
+    public GameObject bow = null;
+    public List<GameObject> arrows = new List<GameObject>();
+
     void Update() {
         if (!init) {
             player = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Player>();
@@ -19,6 +22,11 @@ public class bowPickup : MonoBehaviour {
 
         if (!player.hasBow && player.q == hexObj.q && player.r == hexObj.r && player.h == hexObj.h) {
             player.hasBow = true;
+            GameObject parentPlayer = GameObject.FindGameObjectWithTag("Player");
+            bow.transform.parent = parentPlayer.transform;
+            foreach (GameObject a in arrows) {
+                a.transform.parent = parentPlayer.transform;
+            }
         }
     }
 }
