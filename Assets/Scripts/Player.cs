@@ -43,6 +43,10 @@ public class Player : MonoBehaviour {
     public int actionPoints = 3;
     public AbilityEnum currentAction = AbilityEnum.NOT_USING_ABILITIES;
 
+    //Hard-coded inventory
+    public bool hasBow = false;
+    public bool hasFireball = false;
+
     /// <summary>
     /// Unity's start() function called after the object is initialized
     /// </summary>
@@ -100,7 +104,7 @@ public class Player : MonoBehaviour {
             this.currentAction = AbilityEnum.MOVE_PLAYER;
             uiController.setVisibility(true);
         }
-        if (Input.GetKeyUp(KeyCode.Alpha1) && actionPoints > 0) {
+        if (Input.GetKeyUp(KeyCode.Alpha1) && actionPoints > 0 && this.hasFireball) {
             this.playerActing = true;
             this.currentAction = AbilityEnum.FIREBALL;
             uiController.setVisibility(true);
@@ -119,7 +123,9 @@ public class Player : MonoBehaviour {
     public void onTouchpadUp() {
         //Start actions
         if (actionPoints > 0 && !playerActing) {
+            //Start action
             this.playerActing = true;
+            this.currentAction = AbilityEnum.MOVE_PLAYER;
             uiController.setVisibility(true);
         }
     }

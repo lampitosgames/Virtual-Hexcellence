@@ -20,11 +20,10 @@ public class FPSArrowShooting : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         //If player clicks and isn't taking actions
-        if (Input.GetMouseButtonUp(0) && !player.playerActing) {
+        if (Input.GetMouseButtonUp(0) && !player.playerActing && player.hasBow) {
             Vector3 start = playerCamera.transform.position;
-            //start += playerCamera.transform.forward.normalized;
             GameObject newArrow = Instantiate(arrowPrefab, start, playerCamera.transform.rotation);
-            newArrow.GetComponent<Rigidbody>().velocity = 20 * playerCamera.transform.forward.normalized;
+            newArrow.GetComponent<Rigidbody>().velocity = 25 * playerCamera.transform.forward.normalized;
         }
     }
 }

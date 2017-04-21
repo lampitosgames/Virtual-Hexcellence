@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 95904010970465148}
   m_Layer: 0
   m_Name: Target
-  m_TagString: Target
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -39,9 +39,10 @@ GameObject:
   - component: {fileID: 23374521320661014}
   - component: {fileID: 64801840335098384}
   - component: {fileID: 64832990150755634}
+  - component: {fileID: 114393392790701964}
   m_Layer: 0
   m_Name: target
-  m_TagString: Untagged
+  m_TagString: Target
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -240,3 +241,14 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114393392790701964
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1769056589458572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0bfcd6512a365c4bb34fe9b6e10732f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
