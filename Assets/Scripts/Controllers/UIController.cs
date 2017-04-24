@@ -15,6 +15,9 @@ public class UIController : MonoBehaviour {
     int[] figurePositionHex;
     LevelController levelController;
 
+	Player player = null;
+	Vector3 uiControllerCenterPos = new Vector3(0, 1, 0);
+
     public float uiScale = 0.02f; //the scale of the minimap compared to the world map.
 
     //Materials for hexes
@@ -25,7 +28,8 @@ public class UIController : MonoBehaviour {
     public Material highlightMaterial;
 
     void Start() {
-        levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
+		levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
+		player = GameObject.FindGameObjectWithTag ("Player").GetComponentInChildren<Player> ();
         
         StartCoroutine(LoadTileCheck()); //Coroutine that waits for all cells to become ready before continuing.
     }
@@ -124,7 +128,7 @@ public class UIController : MonoBehaviour {
             //Subtract the player position
             figurePositionHex = HexConst.CoordToHexIndex(new Vector3(playerFigure.transform.position.x - transform.parent.position.x, playerFigure.transform.position.y - transform.parent.position.y, playerFigure.transform.position.z - transform.parent.position.z));
         } else {
-            playerFigure.transform.position = this.transform.position;
+			playerFigure.transform.position = HexConst.HexToWorldCoord(player.q, player.r, player.h) + uiControllerCenterPos;
         }
     }
 
@@ -151,30 +155,11 @@ public class UIController : MonoBehaviour {
     }
 
     /// <summary>
-    /// This is temporary to test different scales and positions of the minimap
-    /// </summary>
-    void Update() {
-        if (Input.GetKeyDown("up")) {
-            //scaleandReposition (); //commented out because we only need to do this once at the beginning.
-        }
-        if (Input.GetKeyDown("b")) {
-            setVisibility(true);
-        }
-        if (Input.GetKeyDown("n")) {
-            setVisibility(false);
-        }
-        if (Input.GetKeyDown("v")) {
-            doMove();
-        }
-    }
-
-    /// <summary>
     /// Rescale and move
     /// </summary>
     void scaleandReposition() {
-        Debug.Log("Scaling down.");
         transform.localScale = transform.localScale * uiScale;
-        transform.position = new Vector3(0, 1, 0);
+        transform.position = uiControllerCenterPos;
         spawnPlayerFigure();
     }
 
@@ -182,21 +167,37 @@ public class UIController : MonoBehaviour {
     /// Enable/Disable the renderer this will eventually become on/off for the minimap
     /// </summary>
     public void setVisibility(bool visible) {
+		//Show UI
         if (visible) {
-            foreach (MeshRenderer renderer in transform.GetComponentsInChildren<MeshRenderer>()) {
-                renderer.enabled = true;
-            }
-            foreach (Collider col in transform.GetComponentsInChildren<Collider>()) {
-                col.enabled = true;
-            }
+			//Get cells in a radius
+			UICell[] toDisplay = uiGrid.GetRadius (player.q, player.r, player.h, 8, -2, true);
+			//Display them all
+			foreach (UICell c in toDisplay) {
+				c.Display (true);
+			}
 
+			//Center the minimap
+			Vector3 translationVec = HexConst.HexToWorldCoord(player.q, player.r, player.h) + uiControllerCenterPos - uiGrid[player.q,player.r,player.h].gameObject.transform.position;
+			gameObject.transform.position += translationVec;
+
+			//Show player figure
+			spawnPlayerFigure();
+			foreach (MeshRenderer r in playerFigure.GetComponentsInChildren<MeshRenderer>()) {
+				r.enabled = true;
+			}
+			playerFigure.GetComponent<Collider> ().enabled = true;
+		
+		//Hide UI
         } else {
-            foreach (MeshRenderer renderer in transform.GetComponentsInChildren<MeshRenderer>()) {
-                renderer.enabled = false;
-            }
-            foreach (Collider col in transform.GetComponentsInChildren<Collider>()) {
-                col.enabled = false;
-            }
+			//Hide all UICells
+			foreach (UICell c in uiGrid) {
+				c.Display (false);
+			}
+			//Hide player figure
+			foreach (MeshRenderer r in playerFigure.GetComponentsInChildren<MeshRenderer>()) {
+				r.enabled = false;
+			}
+			playerFigure.GetComponent<Collider> ().enabled = false;
         }
     }
 

@@ -34,4 +34,19 @@ public class UICell : HexCell {
         gameObject = cell;
     }
 
+	///<summary>
+	/// Set the display status of the UICell
+	/// </summary>
+	public void Display(bool display) {
+		if (display) {
+			MeshRenderer renderer = this.gameObject.GetComponent<MeshRenderer> ();
+			Collider collider = this.gameObject.GetComponent<Collider> ();
+			renderer.enabled = true;
+			collider.enabled = true;
+		} else {
+			this.gameObject.GetComponent<MeshRenderer> ().enabled = false;
+			this.gameObject.GetComponent<Collider> ().enabled = false;
+		}
+	}
+
 }
