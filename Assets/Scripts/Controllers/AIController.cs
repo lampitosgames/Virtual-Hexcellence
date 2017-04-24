@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum eType {
+	BASIC_ENEMY
+}
+
 /// <summary>
 /// The AIController manages state and calculations for AI and pathfinding in the game.
 /// </summary>
@@ -14,6 +18,9 @@ public class AIController : MonoBehaviour {
     public List<Monster> monsters = new List<Monster>();
     //Used in the game loop to continuously update the proper monster
     int curMonster = 0;
+
+	//Enemy Type UI Prefabs
+	public GameObject basicEnemyPrefab = null;
 
     /// <summary>
     /// Allow getting/setting for the level grid using [q,r,h]
@@ -220,6 +227,23 @@ public class AIController : MonoBehaviour {
         //Calculate the cell distance
         return ((int)Mathf.Abs(ac[0] - bc[0]) + (int)Mathf.Abs(ac[1] - bc[1]) + (int)Mathf.Abs(ac[2] - bc[2])) / 2;
     }
+
+	//If a cell has an enemy, return 
+	public GameObject GetMonsterUIPrefab(int q, int r, int h) {
+		//Null check
+		if (pathGrid [q, r, h] == null) {
+			return null;
+		}
+		if (pathGrid [q, r, h].hasEnemy) {
+			switch (pathGrid [q, r, h].enemyType) {
+			case (eType.BASIC_ENEMY):
+				return basicEnemyPrefab;
+			default:
+				return null;
+			}
+		}
+		return null;
+	}
 
     /// <summary>
     /// Recursively travel up the 'parent' chain and construct a list of integer coordinates that form a path.

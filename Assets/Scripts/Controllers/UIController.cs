@@ -14,6 +14,7 @@ public class UIController : MonoBehaviour {
     private GameObject playerFigure;
     int[] figurePositionHex;
     LevelController levelController;
+	AIController aiController;
 
 	Player player = null;
 	Vector3 uiControllerCenterPos = new Vector3(0, 1, 0);
@@ -27,8 +28,9 @@ public class UIController : MonoBehaviour {
     public Material possibleMoveMat3;
     public Material highlightMaterial;
 
-    void Start() {
+	void Start() {
 		levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
+		aiController = GameObject.Find("AIController").GetComponent<AIController>();
 		player = GameObject.FindGameObjectWithTag ("Player").GetComponentInChildren<Player> ();
         
         StartCoroutine(LoadTileCheck()); //Coroutine that waits for all cells to become ready before continuing.
@@ -65,6 +67,7 @@ public class UIController : MonoBehaviour {
         //Create a new GameObject to represent a location in the world
         GameObject newHologramCell = (GameObject)Instantiate(uiGridPrefab, cell.centerPos, transform.rotation);
         cell.setGameObject(newHologramCell);
+		cell.aiController = this.aiController;
         newHologramCell.GetComponent<UICellObj>().parent = cell;
         newHologramCell.GetComponent<UICellObj>().q = cell.q;
         newHologramCell.GetComponent<UICellObj>().r = cell.r;

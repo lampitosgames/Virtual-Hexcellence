@@ -52,3 +52,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsters: []
+  basicEnemyPrefab: {fileID: 1073418172705328, guid: b254e1b250184c04da08c4755c8b585a,
+    type: 2}

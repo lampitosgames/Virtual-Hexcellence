@@ -7,8 +7,9 @@ using UnityEngine;
 /// </summary>
 public class UICell : HexCell {
 	public GameObject gameObject;
-    //public GameObject associatedHexData; //The data for the corresponding hex.
-    
+
+	public AIController aiController = null;
+
 	/// <summary>
 	/// Constructor
 	/// </summary>
@@ -43,9 +44,17 @@ public class UICell : HexCell {
 			Collider collider = this.gameObject.GetComponent<Collider> ();
 			renderer.enabled = true;
 			collider.enabled = true;
+
+			GameObject thisMonster = GameObject.Find("AIController").GetComponent<AIController>().GetMonsterUIPrefab (q, r, h);
+			if (thisMonster != null) {
+				gameObject.GetComponent<UICellObj> ().AddMonster (thisMonster);
+			}
+
 		} else {
 			this.gameObject.GetComponent<MeshRenderer> ().enabled = false;
 			this.gameObject.GetComponent<Collider> ().enabled = false;
+
+			gameObject.GetComponent<UICellObj> ().RemoveMonster ();
 		}
 	}
 

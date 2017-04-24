@@ -19,6 +19,9 @@ public class Monster : MonoBehaviour {
     //Current cell of self and player 
     int[] curCell = null, playerCell = new int[] { 0, 0, 0 };
 
+	//Type of monster
+	eType enemyType = eType.BASIC_ENEMY;
+
     //Getter for the current cell
     public int[] CurrentCell
     {
