@@ -95,6 +95,7 @@ public class LevelController : MonoBehaviour {
             m.ResetTurn();
         }
         this.playerTurn = false;
+		Debug.Log ("Start Monster Turn");
     }
 
     /// <summary>
@@ -104,6 +105,7 @@ public class LevelController : MonoBehaviour {
         player.actionPoints = 3;
         player.playerActing = false;
         this.playerTurn = true;
+		Debug.Log ("Start Player Turn");
     }
 
     /// <summary>

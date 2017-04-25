@@ -86,15 +86,21 @@ public class Player : MonoBehaviour {
     void Update() {
         //Get player position.  Different in VR
         if (vrActive) {
-            int[] hexCoords = HexConst.CoordToHexIndex(new Vector3(transform.position.x, uiController.transform.position.y, transform.position.z));
+			int[] hexCoords = HexConst.CoordToHexIndex(new Vector3(uiController.transform.position.x, uiController.transform.position.y - 1, uiController.transform.position.z));
             q = hexCoords[0];
             r = hexCoords[1];
             h = hexCoords[2];
+			if (levelController.levelGrid.GetHex (hexCoords [0], hexCoords [1], hexCoords [2]) == null) {
+				Debug.LogError ("Player position in VR is invalid! There is no hex at this location!");
+			}
         } else {
             int[] hexCoords = HexConst.CoordToHexIndex(new Vector3(transform.position.x, transform.position.y, transform.position.z));
             q = hexCoords[0];
             r = hexCoords[1];
             h = hexCoords[2];
+			if (levelController.levelGrid.GetHex (hexCoords [0], hexCoords [1], hexCoords [2]) == null) {
+				Debug.LogError ("Player position is invalid! There is no hex at this location!");
+			}
         }
 
         //If player presses "m" to start acting, isn't yet acting, and has enough action points to do so
@@ -230,23 +236,25 @@ public class Player : MonoBehaviour {
                 }
             }
             //VR Specific movement
-        } else {
-            if (vrMoveComplete) {
+		} else if (vrMoveComplete){
+             
                 vrMoveComplete = false;
+				Debug.Log("VR move Completed");
                 return true;
-            }
         }
         //Movement not finished
         return false;
     }
 
     public void vrMove(Vector3 targetPosition) {
+		Debug.Log("vrMove called");
         int[] figurePositionHex = HexConst.CoordToHexIndex(targetPosition);
-        transform.position = levelController[figurePositionHex[0], figurePositionHex[1], figurePositionHex[2]].centerPos;
+        transform.parent.position = levelController[figurePositionHex[0], figurePositionHex[1], figurePositionHex[2]].centerPos;
         actionPoints -= 1;
         uiController.ClearCells();
         uiController.setVisibility(false);
         vrMoveComplete = true;
+
     }
 
     /// <summary>

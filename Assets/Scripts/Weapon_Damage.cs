@@ -17,13 +17,13 @@ public class Weapon_Damage : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision collision) {
-        Debug.Log(collision.relativeVelocity.magnitude);
+        //Debug.Log(collision.relativeVelocity.magnitude);
         if (collision.relativeVelocity.magnitude > 0.7f) {
             if (StickToCollision && collision.gameObject.tag == "Target") {
                 gameObject.transform.parent = collision.gameObject.transform;
                 GetComponent<Rigidbody>().isKinematic = true;
                 attatchedBody.isKinematic = true;
-                Debug.Log("Good Collison");
+               // Debug.Log("Good Collison");
             }
         }
     }
