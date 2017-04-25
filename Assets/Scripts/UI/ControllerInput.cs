@@ -25,7 +25,6 @@ public class ControllerInput : MonoBehaviour {
 		if (device.GetPress (SteamVR_Controller.ButtonMask.Touchpad)) {
 			Vector2 touchpad = (device.GetAxis (Valve.VR.EVRButtonId.k_EButton_Axis0));
 			if (touchpad.y > 0.7f) {
-				print ("UP");
 				player.onTouchpadUp();
 			}
 		}
