@@ -40,6 +40,8 @@ public class Player : MonoBehaviour {
     //Actions (Moving, attacking, abilities, etc.)
     public List<List<PathCell>> movable = new List<List<PathCell>>();
     public bool playerActing = false;
+	public UICellObj VRHitObj = null;
+	public bool doVRClick = false;
     public int actionPoints = 3;
     public AbilityEnum currentAction = AbilityEnum.NOT_USING_ABILITIES;
 
@@ -186,56 +188,64 @@ public class Player : MonoBehaviour {
             //Give the current hex the current hex material
             uiController[q, r, h].gameObject.GetComponent<Renderer>().material = currenthexmaterial;
         }
+
+		UICellObj hitObj = null;
+
         //Non VR Movement
         if (!vrActive) {
             //Get the cell the player is looking at
             Vector3 lineOfSight = playerCamera.transform.forward * 1000;
             RaycastHit hit;
-            UICellObj hitObj = null;
             if (Physics.Raycast(playerCamera.transform.position, lineOfSight, out hit)) {
                 //Get the UI hex cell the player is looking at
                 hitObj = hit.transform.gameObject.GetComponent<UICellObj>() as UICellObj;
             }
-            //if it isn't null
-            if (hitObj != null) {
-                //get the selected cell
-                PathCell lookedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
-                PathCell startCell = aiController[q, r, h];
-
-                //loop through all cells we're close enough to reach
-                for (int i = 0; i < movable.Count; i++) {
-                    foreach (PathCell m in movable[i]) {
-                        if (lookedCell.Equals(m) && !lookedCell.Equals(startCell)) {
-                            //set the material
-                            hitObj.gameObject.GetComponent<Renderer>().material = highlightMaterial;
-                            //If the player clicked the mouse
-                            if (Input.GetMouseButtonUp(0)) {
-                                //Move the player
-                                transform.parent.transform.position = levelController[hitObj.q, hitObj.r, hitObj.h].centerPos;
-                                //If the target has a goal
-                                if (levelController[hitObj.q, hitObj.r, hitObj.h].hasGoal) {
-                                    //Update the goal
-                                    levelController.numOfGoals -= 1;
-                                    levelController[hitObj.q, hitObj.r, hitObj.h].goal.GetComponent<Goal>().Accomplished();
-                                }
-                                //Reduce number of player action points remaining
-                                actionPoints -= i + 1;
-                                //Clear the UI controller
-                                uiController.ClearCells();
-                                uiController.setVisibility(false);
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
             //VR Specific movement
         } else {
-            if (vrMoveComplete) {
+            /*if (vrMoveComplete) {
                 vrMoveComplete = false;
                 return true;
-            }
+            }*/
+			hitObj = VRHitObj;
         }
+
+		//if it isn't null
+		if (hitObj != null) {
+			//get the selected cell
+			PathCell lookedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
+			PathCell startCell = aiController[q, r, h];
+
+			//loop through all cells we're close enough to reach
+			for (int i = 0; i < movable.Count; i++) {
+				foreach (PathCell m in movable[i]) {
+					if (lookedCell.Equals(m) && !lookedCell.Equals(startCell)) {
+						//set the material
+						hitObj.gameObject.GetComponent<Renderer>().material = highlightMaterial;
+						//If the player clicked the mouse
+						if (Input.GetMouseButtonUp(0) || doVRClick) {
+							//Move the player
+							transform.parent.transform.position = levelController[hitObj.q, hitObj.r, hitObj.h].centerPos;
+							//If the target has a goal
+							if (levelController[hitObj.q, hitObj.r, hitObj.h].hasGoal) {
+								//Update the goal
+								levelController.numOfGoals -= 1;
+								levelController[hitObj.q, hitObj.r, hitObj.h].goal.GetComponent<Goal>().Accomplished();
+							}
+							//Reduce number of player action points remaining
+							actionPoints -= i + 1;
+							//Clear the UI controller
+							uiController.ClearCells();
+							uiController.setVisibility(false);
+
+							doVRClick = false;
+							return true;
+						}
+					}
+				}
+			}
+			doVRClick = false;
+		}
+
         //Movement not finished
         return false;
     }
