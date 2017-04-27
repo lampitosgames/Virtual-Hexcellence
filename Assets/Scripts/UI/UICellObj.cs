@@ -19,7 +19,7 @@ public class UICellObj : MonoBehaviour {
 	}
 	public void RemoveMonster () {
 		if (uiMonster != null) {
-			Destroy (uiMonster);
+			uiMonster.SetActive(false);
 		}
 	}
 }

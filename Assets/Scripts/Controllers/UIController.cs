@@ -8,10 +8,10 @@ using UnityEngine;
 public class UIController : MonoBehaviour {
     //Assign the prefab in editor to spawn as minimap hex object
     public GameObject uiGridPrefab;
-    public GameObject playerFigurePrefab;
+	public GameObject playerFigurePrefab;
+	public GameObject playerFigure;
     //uiGrid holds all UICells which relate to each hex on the map
     public HexGrid<UICell> uiGrid = new HexGrid<UICell>();
-    private GameObject playerFigure;
     int[] figurePositionHex;
     LevelController levelController;
 	AIController aiController;
@@ -135,28 +135,6 @@ public class UIController : MonoBehaviour {
         }
     }
 
-
-    /// <summary>
-    /// Called by a canvas button when minimap is open, Moves the player to the hex corresponding to the player figure
-    /// </summary>
-    public void doMove() {
-        //Subtract the player position
-        Vector3 scaledFigurePosition = new Vector3(playerFigure.transform.position.x - transform.parent.position.x, playerFigure.transform.position.y - transform.parent.position.y, playerFigure.transform.position.z - transform.parent.position.z);
-        //Scale up the position from the miniature to full scale and reset the y axis
-        scaledFigurePosition = scaledFigurePosition * 50;
-        scaledFigurePosition.y = scaledFigurePosition.y - 50;
-        //Convert the position into hex coordinates and move the player
-        int[] figurePositionHex = HexConst.CoordToHexIndex(scaledFigurePosition);
-        if (levelController.levelGrid.GetHex(figurePositionHex[0], figurePositionHex[1], figurePositionHex[2]) != null) {
-            print("There is a Hex Here");
-            Vector3 newPosition = HexConst.HexToWorldCoord(figurePositionHex[0], figurePositionHex[1], figurePositionHex[2]);
-            GameObject.FindGameObjectWithTag("Player").transform.position = newPosition;
-            ClearCells();
-        } else {
-            Debug.LogError("OH NO!! THERE IS NO HEX WHERE THE PLAYER FIGURE IS!!" + "q: " + figurePositionHex[0] + "r: " + figurePositionHex[1] + "h: " + figurePositionHex[2]);
-        }
-    }
-
     /// <summary>
     /// Rescale and move
     /// </summary>
@@ -188,7 +166,6 @@ public class UIController : MonoBehaviour {
 			foreach (MeshRenderer r in playerFigure.GetComponentsInChildren<MeshRenderer>()) {
 				r.enabled = true;
 			}
-			playerFigure.GetComponent<Collider> ().enabled = true;
 		
 		//Hide UI
         } else {
@@ -200,7 +177,6 @@ public class UIController : MonoBehaviour {
 			foreach (MeshRenderer r in playerFigure.GetComponentsInChildren<MeshRenderer>()) {
 				r.enabled = false;
 			}
-			playerFigure.GetComponent<Collider> ().enabled = false;
         }
     }
 
