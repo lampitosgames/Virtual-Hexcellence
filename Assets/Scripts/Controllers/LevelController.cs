@@ -15,7 +15,7 @@ public class LevelController : MonoBehaviour {
 	public UIController uiController; //Handles UI interactions
 
     //A reference to the player
-    public Player player;
+    public Player player = null;
     //Is it the player's turn
     bool playerTurn = true;
 
@@ -33,7 +33,7 @@ public class LevelController : MonoBehaviour {
     /// Allow getting/setting for the level grid using [q,r,h]
     /// </summary>
     /// <param name="q">column</param>
-    /// <param name="r">row</param>
+    ///  <param name="r">row</param>
     /// <param name="h">height</param>
     public HexCellData this[int q, int r, int h] {
         get { return this.levelGrid[q, r, h]; }
