@@ -42,7 +42,7 @@ public class UIController : MonoBehaviour {
     IEnumerator LoadTileCheck()
     {
         spawnPlayerFigure();
-        yield return new WaitUntil(() => levelController.cellsReady>=236); //wait until all cells are ready
+        yield return new WaitUntil(() => levelController.cellsReady>=236); //wait until all cells are ready; should probably futureproof this for diff. numbers of tiles
         scaleandReposition();//properly scales down the UI grid.
         setVisibility(false);
     }

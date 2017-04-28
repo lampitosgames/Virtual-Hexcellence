@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.102330804, g: 0.29341656, b: 0.3193395, a: 1}
+  m_IndirectSpecularColor: {r: 0.102330364, g: 0.29341498, b: 0.3193372, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -7328,6 +7328,12 @@ Prefab:
       propertyPath: player
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 114833616353735468, guid: 9e82900ddf84781408199410569cad59,
+        type: 2}
+      propertyPath: goalPrefab
+      value: 
+      objectReference: {fileID: 1837837077893144, guid: 06359d278caea8f41bc4824e3f8d14bf,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9e82900ddf84781408199410569cad59, type: 2}
   m_IsPrefabParent: 0
@@ -11368,6 +11374,23 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114339188330339830, guid: 1f9bab612950fba499e433b11bd86d8e,
+        type: 2}
+      propertyPath: goalPrefab
+      value: 
+      objectReference: {fileID: 1837837077893144, guid: 06359d278caea8f41bc4824e3f8d14bf,
+        type: 2}
+    - target: {fileID: 114339188330339830, guid: 1f9bab612950fba499e433b11bd86d8e,
+        type: 2}
+      propertyPath: bowObject
+      value: 
+      objectReference: {fileID: 1234327887}
+    - target: {fileID: 114339188330339830, guid: 1f9bab612950fba499e433b11bd86d8e,
+        type: 2}
+      propertyPath: bowPickupPrefab
+      value: 
+      objectReference: {fileID: 1449826271402818, guid: 464a803b31ba3224387686393a8f3aca,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1f9bab612950fba499e433b11bd86d8e, type: 2}
   m_IsPrefabParent: 0

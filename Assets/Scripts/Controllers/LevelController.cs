@@ -29,6 +29,9 @@ public class LevelController : MonoBehaviour {
     //temporary for debugging
     public int cellsReady;
 
+    //Prefab for goals on minimap
+    public GameObject goalPrefab = null;
+
     /// <summary>
     /// Allow getting/setting for the level grid using [q,r,h]
     /// </summary>
@@ -172,5 +175,22 @@ public class LevelController : MonoBehaviour {
         this.levelGrid[q, r, h].goal = goalObj;
         this.numOfGoals += 1;
         this.initGoals = true;
+    }
+
+    //If a cell has a goal, return
+    //Works like GetEnemy in AIController 
+    public GameObject GetGoal(int q, int r, int h)
+    {
+        //Null check
+        if (levelGrid[q, r, h] == null)
+        {
+            return null;
+        }
+        if (levelGrid[q, r, h].hasGoal)
+        {
+            return goalPrefab;
+        }
+
+        return null;
     }
 }

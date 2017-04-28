@@ -7,8 +7,8 @@ public class PathCell : HexCell {
     public int g = int.MaxValue;
     //Is there an enemy standing on this cell?
     public bool hasEnemy = false;
-	public eType enemyType = eType.BASIC_ENEMY;
-
+    public eType enemyType = eType.BASIC_ENEMY;
+    
     /// <summary>
     /// Constructor
     /// </summary>

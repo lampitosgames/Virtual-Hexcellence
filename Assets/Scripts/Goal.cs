@@ -14,6 +14,8 @@ public class Goal : MonoBehaviour {
     //Coords
     public int q, r, h;
 
+    LevelController levelController = null;
+
     /// <summary>
     /// Unity's start function
     /// </summary>
@@ -34,7 +36,7 @@ public class Goal : MonoBehaviour {
         //Can't add self in the start() function because it is creation order dependant on hex cells
         if (!addedSelf) {
             //Save the grid game object
-            LevelController levelController = GameObject.Find("LevelController").GetComponent("LevelController") as LevelController;
+            levelController = GameObject.Find("LevelController").GetComponent("LevelController") as LevelController;
             //Tell the level controller to initialize this hex cell
             levelController.AddGoal(q, r, h, gameObject);
             addedSelf = true;
@@ -42,6 +44,8 @@ public class Goal : MonoBehaviour {
     }
 
     public virtual void Accomplished() {
+        levelController[q, r, h].hasGoal = false;
         gameObject.SetActive(false);
+
     }
 }

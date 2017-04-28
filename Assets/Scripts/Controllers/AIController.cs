@@ -16,11 +16,15 @@ public class AIController : MonoBehaviour {
 
     //A list holding all active monsters
     public List<Monster> monsters = new List<Monster>();
+
     //Used in the game loop to continuously update the proper monster
     int curMonster = 0;
 
 	//Enemy Type UI Prefabs
 	public GameObject basicEnemyPrefab = null;
+
+    //Pickup prefabs
+    public GameObject bowPickupPrefab = null;
 
     /// <summary>
     /// Allow getting/setting for the level grid using [q,r,h]
@@ -37,7 +41,7 @@ public class AIController : MonoBehaviour {
     /// Call every step on the monster's turn.
     /// Returns true once all monsters have completed their turns
     /// </summary>
-    /// <returns>Have all monsters finished thier turns?</returns>
+    /// <returns>Have all monsters finished their turns?</returns>
     public bool MonsterTurn() {
         //If the current monster has been incremented past the total number of monsters, reset the variable and end the monsters' turn
         if (curMonster >= monsters.Count) {
@@ -144,7 +148,7 @@ public class AIController : MonoBehaviour {
         }
         return turns;
     }
-
+    
     /// <summary>
     /// A basic implementation of A*
     /// </summary>
@@ -229,7 +233,7 @@ public class AIController : MonoBehaviour {
     }
 
 	//If a cell has an enemy, return 
-	public GameObject GetMonsterUIPrefab(int q, int r, int h) {
+	public GameObject GetEnemy(int q, int r, int h) {
 		//Null check
 		if (pathGrid [q, r, h] == null) {
 			return null;
@@ -244,6 +248,40 @@ public class AIController : MonoBehaviour {
 		}
 		return null;
 	}
+
+
+    //If a cell has special content other than the player, return all of it
+    //"Special content" includes enemies, 
+    //It does not include props.
+    //Commented out, as I decided to reuse HexCellData stuff instead.
+    /*public List<GameObject> GetUIInteractablePrefabs(int q, int r, int h)
+    {
+        //Null check
+        if (pathGrid[q, r, h] == null)
+        {
+            return null;
+        }
+        List<GameObject> prefabs = new List<GameObject>();
+        
+        if (pathGrid[q, r, h].hasEnemy)
+        {
+            switch (pathGrid[q, r, h].enemyType)
+            {
+                case (eType.BASIC_ENEMY):
+                    prefabs.Add(basicEnemyPrefab); break;
+                default:
+                    break;
+            }
+        }
+        //Gets all other interactable prefabs on this tile
+        //this feels clunky but it should work for IMAGINE
+        if (pathGrid[q, r, h].hasBow)
+        {
+            prefabs.Add(bowPickupPrefab);
+        }
+        
+        return prefabs;
+    }*/
 
     /// <summary>
     /// Recursively travel up the 'parent' chain and construct a list of integer coordinates that form a path.

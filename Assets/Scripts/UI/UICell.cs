@@ -9,6 +9,7 @@ public class UICell : HexCell {
 	public GameObject gameObject;
 
 	public AIController aiController = null;
+    public LevelController levelController = null;
 
 	/// <summary>
 	/// Constructor
@@ -45,16 +46,30 @@ public class UICell : HexCell {
 			renderer.enabled = true;
 			collider.enabled = true;
 
-			GameObject thisMonster = GameObject.Find("AIController").GetComponent<AIController>().GetMonsterUIPrefab (q, r, h);
-			if (thisMonster != null) {
-				gameObject.GetComponent<UICellObj> ().AddMonster (thisMonster);
-			}
+			GameObject thisMonster = GameObject.Find("AIController").GetComponent<AIController>().GetEnemy (q, r, h);
+            if (thisMonster != null)
+            {
+                gameObject.GetComponent<UICellObj>().AddInteractable(thisMonster);
+            }
+            else
+            {
+                GameObject thisGoal = GameObject.Find("LevelController").GetComponent<LevelController>().GetGoal(q, r, h);
+                if (thisGoal != null)
+                {
+                    gameObject.GetComponent<UICellObj>().AddInteractable(thisGoal);
+                }
+            }
+
+   //         List<GameObject> interactables = GameObject.Find("AIController").GetComponent<AIController>().GetUIInteractablePrefabs(q, r, h);
+   //         if (interactables!=null&&interactables.Count>0) {
+			//	gameObject.GetComponent<UICellObj> ().AddInteractable (interactables[0]);
+			//}
 
 		} else {
 			this.gameObject.GetComponent<MeshRenderer> ().enabled = false;
 			this.gameObject.GetComponent<Collider> ().enabled = false;
 
-			gameObject.GetComponent<UICellObj> ().RemoveMonster ();
+			gameObject.GetComponent<UICellObj> ().RemoveMinimapObject ();
 		}
 	}
 
