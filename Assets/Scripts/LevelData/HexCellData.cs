@@ -16,6 +16,19 @@ public class HexCellData : HexCell {
     public bool hasGoal;
     public GameObject goal;
 
+    //The list of items in this cell
+    public List<GameObject> items=new List<GameObject>();
+
+    //The list of props in this cell
+    public List<GameObject> props = new List<GameObject>();
+
+    //Whether or not the cell contains items or not.
+    public bool HasItems {
+        get { return items.Count>0; }
+    }
+
+    //Enemy presence is in PathCell. This is because of its greater relevance to pathing.
+
     /// <summary>
     /// Constructor
     /// </summary>

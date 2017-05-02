@@ -9,6 +9,7 @@ public class UICell : HexCell {
 	public GameObject gameObject;
 
 	public AIController aiController = null;
+    public LevelController levelController = null;
 
 	/// <summary>
 	/// Constructor
@@ -36,7 +37,7 @@ public class UICell : HexCell {
     }
 
 	///<summary>
-	/// Set the display status of the UICell
+	/// Set the display status of the UICell and update minimap presence
 	/// </summary>
 	public void Display(bool display) {
 		if (display) {
@@ -44,17 +45,38 @@ public class UICell : HexCell {
 			Collider collider = this.gameObject.GetComponent<Collider> ();
 			renderer.enabled = true;
 			collider.enabled = true;
+            aiController = GameObject.Find("AIController").GetComponent<AIController>();
+            levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
 
-			GameObject thisMonster = GameObject.Find("AIController").GetComponent<AIController>().GetMonsterUIPrefab (q, r, h);
-			if (thisMonster != null) {
-				gameObject.GetComponent<UICellObj> ().AddMonster (thisMonster);
-			}
+            GameObject thisMonster = aiController.GetEnemy(q, r, h);
+            if (thisMonster != null)
+            {
+                gameObject.GetComponent<UICellObj>().AddMinimapObject(thisMonster,MinimapObjectType.ENEMY);
+            }
 
-		} else {
+            GameObject thisGoal = levelController.GetGoal(q, r, h);
+            if (thisGoal != null)
+            {
+                gameObject.GetComponent<UICellObj>().AddMinimapObject(thisGoal, MinimapObjectType.GOAL);
+            }
+
+            List<GameObject> thisItems = levelController.GetItemPrefabs(q, r, h);
+            if (thisItems != null)
+            {
+                gameObject.GetComponent<UICellObj>().AddMinimapObjects(thisItems, MinimapObjectType.ITEM);
+            }
+
+            List<GameObject> thisProps = levelController.GetProps(q, r, h);
+            if (thisProps != null)
+            {
+                gameObject.GetComponent<UICellObj>().AddMinimapObjects(thisProps, MinimapObjectType.PROP);
+            }
+
+        } else {
 			this.gameObject.GetComponent<MeshRenderer> ().enabled = false;
 			this.gameObject.GetComponent<Collider> ().enabled = false;
 
-			gameObject.GetComponent<UICellObj> ().RemoveMonster ();
+			gameObject.GetComponent<UICellObj> ().HideContents();
 		}
 	}
 
