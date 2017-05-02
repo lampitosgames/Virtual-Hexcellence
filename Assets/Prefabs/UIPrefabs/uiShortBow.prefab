@@ -198,6 +198,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4643224887119982}
+  - component: {fileID: 114672956750672680}
   m_Layer: 0
   m_Name: uiShortBow
   m_TagString: Untagged
@@ -696,3 +697,16 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1374556107301998}
   m_Mesh: {fileID: 4300004, guid: 1a0611fb77e81994aa8de6bc0d4da792, type: 3}
+--- !u!114 &114672956750672680
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1718704869327190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ed2cf849ed850b4b87aea080c5cff7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSpeed: 1
+  rotateSpeed: 40
