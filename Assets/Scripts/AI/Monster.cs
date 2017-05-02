@@ -19,12 +19,11 @@ public class Monster : MonoBehaviour {
     //Current cell of self and player 
     int[] curCell = null, playerCell = new int[] { 0, 0, 0 };
 
-	//Type of monster
-	eType enemyType = eType.BASIC_ENEMY;
+    //Type of monster
+    eType enemyType = eType.BASIC_ENEMY;
 
     //Getter for the current cell
-    public int[] CurrentCell
-    {
+    public int[] CurrentCell {
         get { return curCell; }
     }
 
@@ -78,8 +77,8 @@ public class Monster : MonoBehaviour {
                 //Start the path index at 0
                 curPInd = 0;
 
-            //There is a path
-            //If the player is within <aggroRadius> hexes
+                //There is a path
+                //If the player is within <aggroRadius> hexes
             } else if (pathToPlayer.Count - 1 <= aggroRadius && pathToPlayer.Count > 2) {
                 //Stall the logic by repeatedly calling MoveToPlayer() until it returns true
                 if (this.MoveToPlayer()) {
@@ -87,7 +86,7 @@ public class Monster : MonoBehaviour {
                     actionPoints -= 1;
                 }
 
-             //Player is within Melee range
+                //Player is within Melee range
             } else if (pathToPlayer.Count == 2) {
                 //TODO: Attack player.  For now, if a monster detects it can attack the player, the player loses
                 //End the game in a failure state
@@ -102,7 +101,7 @@ public class Monster : MonoBehaviour {
                 //Player not close enough to do anything, end turn
                 return EndTurn();
             }
-        //Turn is over, end it
+            //Turn is over, end it
         } else {
             return EndTurn();
         }

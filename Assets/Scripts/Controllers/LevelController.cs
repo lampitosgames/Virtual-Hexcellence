@@ -173,4 +173,9 @@ public class LevelController : MonoBehaviour {
         this.numOfGoals += 1;
         this.initGoals = true;
     }
+
+    public void AddDisplayedObject(int q, int r, int h, GameObject uiPrefab) {
+        uiController[q, r, h].forceGoalMaterial = true;
+        this.levelGrid[q, r, h].displayedPrefabs.Add(uiPrefab);
+    }
 }

@@ -38,14 +38,14 @@ public class Player : MonoBehaviour {
     public GameObject playerCamera;
 
 
-	public UICellObj VRHitObj = null;
-	public bool vrPressDown = false;
-	public bool vrPressUp = false;
+    public UICellObj VRHitObj = null;
+    public bool vrPressDown = false;
+    public bool vrPressUp = false;
 
-	public bool playerActing = false;
+    public bool playerActing = false;
 
     //Actions (Moving, attacking, abilities, etc.)
-	public List<List<PathCell>> movable = new List<List<PathCell>>();
+    public List<List<PathCell>> movable = new List<List<PathCell>>();
     public int actionPoints = 3;
     public AbilityEnum currentAction = AbilityEnum.NOT_USING_ABILITIES;
 
@@ -68,22 +68,22 @@ public class Player : MonoBehaviour {
         //Check for VR
         if (PlayerSettings.virtualRealitySupported == true) {
             vrActive = true;
-			if (!AttatchedToVRPlayer) {
-				Destroy (this.gameObject);
-			} else {
-				levelController.player = this;
-			}
+            if (!AttatchedToVRPlayer) {
+                Destroy(this.gameObject);
+            } else {
+                levelController.player = this;
+            }
         } else {
             vrActive = false;
-			if (AttatchedToVRPlayer) {
-				Destroy (this.gameObject);
-			} else {
-				levelController.player = this.gameObject.GetComponent<Player>();
-			}
+            if (AttatchedToVRPlayer) {
+                Destroy(this.gameObject);
+            } else {
+                levelController.player = this.gameObject.GetComponent<Player>();
+            }
             //Disable everything VR related and fix FOV of Camera
             SteamVR.SafeDispose();
             VRSettings.enabled = false;
-			playerCamera.GetComponent<Camera>().fieldOfView = 60;
+            playerCamera.GetComponent<Camera>().fieldOfView = 60;
         }
     }
 
@@ -93,7 +93,7 @@ public class Player : MonoBehaviour {
     void Update() {
         //Get player position.  Different in VR
         if (vrActive) {
-			int[] hexCoords = HexConst.CoordToHexIndex(new Vector3(transform.parent.position.x, transform.parent.position.y, transform.parent.position.z));
+            int[] hexCoords = HexConst.CoordToHexIndex(new Vector3(transform.parent.position.x, transform.parent.position.y, transform.parent.position.z));
             q = hexCoords[0];
             r = hexCoords[1];
             h = hexCoords[2];
@@ -106,14 +106,14 @@ public class Player : MonoBehaviour {
 
         //If player presses "m" to start acting, isn't yet acting, and has enough action points to do so
         if (Input.GetKeyUp("m")) {
-			StartMove ();
+            StartMove();
         }
         if (Input.GetKeyUp(KeyCode.Alpha1) && actionPoints > 0 && this.hasFireball) {
-			StartFireball ();
+            StartFireball();
         }
         //Cancel abilities
         if (Input.GetKeyUp(KeyCode.Escape)) {
-			CancelAction ();
+            CancelAction();
         }
     }
 
@@ -122,30 +122,30 @@ public class Player : MonoBehaviour {
     /// </summary>
 	public void StartMove() {
         //Start actions
-		if (actionPoints > 0) {
-			//Start action
-			this.playerActing = true;
-			this.currentAction = AbilityEnum.MOVE_PLAYER;
-			uiController.setVisibility(true);
+        if (actionPoints > 0) {
+            //Start action
+            this.playerActing = true;
+            this.currentAction = AbilityEnum.MOVE_PLAYER;
+            uiController.setVisibility(true);
         }
     }
 
-	/// <summary>
-	/// Called to start casting fireball
-	/// </summary>
-	public void StartFireball() {
-		if (actionPoints > 0 && this.hasFireball) {
-			this.playerActing = true;
-			this.currentAction = AbilityEnum.FIREBALL;
-			uiController.setVisibility (true);
-		}
-	}
+    /// <summary>
+    /// Called to start casting fireball
+    /// </summary>
+    public void StartFireball() {
+        if (actionPoints > 0 && this.hasFireball) {
+            this.playerActing = true;
+            this.currentAction = AbilityEnum.FIREBALL;
+            uiController.setVisibility(true);
+        }
+    }
 
-	public void CancelAction() {
-		this.playerActing = false;
-		this.currentAction = AbilityEnum.NOT_USING_ABILITIES;
-		uiController.setVisibility(false);
-	}
+    public void CancelAction() {
+        this.playerActing = false;
+        this.currentAction = AbilityEnum.NOT_USING_ABILITIES;
+        uiController.setVisibility(false);
+    }
 
     /// <summary>
     /// Draw a GUI to the screen.  This is debug
@@ -184,9 +184,9 @@ public class Player : MonoBehaviour {
         }
         if (actionPoints == 0) {
             return true;
-		}
-		vrPressDown = false;
-		vrPressUp = false;
+        }
+        vrPressDown = false;
+        vrPressUp = false;
         return false;
     }
 
@@ -203,10 +203,10 @@ public class Player : MonoBehaviour {
             //Give all valid neighbors the neighbor material
             uiController.ShowValidMoves(movable);
             //Give the current hex the current hex material
-            uiController[q, r, h].gameObject.GetComponent<Renderer>().material = currenthexmaterial;
+            uiController[q, r, h].SetMaterial(currenthexmaterial, true);
         }
 
-		UICellObj hitObj = null;
+        UICellObj hitObj = null;
 
         //Non VR Movement
         if (!vrActive) {
@@ -219,45 +219,45 @@ public class Player : MonoBehaviour {
             }
             //VR Specific movement
         } else {
-			hitObj = VRHitObj;
+            hitObj = VRHitObj;
         }
 
-		//if it isn't null
-		if (hitObj != null) {
-			//get the selected cell
-			PathCell lookedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
-			PathCell startCell = aiController[q, r, h];
+        //if it isn't null
+        if (hitObj != null) {
+            //get the selected cell
+            PathCell lookedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
+            PathCell startCell = aiController[q, r, h];
 
-			//loop through all cells we're close enough to reach
-			for (int i = 0; i < movable.Count; i++) {
-				foreach (PathCell m in movable[i]) {
-					if (lookedCell.Equals(m) && !lookedCell.Equals(startCell)) {
-						//set the material
-						hitObj.gameObject.GetComponent<Renderer>().material = highlightMaterial;
-						GameObject thisUICell = uiController [lookedCell.q, lookedCell.r, lookedCell.h].gameObject;
-						uiController.playerFigure.transform.position = thisUICell.transform.position + new Vector3(0, thisUICell.GetComponent<Renderer>().bounds.size.y/2, 0);
-						//If the player clicked the mouse
-						if (Input.GetMouseButtonUp(0) || vrPressUp) {
-							//Move the player
-							transform.parent.position = levelController[hitObj.q, hitObj.r, hitObj.h].centerPos;
-							//If the target has a goal
-							if (levelController[hitObj.q, hitObj.r, hitObj.h].hasGoal) {
-								//Update the goal
-								levelController.numOfGoals -= 1;
-								levelController[hitObj.q, hitObj.r, hitObj.h].goal.GetComponent<Goal>().Accomplished();
-							}
-							//Reduce number of player action points remaining
-							actionPoints -= i + 1;
-							//Clear the UI controller
-							uiController.ClearCells();
-							uiController.setVisibility(false);
-							currentAction = AbilityEnum.NOT_USING_ABILITIES;
-							return true;
-						}
-					}
-				}
-			}
-		}
+            //loop through all cells we're close enough to reach
+            for (int i = 0; i < movable.Count; i++) {
+                foreach (PathCell m in movable[i]) {
+                    if (lookedCell.Equals(m) && !lookedCell.Equals(startCell)) {
+                        //set the material
+                        uiController[hitObj.q, hitObj.r, hitObj.h].SetMaterial(highlightMaterial, true);
+                        GameObject thisUICell = uiController[lookedCell.q, lookedCell.r, lookedCell.h].gameObject;
+                        uiController.playerFigure.transform.position = thisUICell.transform.position + new Vector3(0, thisUICell.GetComponent<Renderer>().bounds.size.y / 2, 0);
+                        //If the player clicked the mouse
+                        if (Input.GetMouseButtonUp(0) || vrPressUp) {
+                            //Move the player
+                            transform.parent.position = levelController[hitObj.q, hitObj.r, hitObj.h].centerPos;
+                            //If the target has a goal
+                            if (levelController[hitObj.q, hitObj.r, hitObj.h].hasGoal) {
+                                //Update the goal
+                                levelController.numOfGoals -= 1;
+                                levelController[hitObj.q, hitObj.r, hitObj.h].goal.GetComponent<Goal>().Accomplished();
+                            }
+                            //Reduce number of player action points remaining
+                            actionPoints -= i + 1;
+                            //Clear the UI controller
+                            uiController.ClearCells();
+                            uiController.setVisibility(false);
+                            currentAction = AbilityEnum.NOT_USING_ABILITIES;
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
 
         //Movement not finished
         return false;
@@ -274,21 +274,21 @@ public class Player : MonoBehaviour {
             uiController.ShowValidTopDownRadius(q, r, h, 5, true);
         }
 
-		UICellObj hitObj = null;
+        UICellObj hitObj = null;
 
-		//Non VR Movement
-		if (!vrActive) {
-			//Get the cell the player is looking at
-			Vector3 lineOfSight = playerCamera.transform.forward * 1000;
-			RaycastHit hit;
-			if (Physics.Raycast(playerCamera.transform.position, lineOfSight, out hit)) {
-				//Get the UI hex cell the player is looking at
-				hitObj = hit.transform.gameObject.GetComponent<UICellObj>() as UICellObj;
-			}
-			//VR Specific movement
-		} else {
-			hitObj = VRHitObj;
-		}
+        //Non VR Movement
+        if (!vrActive) {
+            //Get the cell the player is looking at
+            Vector3 lineOfSight = playerCamera.transform.forward * 1000;
+            RaycastHit hit;
+            if (Physics.Raycast(playerCamera.transform.position, lineOfSight, out hit)) {
+                //Get the UI hex cell the player is looking at
+                hitObj = hit.transform.gameObject.GetComponent<UICellObj>() as UICellObj;
+            }
+            //VR Specific movement
+        } else {
+            hitObj = VRHitObj;
+        }
 
         //if it isn't null
         if (hitObj != null) {
@@ -301,7 +301,7 @@ public class Player : MonoBehaviour {
                 uiController.ShowValidTopDownRadius(hitObj.q, hitObj.r, hitObj.h, 1, true, TargetingMaterial.TARGETED_ZONE);
 
                 //If the player presses the mouse button
-				if (Input.GetMouseButtonUp(0) || vrPressUp) {
+                if (Input.GetMouseButtonUp(0) || vrPressUp) {
                     PathCell targetedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
                     //kill any monsters on the cells you target
                     foreach (Monster m in aiController.monsters) {
@@ -320,8 +320,8 @@ public class Player : MonoBehaviour {
 
                     actionPoints -= 1;
                     uiController.ClearCells();
-					uiController.setVisibility(false);
-					currentAction = AbilityEnum.NOT_USING_ABILITIES;
+                    uiController.setVisibility(false);
+                    currentAction = AbilityEnum.NOT_USING_ABILITIES;
                     return true;
                 }
             }

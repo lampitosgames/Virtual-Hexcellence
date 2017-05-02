@@ -13,6 +13,8 @@ public class Goal : MonoBehaviour {
     public bool reached = false;
     //Coords
     public int q, r, h;
+    //UI Prefab
+    public GameObject uiPrefab;
 
     /// <summary>
     /// Unity's start function
@@ -37,11 +39,15 @@ public class Goal : MonoBehaviour {
             LevelController levelController = GameObject.Find("LevelController").GetComponent("LevelController") as LevelController;
             //Tell the level controller to initialize this hex cell
             levelController.AddGoal(q, r, h, gameObject);
+            levelController.AddDisplayedObject(q, r, h, this.uiPrefab);
             addedSelf = true;
         }
     }
 
     public virtual void Accomplished() {
+        //Clear the ui prefab
+        GameObject.Find("LevelController").GetComponent<LevelController>()[q, r, h].displayedPrefabs = new List<GameObject>();
+        GameObject.Find("UIController").GetComponent<UIController>()[q, r, h].forceGoalMaterial = false;
         gameObject.SetActive(false);
     }
 }

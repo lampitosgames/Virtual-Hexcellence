@@ -11,6 +11,8 @@ using UnityEngine;
 public class HexCellData : HexCell {
     //Reference to the cell's game object
     public GameObject hexCellObject;
+    //Reference to displayed prefabs (things that will show up on the minimap)
+    public List<GameObject> displayedPrefabs = new List<GameObject>();
 
     //Whether or not the cell contains a goal object and a reference if it does
     public bool hasGoal;
