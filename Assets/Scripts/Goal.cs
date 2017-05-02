@@ -3,32 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Base class for objectives.
+/// Former base class for objectives, now a subclass of Objective.
 /// Other classes can inherit this to implement different objective functionality
 /// </summary>
-public class Goal : MonoBehaviour {
-    private bool addedSelf = false;
-
-    //Has the player reached this goal?
-    public bool reached = false;
-    //Coords
-    public int q, r, h;
-
-    LevelController levelController = null;
-
-    /// <summary>
-    /// Unity's start function
-    /// </summary>
-    void Start() {
-        //get the goal's model height so we can properly determine the cell it is on
-        float modelHeight = gameObject.GetComponent<Renderer>().bounds.size.y;
-        //Get the hex index for this hex cell.  Pass in the transform.
-        int[] thisHexIndex = HexConst.CoordToHexIndex(transform.position + new Vector3(0, -0.5f * modelHeight, 0));
-        q = thisHexIndex[0];
-        r = thisHexIndex[1];
-        h = thisHexIndex[2];
-    }
-
+public class Goal : Objective
+{
     /// <summary>
     /// Unity's update function
     /// </summary>

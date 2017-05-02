@@ -37,7 +37,7 @@ public class UICell : HexCell {
     }
 
 	///<summary>
-	/// Set the display status of the UICell
+	/// Set the display status of the UICell and update minimap presence
 	/// </summary>
 	public void Display(bool display) {
 		if (display) {
@@ -45,31 +45,38 @@ public class UICell : HexCell {
 			Collider collider = this.gameObject.GetComponent<Collider> ();
 			renderer.enabled = true;
 			collider.enabled = true;
+            aiController = GameObject.Find("AIController").GetComponent<AIController>();
+            levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
 
-			GameObject thisMonster = GameObject.Find("AIController").GetComponent<AIController>().GetEnemy (q, r, h);
+            GameObject thisMonster = aiController.GetEnemy(q, r, h);
             if (thisMonster != null)
             {
-                gameObject.GetComponent<UICellObj>().AddInteractable(thisMonster);
+                gameObject.GetComponent<UICellObj>().AddMinimapObject(thisMonster,MinimapObjectType.ENEMY);
             }
-            else
+
+            GameObject thisGoal = levelController.GetGoal(q, r, h);
+            if (thisGoal != null)
             {
-                GameObject thisGoal = GameObject.Find("LevelController").GetComponent<LevelController>().GetGoal(q, r, h);
-                if (thisGoal != null)
-                {
-                    gameObject.GetComponent<UICellObj>().AddInteractable(thisGoal);
-                }
+                gameObject.GetComponent<UICellObj>().AddMinimapObject(thisGoal, MinimapObjectType.GOAL);
             }
 
-   //         List<GameObject> interactables = GameObject.Find("AIController").GetComponent<AIController>().GetUIInteractablePrefabs(q, r, h);
-   //         if (interactables!=null&&interactables.Count>0) {
-			//	gameObject.GetComponent<UICellObj> ().AddInteractable (interactables[0]);
-			//}
+            List<GameObject> thisItems = levelController.GetItemPrefabs(q, r, h);
+            if (thisItems != null)
+            {
+                gameObject.GetComponent<UICellObj>().AddMinimapObjects(thisItems, MinimapObjectType.ITEM);
+            }
 
-		} else {
+            List<GameObject> thisProps = levelController.GetProps(q, r, h);
+            if (thisProps != null)
+            {
+                gameObject.GetComponent<UICellObj>().AddMinimapObjects(thisProps, MinimapObjectType.PROP);
+            }
+
+        } else {
 			this.gameObject.GetComponent<MeshRenderer> ().enabled = false;
 			this.gameObject.GetComponent<Collider> ().enabled = false;
 
-			gameObject.GetComponent<UICellObj> ().RemoveMinimapObject ();
+			gameObject.GetComponent<UICellObj> ().HideContents();
 		}
 	}
 

@@ -11592,6 +11592,23 @@ GameObject:
   m_PrefabParentObject: {fileID: 1833678226724254, guid: a6274875e4396064485f0053d2aa8b77,
     type: 2}
   m_PrefabInternal: {fileID: 1350736660}
+--- !u!114 &1045904868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1045904867}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34345b3a963e79c4fa9a499e165b5bdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reached: 0
+  q: 0
+  r: 0
+  h: 0
+  minimapObject: {fileID: 1581714453348324, guid: 952fc157e04a52e4bb958080b01c7c8f,
+    type: 2}
 --- !u!4 &1045904875 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4307674865456848, guid: a6274875e4396064485f0053d2aa8b77,
@@ -13482,6 +13499,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1234327888}
+  - component: {fileID: 1234327889}
   m_Layer: 0
   m_Name: BowAndArrows
   m_TagString: Untagged
@@ -13521,6 +13539,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1234327889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1234327887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34345b3a963e79c4fa9a499e165b5bdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reached: 0
+  q: 0
+  r: 0
+  h: 0
+  minimapObject: {fileID: 1581714453348324, guid: 952fc157e04a52e4bb958080b01c7c8f,
+    type: 2}
 --- !u!1 &1241565513
 GameObject:
   m_ObjectHideFlags: 0
