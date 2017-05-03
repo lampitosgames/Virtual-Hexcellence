@@ -91,7 +91,9 @@ public class UIController : MonoBehaviour {
                 } else {
                     matToUse = possibleMoveMat3;
                 }
-                uiGrid[coords.q, coords.r, coords.h].SetMaterial(matToUse, false);
+				if (uiGrid [coords.q, coords.r, coords.h] != null) {
+					uiGrid [coords.q, coords.r, coords.h].SetMaterial (matToUse, false);
+				}
             }
         }
     }
@@ -196,5 +198,13 @@ public class UIController : MonoBehaviour {
             }
         }
     }
+
+	public void StartSecondStage() {
+		foreach (UICell c in uiGrid) {
+			if (c.h > -15) {
+				uiGrid.DeleteHex(c.q, c.r, c.h);
+			}
+		}
+	}
 
 }

@@ -66,6 +66,27 @@ public class HexGrid<T> : IEnumerable<T> {
         return default(T);
     }
 
+	/// <summary>
+	/// Deletes the hex.
+	/// </summary>
+	/// <param name="q">column</param>
+	/// <param name="r">row</param>
+	/// <param name="h">height</param>
+	public void DeleteHex(int q, int r, int h) {
+		//Hash the hex coordinates
+		int coords = Hash(new int[] {q, r});
+		//If there are cells at these coords
+		if (hexGrid.ContainsKey (coords)) {
+			//Get the height dictionary
+			Dictionary<int, T> atCoords = hexGrid[coords];
+			//If there is a cell at this position
+			if (atCoords.ContainsKey (h)) {
+				//Delete it
+				atCoords.Remove(h);
+			}
+		}
+	}
+
     /// <summary>
     /// Get hex cells in a radius surrounding the origin
     /// Optional parameters allow for search height (+/- how much height will it search)

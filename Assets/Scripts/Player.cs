@@ -252,6 +252,11 @@ public class Player : MonoBehaviour {
                             uiController.ClearCells();
                             uiController.setVisibility(false);
                             currentAction = AbilityEnum.NOT_USING_ABILITIES;
+
+							if (hitObj.h < -17) {
+								uiController.StartSecondStage ();
+							}
+
                             return true;
                         }
                     }
