@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.102330804, g: 0.29341656, b: 0.3193395, a: 1}
+  m_IndirectSpecularColor: {r: 0.102330364, g: 0.29341498, b: 0.3193372, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -266,6 +266,7 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114686535775867764, guid: a4ee73be3f8693142a3616adfbbaa417, type: 2}
+    - {fileID: 114241324885338144, guid: a4ee73be3f8693142a3616adfbbaa417, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: a4ee73be3f8693142a3616adfbbaa417, type: 2}
   m_IsPrefabParent: 0
 --- !u!4 &13652973 stripped
@@ -10919,6 +10920,21 @@ GameObject:
     type: 2}
   m_PrefabInternal: {fileID: 13652972}
 --- !u!114 &945793797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 945793795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 324b093adf315da4ba1dda9859896087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackMaterial: {fileID: 0}
+  aggroRadius: 10
+  movementSpeed: 2
+  realtimeSpeed: 4
+--- !u!114 &945793798
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}

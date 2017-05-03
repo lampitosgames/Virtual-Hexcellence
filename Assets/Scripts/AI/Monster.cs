@@ -36,6 +36,8 @@ public class Monster : MonoBehaviour {
     public float realtimeSpeed = 4f;
     int actionPoints = 2;
 
+	float modelHeight;
+
     /// <summary>
     /// Unity start method
     /// </summary>
@@ -45,7 +47,14 @@ public class Monster : MonoBehaviour {
         aiController = GameObject.Find("AIController").GetComponent<AIController>() as AIController;
         levelController = GameObject.Find("LevelController").GetComponent<LevelController>() as LevelController;
 
-        curCell = HexConst.CoordToHexIndex(transform.position - new Vector3(0, 0.8f, 0));
+		//Set full bounds of prefab
+		foreach (Renderer renderer in gameObject.GetComponentsInChildren<Renderer>()) {
+			if (renderer != gameObject.GetComponentInChildren<Renderer>()) {
+				gameObject.GetComponentInChildren<Renderer>().bounds.Encapsulate(renderer.bounds);
+			}
+		}
+		modelHeight = gameObject.GetComponentInChildren<Renderer> ().bounds.size.y;
+		curCell = HexConst.CoordToHexIndex(transform.position - new Vector3(0, modelHeight/2f, 0));
         //Add self to the list of monsters
         aiController.monsters.Add(this);
     }
@@ -63,7 +72,7 @@ public class Monster : MonoBehaviour {
                 //Get player positino
                 Vector3 playerPos = player.GetComponent<Transform>().position;
                 //Get the current cell and the player's cell
-                curCell = HexConst.CoordToHexIndex(transform.position - new Vector3(0, 0.8f, 0));
+				curCell = HexConst.CoordToHexIndex(transform.position - new Vector3(0, modelHeight/2f, 0));
                 playerCell = HexConst.CoordToHexIndex(playerPos);
 
                 //Update the AI controller.  This monster will be moving off it's current cell
@@ -118,7 +127,7 @@ public class Monster : MonoBehaviour {
         //Reset path to player
         pathToPlayer = null;
         //Update the AI controller to show an enemy is standing on the tile
-        curCell = HexConst.CoordToHexIndex(transform.position - new Vector3(0, 0.8f, 0));
+		curCell = HexConst.CoordToHexIndex(transform.position - new Vector3(0, modelHeight/2f, 0));
         aiController[curCell[0], curCell[1], curCell[2]].hasEnemy = true;
         return true;
     }
@@ -135,7 +144,7 @@ public class Monster : MonoBehaviour {
             return true;
         }
         //Get the move destination by converting it's hex coordinates to a world position
-        Vector3 movementDest = HexConst.HexToWorldCoord(pathToPlayer[movementSpeed][0], pathToPlayer[movementSpeed][1], pathToPlayer[movementSpeed][2]) + new Vector3(0, 0.8f, 0);
+		Vector3 movementDest = HexConst.HexToWorldCoord(pathToPlayer[movementSpeed][0], pathToPlayer[movementSpeed][1], pathToPlayer[movementSpeed][2]) + new Vector3(0, modelHeight/2f, 0);
 
         //If this monster has reached the target destination
         if ((transform.position - movementDest).magnitude < 0.2f) {
@@ -145,7 +154,7 @@ public class Monster : MonoBehaviour {
             return true;
         }
         //Get the 'next waypoint' to move towards.  This is simply the next cell in the path's world coordinates
-        Vector3 nextWaypoint = HexConst.HexToWorldCoord(pathToPlayer[curPInd + 1][0], pathToPlayer[curPInd + 1][1], pathToPlayer[curPInd + 1][2]) + new Vector3(0, 0.8f, 0);
+		Vector3 nextWaypoint = HexConst.HexToWorldCoord(pathToPlayer[curPInd + 1][0], pathToPlayer[curPInd + 1][1], pathToPlayer[curPInd + 1][2]) + new Vector3(0, modelHeight/2f, 0);
         //Step towards the waypoint
         transform.position = Vector3.MoveTowards(transform.position, nextWaypoint, realtimeSpeed * Time.deltaTime);
         //If next waypoint has been reached, move on to the next one

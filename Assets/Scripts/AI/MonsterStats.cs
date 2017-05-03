@@ -9,6 +9,13 @@ public class MonsterStats : MonoBehaviour {
 
     void Start() {
         aiController = GameObject.Find("AIController").GetComponent<AIController>();
+
+		//Give all collider children a childMonsterCollider object
+		foreach (Collider c in gameObject.GetComponentsInChildren<Collider>()) {
+			c.gameObject.AddComponent<ChildMonsterCollider> ();
+			c.gameObject.GetComponent<ChildMonsterCollider> ().activeParent = this;
+			c.gameObject.tag = "Target";
+		}
     }
 
 	// Use this for initialization
@@ -18,11 +25,9 @@ public class MonsterStats : MonoBehaviour {
 		}
 	}
 	
-	void OnCollisionEnter(Collision collision)
-	{
+	public void OnCollisionEnter(Collision collision) {
 		if (collision.gameObject.tag == "Deadly") {
 			Health -= collision.gameObject.GetComponent<Weapon_Damage> ().damage;
-
 		}
 	}
 

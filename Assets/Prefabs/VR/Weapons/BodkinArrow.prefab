@@ -539,6 +539,7 @@ MonoBehaviour:
   StickToCollision: 1
   attatchedBody: {fileID: 54628273233725074}
   damage: 5
+  flashmat: {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
 --- !u!114 &114473496106581302
 MonoBehaviour:
   m_ObjectHideFlags: 1

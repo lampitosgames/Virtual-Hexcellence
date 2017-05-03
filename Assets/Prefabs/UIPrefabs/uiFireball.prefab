@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4057150978871676}
   - component: {fileID: 33422555718745232}
   - component: {fileID: 23555069088029182}
+  - component: {fileID: 114679979498961422}
   m_Layer: 0
   m_Name: uiFireball
   m_TagString: Untagged
@@ -79,3 +80,16 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1211660215915766}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114679979498961422
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1211660215915766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ed2cf849ed850b4b87aea080c5cff7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSpeed: 1
+  rotateSpeed: 40

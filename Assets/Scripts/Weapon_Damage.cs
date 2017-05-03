@@ -8,6 +8,7 @@ public class Weapon_Damage : MonoBehaviour {
     public bool StickToCollision;
     public Rigidbody attatchedBody;
     public float damage;
+	public Material flashmat;
 
     private bool hasCollided = false;
     private GameObject hit;
@@ -38,7 +39,33 @@ public class Weapon_Damage : MonoBehaviour {
                 location = hit.transform.position + (gameObject.transform.position - hit.transform.position);
                 GetComponent<Rigidbody>().isKinematic = true;
                 attatchedBody.isKinematic = true;
+				if (collision.gameObject.tag == "Target") {
+					StartCoroutine (FlashMaterial (collision.gameObject));
+				}
             }
         }
     }
+
+	private IEnumerator FlashMaterial(GameObject objToFlash) {
+		List<Material> materials = new List<Material> ();
+		GameObject toFlash = objToFlash;
+		try {
+			while (toFlash.GetComponent<Monster> () == null) {
+				toFlash = toFlash.transform.parent.gameObject;
+			}
+		} catch {
+			toFlash = objToFlash;
+		}
+
+		foreach (Renderer r in toFlash.GetComponentsInChildren<Renderer>()) {
+			materials.Add (r.material);
+			r.material = flashmat;
+		}
+		yield return new WaitForSeconds (0.3f);
+		int i = 0;
+		foreach (Renderer r in toFlash.GetComponentsInChildren<Renderer>()) {
+			r.material = materials [i];
+			i++;
+		}
+	}
 }
