@@ -170,7 +170,7 @@ public class UIController : MonoBehaviour {
         //Show UI
         if (visible) {
             //Get cells in a radius
-            UICell[] toDisplay = uiGrid.GetRadius(player.q, player.r, player.h, 8, -2, true);
+			UICell[] toDisplay = uiGrid.TopDownRadius(player.q, player.r, player.h, 8, true);
             //Display them all
             foreach (UICell c in toDisplay) {
                 c.Display(true);

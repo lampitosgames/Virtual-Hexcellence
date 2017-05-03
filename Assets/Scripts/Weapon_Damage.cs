@@ -22,12 +22,14 @@ public class Weapon_Damage : MonoBehaviour {
     }
 
     void Update() {
-        if (hasCollided) {
-            location = hit.transform.position + (gameObject.transform.position - hit.transform.position);
-            gameObject.transform.position = location;
-            if (hit.activeSelf == false || hit == null) {
-                Destroy(gameObject);
-            }
+		if (hasCollided) {
+			if (hit == null || hit.activeSelf == false) {
+				Destroy(gameObject);
+			}
+			if (hit != null && gameObject != null) {
+				location = hit.transform.position + (gameObject.transform.position - hit.transform.position);
+				gameObject.transform.position = location;
+			}
         }
     }
 
@@ -61,11 +63,13 @@ public class Weapon_Damage : MonoBehaviour {
 			materials.Add (r.material);
 			r.material = flashmat;
 		}
-		yield return new WaitForSeconds (0.3f);
-		int i = 0;
-		foreach (Renderer r in toFlash.GetComponentsInChildren<Renderer>()) {
-			r.material = materials [i];
-			i++;
+		yield return new WaitForSeconds (0.15f);
+		if (toFlash != null) {
+			int i = 0;
+			foreach (Renderer r in toFlash.GetComponentsInChildren<Renderer>()) {
+				r.material = materials [i];
+				i++;
+			}
 		}
 	}
 }

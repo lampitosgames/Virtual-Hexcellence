@@ -188,8 +188,10 @@ public class HexGrid<T> : IEnumerable<T> {
             if (hexGrid.ContainsKey(hashed)) {
                 //Get the height dictionary at these coordinates
                 Dictionary<int, T> heightDic = hexGrid[Hash(aCoords[i])];
-                //Add the highest item to the return list
-                returnList.Add(heightDic[heightDic.Keys.Max()]);
+				if (heightDic.Keys.Count > 0) {
+					//Add the highest item to the return list
+					returnList.Add (heightDic [heightDic.Keys.Max ()]);
+				}
             }
         }
         return returnList.ToArray();

@@ -12,8 +12,10 @@ public class MonsterStats : MonoBehaviour {
 
 		//Give all collider children a childMonsterCollider object
 		foreach (Collider c in gameObject.GetComponentsInChildren<Collider>()) {
-			c.gameObject.AddComponent<ChildMonsterCollider> ();
-			c.gameObject.GetComponent<ChildMonsterCollider> ().activeParent = this;
+			if (c.gameObject != gameObject) {
+				c.gameObject.AddComponent<ChildMonsterCollider> ();
+				c.gameObject.GetComponent<ChildMonsterCollider> ().activeParent = this;
+			}
 			c.gameObject.tag = "Target";
 		}
     }
