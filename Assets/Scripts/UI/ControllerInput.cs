@@ -11,6 +11,9 @@ public class ControllerInput : MonoBehaviour {
 	Player player;
 	UIController uiController;
 
+	public static bool controllerInUse = false;
+	public bool thisControllerInUse = false;
+
 
 	public float edgeThreshold = 0.4f;
 	public float upDownThreshold = 0.7f;
@@ -28,9 +31,8 @@ public class ControllerInput : MonoBehaviour {
 	}
 
 	void Update(){
-		if (device.GetPress (SteamVR_Controller.ButtonMask.Touchpad)) {
+		if (device.GetPressUp (SteamVR_Controller.ButtonMask.Touchpad)) {
 			Vector2 touchpad = (device.GetAxis (Valve.VR.EVRButtonId.k_EButton_Axis0));
-			print (touchpad);
 			if (player.currentAction == AbilityEnum.NOT_USING_ABILITIES) {
 				player.StartMove ();
 			} else {
@@ -53,15 +55,18 @@ public class ControllerInput : MonoBehaviour {
 			}
 		}
 
-		if (device.GetPressDown (Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger)) {
+		if (device.GetPressDown (Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger) && !controllerInUse) {
+			controllerInUse = true;
+			thisControllerInUse = true;
 			player.vrPressDown = true;
 		}
 
-		if (device.GetPressUp (Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger)) {
+		if (device.GetPressUp (Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger) && thisControllerInUse) {
+			controllerInUse = false;
+			thisControllerInUse = false;
 			player.vrPressUp = true;
 		}
-		if (device.GetPress (Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger)) {
-			print ("do something");
+		if (device.GetPress (Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger) && (!controllerInUse || thisControllerInUse)) {
 			//add arrow/behind back check here
 			//if () {
 			// player.CancelAction()
