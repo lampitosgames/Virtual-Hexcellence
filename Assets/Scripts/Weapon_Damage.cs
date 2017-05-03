@@ -9,6 +9,10 @@ public class Weapon_Damage : MonoBehaviour {
     public Rigidbody attatchedBody;
     public float damage;
 
+    private bool hasCollided = false;
+    private GameObject hit;
+    private Vector3 location;
+
     void Start() {
         //Ignore the FPSController bounds
         foreach (GameObject playerColliderBox in GameObject.FindGameObjectsWithTag("PlayerCollisionBox")) {
@@ -16,13 +20,24 @@ public class Weapon_Damage : MonoBehaviour {
         }
     }
 
+    void Update() {
+        if (hasCollided) {
+            location = hit.transform.position + (gameObject.transform.position - hit.transform.position);
+            gameObject.transform.position = location;
+            if (hit.activeSelf == false || hit == null) {
+                Destroy(gameObject);
+            }
+        }
+    }
+
     void OnCollisionEnter(Collision collision) {
         if (collision.relativeVelocity.magnitude > 0.7f) {
-            if (StickToCollision && collision.gameObject.tag == "Target") {
-                gameObject.transform.parent = collision.gameObject.transform;
+            if (StickToCollision) {
+                hasCollided = true;
+                hit = collision.gameObject;
+                location = hit.transform.position + (gameObject.transform.position - hit.transform.position);
                 GetComponent<Rigidbody>().isKinematic = true;
                 attatchedBody.isKinematic = true;
-                Debug.Log("Good Collison");
             }
         }
     }

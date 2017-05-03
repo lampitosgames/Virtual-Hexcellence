@@ -25,11 +25,8 @@ public class UICellObj : MonoBehaviour {
 
             //Move the prefab up so it doesn't intersect the game cell
             uiObject.transform.position += new Vector3(0, uiObject.transform.parent.gameObject.GetComponent<Renderer>().bounds.size.y / 2 + (scale * prefab.GetComponentInChildren<Renderer>().bounds.size.y / 2), 0);
-            float balkskldjfj = uiObject.transform.parent.gameObject.GetComponent<Renderer>().bounds.size.y;
             Vector3 lscale = uiObject.transform.localScale;
             uiObject.transform.localScale = new Vector3(lscale.x / uiObject.transform.parent.localScale.x, lscale.y / uiObject.transform.parent.localScale.y, lscale.z / uiObject.transform.parent.localScale.z);
-            //uiObject.transform.localScale /= scale;
-            //uiObject.transform.localScale /= uiObject.transform.parent.localScale.y;
             //Add the new uiObject to the list of minimap objects
             minimapObjects.Add(uiObject);
         }
