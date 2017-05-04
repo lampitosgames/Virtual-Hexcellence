@@ -20,6 +20,9 @@ public class ControllerInput : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
+		if (gameObject.GetComponent<LineRenderer> () != null) {
+			Destroy(gameObject.GetComponent<LineRenderer> ());
+		}
 		trackedObj = GetComponent<SteamVR_TrackedObject> ();
 		player = GameObject.FindGameObjectWithTag ("Player").GetComponentInChildren<Player> ();
 		uiController = GameObject.Find ("UIController").GetComponent<UIController>();
@@ -31,8 +34,10 @@ public class ControllerInput : MonoBehaviour {
 	}
 
 	void Update(){
-		if (device.GetPressUp (SteamVR_Controller.ButtonMask.Touchpad)) {
+		if (device.GetPressUp (SteamVR_Controller.ButtonMask.Touchpad) && (!controllerInUse || thisControllerInUse)) {
 			Vector2 touchpad = (device.GetAxis (Valve.VR.EVRButtonId.k_EButton_Axis0));
+			controllerInUse = true;
+			thisControllerInUse = true;
 			if (player.currentAction == AbilityEnum.NOT_USING_ABILITIES) {
 				player.StartMove ();
 			} else {
@@ -47,6 +52,11 @@ public class ControllerInput : MonoBehaviour {
 				} else if (touchpad.y < -edgeThreshold && touchpad.x > -upDownThreshold && touchpad.x < upDownThreshold) {
 					print ("DOWN");
 					player.CancelAction ();
+					if (gameObject.GetComponent<LineRenderer> () != null) {
+						Destroy(gameObject.GetComponent<LineRenderer> ());
+					}
+					controllerInUse = false;
+					thisControllerInUse = false;
 				//Left
 				} else if (touchpad.x < -edgeThreshold && touchpad.y < upDownThreshold && touchpad.y > -upDownThreshold) {
 					print ("LEFT");
@@ -56,8 +66,6 @@ public class ControllerInput : MonoBehaviour {
 		}
 
 		if (device.GetPressDown (Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger) && !controllerInUse) {
-			controllerInUse = true;
-			thisControllerInUse = true;
 			player.vrPressDown = true;
 		}
 
@@ -65,8 +73,11 @@ public class ControllerInput : MonoBehaviour {
 			controllerInUse = false;
 			thisControllerInUse = false;
 			player.vrPressUp = true;
+			if (gameObject.GetComponent<LineRenderer> () != null) {
+				Destroy(gameObject.GetComponent<LineRenderer> ());
+			}
 		}
-		if (device.GetPress (Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger) && (!controllerInUse || thisControllerInUse)) {
+		if (/*device.GetPress (Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger) && */(!controllerInUse || thisControllerInUse)) {
 			//add arrow/behind back check here
 			//if () {
 			// player.CancelAction()
@@ -82,6 +93,9 @@ public class ControllerInput : MonoBehaviour {
 					UICellObj hitMoveObj = moveHit.transform.gameObject.GetComponent<UICellObj>() as UICellObj;
 					if (hitMoveObj != null) {
 						player.VRHitObj = hitMoveObj;
+						DrawLine (transform.position, hitMoveObj.gameObject.transform.position);
+					} else {
+						DrawLine (transform.position, uiController.gameObject.transform.position);
 					}
 				}
 				break;
@@ -92,19 +106,25 @@ public class ControllerInput : MonoBehaviour {
 					UICellObj hitFireballObj = fireballHit.transform.gameObject.GetComponent<UICellObj>() as UICellObj;
 					if (hitFireballObj != null) {
 						player.VRHitObj = hitFireballObj;
+						DrawLine (transform.position, hitFireballObj.gameObject.transform.position);
+					} else {
+						DrawLine (transform.position, uiController.gameObject.transform.position);
 					}
 				}
 				break;
 			default:
 				break;
 			}
-
-
-
-
-
 		}
+	}
 
-
+	void DrawLine(Vector3 pos1, Vector3 pos2) {
+		if (gameObject.GetComponent<LineRenderer> () == null) {
+			gameObject.AddComponent<LineRenderer> ();
+		}
+		LineRenderer line = gameObject.GetComponent<LineRenderer> ();
+		line.SetPosition (0, new Vector3(pos1.x,pos1.y,pos1.z));
+		line.SetPosition (1, pos2);
+		line.widthMultiplier = 0.01f;
 	}
 }

@@ -43,9 +43,6 @@ public class Weapon_Damage : MonoBehaviour {
 				}
                 location = hit.transform.position + (gameObject.transform.position - hit.transform.position);
 				GetComponent<Rigidbody>().isKinematic = true;
-                attatchedBody.isKinematic = true;
-				//if (collision.gameObject.tag == "Target") {
-				//}
             }
         }
     }
