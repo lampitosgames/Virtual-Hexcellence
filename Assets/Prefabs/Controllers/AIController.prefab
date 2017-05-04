@@ -56,3 +56,5 @@ MonoBehaviour:
     type: 2}
   mouseMonsterPrefab: {fileID: 1975282058106614, guid: 1015aa0163874394b9cbc44d1601167b,
     type: 2}
+  rockMonsterPrefab: {fileID: 1059691508819236, guid: faca2ceac718dce48b51cf423edffbe3,
+    type: 2}
