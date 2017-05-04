@@ -312,7 +312,7 @@ public class Player : MonoBehaviour {
                     foreach (Monster m in aiController.monsters) {
                         PathCell monsterLoc = aiController.pathGrid[m.CurrentCell[0], m.CurrentCell[1], m.CurrentCell[2]];
                         if (aiController.DistBetween(targetedCell, monsterLoc) <= 1) {
-                            m.gameObject.GetComponent<MonsterStats>().Health -= 9001;
+                            m.gameObject.GetComponent<MonsterStats>().Health -= 50;
                         }
                     }
 
