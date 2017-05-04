@@ -54,3 +54,5 @@ MonoBehaviour:
   monsters: []
   basicEnemyPrefab: {fileID: 1073418172705328, guid: b254e1b250184c04da08c4755c8b585a,
     type: 2}
+  mouseMonsterPrefab: {fileID: 1975282058106614, guid: 1015aa0163874394b9cbc44d1601167b,
+    type: 2}

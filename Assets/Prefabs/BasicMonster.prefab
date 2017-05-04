@@ -109,6 +109,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 324b093adf315da4ba1dda9859896087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 0
+  originVertOffset: 0.8
   attackMaterial: {fileID: 0}
   aggroRadius: 10
   movementSpeed: 2
