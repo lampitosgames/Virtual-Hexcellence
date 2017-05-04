@@ -37,13 +37,15 @@ public class Weapon_Damage : MonoBehaviour {
         if (collision.relativeVelocity.magnitude > 0.7f) {
             if (StickToCollision) {
                 hasCollided = true;
-                hit = collision.gameObject;
-                location = hit.transform.position + (gameObject.transform.position - hit.transform.position);
-                GetComponent<Rigidbody>().isKinematic = true;
-                attatchedBody.isKinematic = true;
+				hit = collision.gameObject;
 				if (collision.gameObject.tag == "Target") {
 					StartCoroutine (FlashMaterial (collision.gameObject));
 				}
+                location = hit.transform.position + (gameObject.transform.position - hit.transform.position);
+				GetComponent<Rigidbody>().isKinematic = true;
+                attatchedBody.isKinematic = true;
+				//if (collision.gameObject.tag == "Target") {
+				//}
             }
         }
     }

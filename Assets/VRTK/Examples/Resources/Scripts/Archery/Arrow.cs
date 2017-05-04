@@ -36,8 +36,8 @@
         {
             collided = true;
             inFlight = false;
-            RecreateNotch();
-            ResetTransform();
+            //RecreateNotch();
+            //ResetTransform();
         }
 
         private void Start()

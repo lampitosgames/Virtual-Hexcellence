@@ -10,7 +10,6 @@ public class bowPickup : MonoBehaviour {
     bool init = false;
 
     public GameObject bow = null;
-    public List<GameObject> arrows = new List<GameObject>();
     public GameObject uiPrefab = null;
 
     void Update() {
@@ -26,9 +25,6 @@ public class bowPickup : MonoBehaviour {
             player.hasBow = true;
             GameObject parentPlayer = GameObject.FindGameObjectWithTag("Player");
             bow.transform.parent = parentPlayer.transform;
-            foreach (GameObject a in arrows) {
-                a.transform.parent = parentPlayer.transform;
-            }
             //Clear the ui prefab
             GameObject.Find("LevelController").GetComponent<LevelController>()[hexObj.q, hexObj.r, hexObj.h].displayedPrefabs = new List<GameObject>();
             GameObject.Find("UIController").GetComponent<UIController>()[hexObj.q, hexObj.r, hexObj.h].forceGoalMaterial = false;

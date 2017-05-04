@@ -35,6 +35,7 @@
             notchCopy.name = name;
             arrow.GetComponent<Arrow>().SetArrowHolder(notchCopy);
             arrow.GetComponent<Arrow>().OnNock();
+
         }
     }
 }
