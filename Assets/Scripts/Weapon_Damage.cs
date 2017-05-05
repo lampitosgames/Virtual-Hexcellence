@@ -51,7 +51,7 @@ public class Weapon_Damage : MonoBehaviour {
 		List<Material> materials = new List<Material> ();
 		GameObject toFlash = objToFlash;
 		try {
-			while (toFlash.GetComponent<Monster> () == null) {
+			while (!toFlash.GetComponent<Monster>()) {
 				toFlash = toFlash.transform.parent.gameObject;
 			}
 		} catch {

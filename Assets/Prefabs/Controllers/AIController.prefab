@@ -60,3 +60,5 @@ MonoBehaviour:
     type: 2}
   skeletonMonsterPrefab: {fileID: 1917581905947924, guid: 0bab66c02c33b6941905b7a6207c2bef,
     type: 2}
+  turtleMonsterPrefab: {fileID: 1215389298653738, guid: 1ff980ff6513bc24c89389b6ba2afdb0,
+    type: 2}

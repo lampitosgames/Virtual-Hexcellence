@@ -7,7 +7,8 @@ public enum eType {
 	BASIC_ENEMY,
     MOUSE_MONSTER,
     ROCK_MONSTER,
-    SKELETON_MONSTER
+    SKELETON_MONSTER,
+    TURTLE_MONSTER
 }
 
 /// <summary>
@@ -27,6 +28,7 @@ public class AIController : MonoBehaviour {
     public GameObject mouseMonsterPrefab = null;
     public GameObject rockMonsterPrefab = null;
     public GameObject skeletonMonsterPrefab = null;
+    public GameObject turtleMonsterPrefab = null;
 
     /// <summary>
     /// Allow getting/setting for the level grid using [q,r,h]
@@ -250,6 +252,8 @@ public class AIController : MonoBehaviour {
                 return rockMonsterPrefab;
             case (eType.SKELETON_MONSTER):
                 return skeletonMonsterPrefab;
+            case (eType.TURTLE_MONSTER):
+                return turtleMonsterPrefab;
 			default:
 				return null;
 			}
