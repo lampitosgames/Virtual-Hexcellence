@@ -6,7 +6,8 @@ using UnityEngine;
 public enum eType {
 	BASIC_ENEMY,
     MOUSE_MONSTER,
-    ROCK_MONSTER
+    ROCK_MONSTER,
+    SKELETON_MONSTER
 }
 
 /// <summary>
@@ -25,6 +26,7 @@ public class AIController : MonoBehaviour {
 	public GameObject basicEnemyPrefab = null;
     public GameObject mouseMonsterPrefab = null;
     public GameObject rockMonsterPrefab = null;
+    public GameObject skeletonMonsterPrefab = null;
 
     /// <summary>
     /// Allow getting/setting for the level grid using [q,r,h]
@@ -246,6 +248,8 @@ public class AIController : MonoBehaviour {
                 return mouseMonsterPrefab;
             case (eType.ROCK_MONSTER):
                 return rockMonsterPrefab;
+            case (eType.SKELETON_MONSTER):
+                return skeletonMonsterPrefab;
 			default:
 				return null;
 			}

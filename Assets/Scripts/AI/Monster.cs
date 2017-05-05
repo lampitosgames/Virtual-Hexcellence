@@ -74,6 +74,9 @@ public class Monster : MonoBehaviour {
                 //Get player positino
                 Vector3 playerPos = player.GetComponent<Transform>().position;
                 //Get the current cell and the player's cell
+                if (transform.position == null) {
+                    return false;
+                }
 				curCell = HexConst.CoordToHexIndex(transform.position - new Vector3(0, originVertOffset, 0));
                 playerCell = HexConst.CoordToHexIndex(playerPos);
 

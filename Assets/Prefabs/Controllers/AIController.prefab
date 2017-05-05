@@ -58,3 +58,5 @@ MonoBehaviour:
     type: 2}
   rockMonsterPrefab: {fileID: 1059691508819236, guid: faca2ceac718dce48b51cf423edffbe3,
     type: 2}
+  skeletonMonsterPrefab: {fileID: 1917581905947924, guid: 0bab66c02c33b6941905b7a6207c2bef,
+    type: 2}
