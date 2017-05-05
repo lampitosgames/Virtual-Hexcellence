@@ -136,7 +136,6 @@ GameObject:
   - component: {fileID: 4293700157083054}
   - component: {fileID: 33403267576423784}
   - component: {fileID: 23413634235554266}
-  - component: {fileID: 64402732954978642}
   m_Layer: 0
   m_Name: polySurface24
   m_TagString: Untagged
@@ -582,7 +581,6 @@ GameObject:
   - component: {fileID: 4862655456734228}
   - component: {fileID: 33728585987521868}
   - component: {fileID: 23863723067491230}
-  - component: {fileID: 64371399798521276}
   m_Layer: 0
   m_Name: pSphere1
   m_TagString: Untagged
@@ -884,7 +882,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1670337923117594}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 3.619, y: -9.231307, z: -19.421}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4058929605397126}
@@ -1739,34 +1737,6 @@ MeshCollider:
   m_InflateMesh: 1
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300006, guid: 62e24a20d9c87a8449f3403ffa8161c4, type: 3}
---- !u!64 &64371399798521276
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1717057957642430}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Convex: 1
-  m_InflateMesh: 1
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300016, guid: 62e24a20d9c87a8449f3403ffa8161c4, type: 3}
---- !u!64 &64402732954978642
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1202707257890122}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Convex: 1
-  m_InflateMesh: 1
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300014, guid: 62e24a20d9c87a8449f3403ffa8161c4, type: 3}
 --- !u!64 &64885901606128708
 MeshCollider:
   m_ObjectHideFlags: 1
@@ -1826,7 +1796,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1897310f07cd93f46801c72b9ee38299, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 20
+  Health: 40
 --- !u!135 &135401018199970168
 SphereCollider:
   m_ObjectHideFlags: 1

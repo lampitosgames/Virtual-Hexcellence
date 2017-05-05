@@ -10,7 +10,7 @@ public class Weapon_Damage : MonoBehaviour {
     public float damage;
 	public Material flashmat;
 
-    private bool hasCollided = false;
+    public bool hasCollided = false;
     private GameObject hit;
     private Vector3 location;
 
@@ -34,7 +34,7 @@ public class Weapon_Damage : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision collision) {
-        if (collision.relativeVelocity.magnitude > 0.7f) {
+		if (collision.relativeVelocity.magnitude > 0.7f && !hasCollided) {
             if (StickToCollision) {
                 hasCollided = true;
 				hit = collision.gameObject;
