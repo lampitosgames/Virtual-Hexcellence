@@ -1729,6 +1729,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 15
+  ragdoll: {fileID: 1806936550885616, guid: d465dbe41e255094a8e1a30fe1396fe5, type: 2}
 --- !u!137 &137708629922500858
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

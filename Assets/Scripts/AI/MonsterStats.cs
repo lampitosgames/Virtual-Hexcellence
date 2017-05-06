@@ -6,6 +6,7 @@ public class MonsterStats : MonoBehaviour {
 
 	public float Health;
     AIController aiController;
+	public GameObject ragdoll;
 
     void Start() {
         aiController = GameObject.Find("AIController").GetComponent<AIController>();
@@ -38,6 +39,10 @@ public class MonsterStats : MonoBehaviour {
         Monster self = gameObject.GetComponent<Monster>();
         aiController.monsters.Remove(self);
         aiController[self.CurrentCell[0], self.CurrentCell[1], self.CurrentCell[2]].hasEnemy = false;
-        this.gameObject.SetActive(false);
+		GameObject corpse = GameObject.Instantiate (ragdoll, transform);
+		corpse.transform.position = this.transform.position;
+		//corpse.transform.rotation = this.transform.rotation;
+		corpse.transform.parent = null;
+		Destroy (gameObject);
     }
 }

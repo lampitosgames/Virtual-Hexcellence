@@ -21,6 +21,8 @@ public class UIController : MonoBehaviour {
 
     public float uiScale = 0.02f; //the scale of the minimap compared to the world map.
 
+	public GameObject controller1 = null, controller2 = null;
+
     //Materials for hexes
     public Material defaultHexMaterial;
     public Material possibleMoveMat1;
@@ -38,6 +40,26 @@ public class UIController : MonoBehaviour {
 
         StartCoroutine(LoadTileCheck()); //Coroutine that waits for all cells to become ready before continuing.
     }
+
+	void Update() {
+		ControllerInput input1 = controller1.GetComponent<ControllerInput> ();
+		ControllerInput input2 = controller2.GetComponent<ControllerInput> ();
+
+		if (input1.thisControllerInUse) {
+			input2.thisControllerInUse = false;
+		} else if (input2.thisControllerInUse) {
+			input1.thisControllerInUse = false;
+		}
+
+		if (ControllerInput.controllerInUse && input1.thisControllerInUse == false && input2.thisControllerInUse == false) {
+			ControllerInput.controllerInUse = false;
+		}
+
+		if ((input1.thisControllerInUse == true || input2.thisControllerInUse == true) && ControllerInput.controllerInUse == false) {
+			input1.thisControllerInUse = false;
+			input2.thisControllerInUse = false;
+		}
+	}
 
     //Helper coroutine for Start
     //Makes sure all tiles are completely loaded before scaling, repositioning, and setting visibility.

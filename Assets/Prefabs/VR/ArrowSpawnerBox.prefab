@@ -120,5 +120,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57bbc5c81652cb540b08c6085deb568b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrowPrefab: {fileID: 182108, guid: da23bdf76745c6c4f9258cd40e3d4859, type: 2}
+  arrowPrefab: {fileID: 1684331762364502, guid: f26e5169159eca64599404f0df579844,
+    type: 2}
   spawnDelay: 0.1
