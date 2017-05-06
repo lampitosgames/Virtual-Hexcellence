@@ -18,6 +18,8 @@ public class LevelController : MonoBehaviour {
     public Player player = null;
     //Is it the player's turn
     bool playerTurn = true;
+    //Is the current turn frozen (i.e. is an animation still playing?)
+    public bool turnFrozen = false;
 
     //Goal-related variables
     public int numOfGoals = 0;

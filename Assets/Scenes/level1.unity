@@ -39467,6 +39467,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
   burntTileMaterial: {fileID: 2100000, guid: 9c6d01987d3892e4895e793dc8b6c17b, type: 2}
   playerCamera: {fileID: 0}
+  fireballPrefab: {fileID: 0}
   VRHitObj: {fileID: 0}
   vrPressDown: 0
   vrPressUp: 0
@@ -44525,6 +44526,8 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
   burntTileMaterial: {fileID: 2100000, guid: 9c6d01987d3892e4895e793dc8b6c17b, type: 2}
   playerCamera: {fileID: 0}
+  fireballPrefab: {fileID: 1475051299232416, guid: 1808b92f952b1534ab66332b99a26b35,
+    type: 2}
   VRHitObj: {fileID: 0}
   vrPressDown: 0
   vrPressUp: 0
@@ -44532,7 +44535,7 @@ MonoBehaviour:
   actionPoints: 3
   currentAction: 0
   hasBow: 0
-  hasFireball: 0
+  hasFireball: 1
 --- !u!114 &1624174603
 MonoBehaviour:
   m_ObjectHideFlags: 0

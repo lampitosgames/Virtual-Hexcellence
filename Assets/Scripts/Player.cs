@@ -37,6 +37,8 @@ public class Player : MonoBehaviour {
     //Relevant Gameobjects
     public GameObject playerCamera;
 
+    //Reference to fireball animation object
+    public GameObject fireballPrefab;
 
     public UICellObj VRHitObj = null;
     public bool vrPressDown = false;
@@ -168,23 +170,30 @@ public class Player : MonoBehaviour {
     /// </summary>
     /// <returns>is the player turn over?</returns>
     public bool TakeTurn() {
-        //If the player is acting
-        if (playerActing) {
-            uiController.ClearCells();
-            switch (currentAction) {
-                case AbilityEnum.MOVE_PLAYER:
-                    playerActing = !MovePlayer();
-                    break;
-                case AbilityEnum.FIREBALL:
-                    playerActing = !Fireball();
-                    break;
-                default:
-                    break;
+        if (!levelController.turnFrozen)
+        {
+            //If the player is acting
+            if (playerActing)
+            {
+                uiController.ClearCells();
+                switch (currentAction)
+                {
+                    case AbilityEnum.MOVE_PLAYER:
+                        playerActing = !MovePlayer();
+                        break;
+                    case AbilityEnum.FIREBALL:
+                        playerActing = !Fireball();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (actionPoints == 0)
+            {
+                return true;
             }
         }
-        if (actionPoints == 0) {
-            return true;
-        }
+
         vrPressDown = false;
         vrPressUp = false;
         return false;
@@ -307,26 +316,35 @@ public class Player : MonoBehaviour {
 
                 //If the player presses the mouse button
                 if (Input.GetMouseButtonUp(0) || vrPressUp) {
-                    PathCell targetedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
-                    //kill any monsters on the cells you target
-                    foreach (Monster m in aiController.monsters) {
-                        PathCell monsterLoc = aiController.pathGrid[m.CurrentCell[0], m.CurrentCell[1], m.CurrentCell[2]];
-                        if (aiController.DistBetween(targetedCell, monsterLoc) <= 1) {
-                            m.gameObject.GetComponent<MonsterStats>().Health -= 50;
-                        }
-                    }
+                    //PathCell targetedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
+                    HexCellData targetCell = levelController[hitObj.q, hitObj.r, hitObj.h];
+                    ////kill any monsters on the cells you target
+                    //foreach (Monster m in aiController.monsters) {
+                    //    PathCell monsterLoc = aiController.pathGrid[m.CurrentCell[0], m.CurrentCell[1], m.CurrentCell[2]];
+                    //    if (aiController.DistBetween(targetedCell, monsterLoc) <= 1) {
+                    //        m.gameObject.GetComponent<MonsterStats>().Health -= 50;
+                    //    }
+                    //}
 
-                    //now turn the remaining tiles extra crispy
-                    PathCell[] surroundingCells = aiController.pathGrid.GetRadius(hitObj.q, hitObj.r, hitObj.h, 1, -1, true);
-                    foreach (PathCell cell in surroundingCells) {
-                        HexCellData cellData = levelController.levelGrid[cell.q, cell.r, cell.h];
-                        cellData.hexCellObject.gameObject.GetComponent<Renderer>().material = this.burntTileMaterial;
-                    }
+                    ////now turn the remaining tiles extra crispy
+                    //PathCell[] surroundingCells = aiController.pathGrid.GetRadius(hitObj.q, hitObj.r, hitObj.h, 1, -1, true);
+                    //foreach (PathCell cell in surroundingCells) {
+                    //    HexCellData cellData = levelController.levelGrid[cell.q, cell.r, cell.h];
+                    //    cellData.hexCellObject.gameObject.GetComponent<Renderer>().material = this.burntTileMaterial;
+                    //}
+
+
 
                     actionPoints -= 1;
                     uiController.ClearCells();
                     uiController.setVisibility(false);
                     currentAction = AbilityEnum.NOT_USING_ABILITIES;
+
+                    //Freeze the turn so that we don't continue past fireball if it's the last action on our turn.
+                    levelController.turnFrozen = true;
+                    
+                    //Make a new fireball
+                    GameObject.Instantiate(fireballPrefab, targetCell.hexCellObject.transform.position, Quaternion.identity, targetCell.hexCellObject.transform);
                     return true;
                 }
             }
