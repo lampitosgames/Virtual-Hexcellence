@@ -16,6 +16,9 @@ public class LevelController : MonoBehaviour {
 
     //A reference to the player
     public Player player = null;
+	public GameObject gameOver;
+	public GameObject youWin;
+	public GameObject enemyTurn;
     //Is it the player's turn
     bool playerTurn = true;
 
@@ -63,6 +66,7 @@ public class LevelController : MonoBehaviour {
 
             //If it is the player turn
             if (playerTurn) {
+				enemyTurn.SetActive(false);
                 //Step through player's turn.  This will return true when the player's turn is over
                 //DOCUMENTATION NOTE:
                 //This is the common structure for all game loop methods.  The LevelController's update function gets stuck, logically speaking, on calling this
@@ -76,6 +80,7 @@ public class LevelController : MonoBehaviour {
 
             //Not player turn
             } else {
+				enemyTurn.SetActive(true);
                 //If the monster turn is over
                 if (aiController.MonsterTurn()) {
                     //Switch to player turn
@@ -112,8 +117,12 @@ public class LevelController : MonoBehaviour {
     /// <param name="playerWon">Did the player win?</param>
     public void EndGame(bool playerWon) {
         if (playerWon) {
+			youWin.SetActive (true);
+			enemyTurn.SetActive (false);
             this.win = true;
         } else {
+			gameOver.SetActive (true);
+			enemyTurn.SetActive (false);
             this.lose = true;
         }
     }
