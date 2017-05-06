@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 96332292593594922}
   m_Layer: 0
   m_Name: Arrow
-  m_TagString: Untagged
+  m_TagString: Deadly
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -640,6 +640,7 @@ MonoBehaviour:
   attatchedBody: {fileID: 54628273233725074}
   damage: 5
   flashmat: {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
+  hasCollided: 0
 --- !u!114 &114473496106581302
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -721,7 +722,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afe5feea2d5384b4baf34ac748da32ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StickToCollision: 0
+  StickToCollision: 1
   attatchedBody: {fileID: 0}
-  damage: 0
-  flashmat: {fileID: 0}
+  damage: 6
+  flashmat: {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
+  hasCollided: 0

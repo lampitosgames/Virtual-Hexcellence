@@ -41,6 +41,7 @@ public class Player : MonoBehaviour {
     public GameObject fireballPrefab;
 
     public UICellObj VRHitObj = null;
+	public bool validVRHitObj = false;
     public bool vrPressDown = false;
     public bool vrPressUp = false;
 
@@ -237,38 +238,41 @@ public class Player : MonoBehaviour {
             PathCell lookedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
             PathCell startCell = aiController[q, r, h];
 
+			//False until proven true
+			validVRHitObj = false;
             //loop through all cells we're close enough to reach
             for (int i = 0; i < movable.Count; i++) {
                 foreach (PathCell m in movable[i]) {
-                    if (lookedCell.Equals(m) && !lookedCell.Equals(startCell)) {
-                        //set the material
-                        uiController[hitObj.q, hitObj.r, hitObj.h].SetMaterial(highlightMaterial, true);
-                        GameObject thisUICell = uiController[lookedCell.q, lookedCell.r, lookedCell.h].gameObject;
-                        uiController.playerFigure.transform.position = thisUICell.transform.position + new Vector3(0, thisUICell.GetComponent<Renderer>().bounds.size.y / 2, 0);
-                        //If the player clicked the mouse
-                        if (Input.GetMouseButtonUp(0) || vrPressUp) {
-                            //Move the player
-                            transform.parent.position = levelController[hitObj.q, hitObj.r, hitObj.h].centerPos;
-                            //If the target has a goal
-                            if (levelController[hitObj.q, hitObj.r, hitObj.h].hasGoal) {
-                                //Update the goal
-                                levelController.numOfGoals -= 1;
-                                levelController[hitObj.q, hitObj.r, hitObj.h].goal.GetComponent<Goal>().Accomplished();
-                            }
-                            //Reduce number of player action points remaining
-                            actionPoints -= i + 1;
-                            //Clear the UI controller
-                            uiController.ClearCells();
-                            uiController.setVisibility(false);
-                            currentAction = AbilityEnum.NOT_USING_ABILITIES;
+					if (lookedCell.Equals (m) && !lookedCell.Equals (startCell)) {
+						validVRHitObj = true;
+						//set the material
+						uiController [hitObj.q, hitObj.r, hitObj.h].SetMaterial (highlightMaterial, true);
+						GameObject thisUICell = uiController [lookedCell.q, lookedCell.r, lookedCell.h].gameObject;
+						uiController.playerFigure.transform.position = thisUICell.transform.position + new Vector3 (0, thisUICell.GetComponent<Renderer> ().bounds.size.y / 2, 0);
+						//If the player clicked the mouse
+						if (Input.GetMouseButtonUp (0) || vrPressUp) {
+							//Move the player
+							transform.parent.position = levelController [hitObj.q, hitObj.r, hitObj.h].centerPos;
+							//If the target has a goal
+							if (levelController [hitObj.q, hitObj.r, hitObj.h].hasGoal) {
+								//Update the goal
+								levelController.numOfGoals -= 1;
+								levelController [hitObj.q, hitObj.r, hitObj.h].goal.GetComponent<Goal> ().Accomplished ();
+							}
+							//Reduce number of player action points remaining
+							actionPoints -= i + 1;
+							//Clear the UI controller
+							uiController.ClearCells ();
+							uiController.setVisibility (false);
+							currentAction = AbilityEnum.NOT_USING_ABILITIES;
 
 							if (hitObj.h < -17) {
 								uiController.StartSecondStage ();
 							}
 
-                            return true;
-                        }
-                    }
+							return true;
+						}
+					}
                 }
             }
         }
@@ -310,8 +314,11 @@ public class Player : MonoBehaviour {
             PathCell lookedCell = aiController[hitObj.q, hitObj.r, hitObj.h];
             PathCell startCell = aiController[q, r, h];
 
+			//False until proven true
+			validVRHitObj = false;
             //if this is in the right range to cast this, it's a valid move.
             if (aiController.DistBetween(lookedCell, startCell) <= 5) {
+				validVRHitObj = true;
                 uiController.ShowValidTopDownRadius(hitObj.q, hitObj.r, hitObj.h, 1, true, TargetingMaterial.TARGETED_ZONE);
 
                 //If the player presses the mouse button

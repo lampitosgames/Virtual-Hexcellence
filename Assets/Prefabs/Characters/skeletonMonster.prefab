@@ -2658,6 +2658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 10
+  ragdoll: {fileID: 1266683071636904, guid: efb1720d856379642b61158ad8450d39, type: 2}
 --- !u!114 &114920588400487978
 MonoBehaviour:
   m_ObjectHideFlags: 1
