@@ -14,6 +14,7 @@ public class ControllerInput : MonoBehaviour {
 	public static bool controllerInUse = false;
 	public bool thisControllerInUse = false;
 	public bool validHex = false;
+	public Material lineMaterial;
 
 
 	public float edgeThreshold = 0.4f;
@@ -122,6 +123,7 @@ public class ControllerInput : MonoBehaviour {
 		LineRenderer line = gameObject.GetComponent<LineRenderer> ();
 		line.SetPosition (0, new Vector3(pos1.x,pos1.y,pos1.z));
 		line.SetPosition (1, pos2);
-		line.widthMultiplier = 0.01f;
+		line.widthMultiplier = 0.005f;
+		line.material = lineMaterial;
 	}
 }

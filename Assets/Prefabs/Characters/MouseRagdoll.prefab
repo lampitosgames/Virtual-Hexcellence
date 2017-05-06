@@ -758,6 +758,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4498588762925402}
   - component: {fileID: 95555601482104430}
+  - component: {fileID: 114353799116010244}
   m_Layer: 0
   m_Name: MouseRagdoll
   m_TagString: Untagged
@@ -1889,6 +1890,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114353799116010244
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1806936550885616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 576852b42cbdd7749bd06f0036fa934c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: 10
 --- !u!136 &136013062986313480
 CapsuleCollider:
   m_ObjectHideFlags: 1

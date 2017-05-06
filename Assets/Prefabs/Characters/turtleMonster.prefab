@@ -1797,6 +1797,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 40
+  ragdoll: {fileID: 1490805980528564, guid: dba6f6d6a32049942b02fd00656aee0d, type: 2}
 --- !u!135 &135401018199970168
 SphereCollider:
   m_ObjectHideFlags: 1
