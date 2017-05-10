@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1170944768}
-  m_IndirectSpecularColor: {r: 0.72213906, g: 0.8330488, b: 0.72604007, a: 1}
+  m_IndirectSpecularColor: {r: 0.7221359, g: 0.83304596, b: 0.72603774, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -39619,6 +39619,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
   burntTileMaterial: {fileID: 2100000, guid: 9c6d01987d3892e4895e793dc8b6c17b, type: 2}
   playerCamera: {fileID: 0}
+  fireballPrefab: {fileID: 0}
   VRHitObj: {fileID: 0}
   validVRHitObj: 0
   vrPressDown: 0
@@ -44741,6 +44742,8 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 6ffdcb1c480ed3545ac59a7321283f84, type: 2}
   burntTileMaterial: {fileID: 2100000, guid: 9c6d01987d3892e4895e793dc8b6c17b, type: 2}
   playerCamera: {fileID: 0}
+  fireballPrefab: {fileID: 1475051299232416, guid: 1808b92f952b1534ab66332b99a26b35,
+    type: 2}
   VRHitObj: {fileID: 0}
   validVRHitObj: 0
   vrPressDown: 0
